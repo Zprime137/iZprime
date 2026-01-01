@@ -1,4 +1,4 @@
-#include <iZ.h>
+#include <test_api.h>
 
 int TEST_IZM(int verbose)
 {

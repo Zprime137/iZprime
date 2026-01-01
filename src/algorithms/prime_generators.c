@@ -12,7 +12,7 @@
  *
  */
 
-#include <iZ.h>
+#include <iZ_api.h>
 
 // Helper to generate a random m_id (1 or -1)
 static int random_m_id(void)

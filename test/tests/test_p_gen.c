@@ -1,4 +1,4 @@
-#include <tests.h>
+#include <test_api.h>
 
 #include <openssl/bn.h>
 

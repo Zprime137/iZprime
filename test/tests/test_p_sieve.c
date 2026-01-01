@@ -1,21 +1,6 @@
-#include <tests.h>
+#include <test_api.h>
 
 // Sieve function type, takes uint64_t limit and returns a UI64_ARRAY pointer
-typedef UI64_ARRAY *(*SIEVE_FN)(uint64_t);
-
-// Structure to define sieve limits
-typedef struct
-{
-    int base;
-    int exp;
-} SIEVE_LIMIT;
-
-// Structure to associate the sieve function with its name
-typedef struct
-{
-    SIEVE_FN function;
-    const char name[32];
-} SIEVE_MODEL;
 
 // * List of available algorithms
 const SIEVE_MODEL _SoE = {SoE, "SoE"};    // * Sieve of Eratosthenes

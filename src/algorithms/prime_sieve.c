@@ -28,7 +28,7 @@
  *   obtain the total number of primes in [Zs, Ze].
  */
 
-#include <iZ.h>
+#include <iZ_api.h>
 
 /**
  * @brief Estimate the number of primes up to n using the prime number theorem.
@@ -667,7 +667,7 @@ UI64_ARRAY *SiZm(uint64_t n)
 }
 
 // =========================================================
-// * Sieve-iZm Range Algorithms: Implementations
+// * SiZ Range Variants
 // =========================================================
 
 /**

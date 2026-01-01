@@ -1,6 +1,6 @@
 // file playground.c for experimental algorithms
 
-#include <iZ.h>
+#include <iZ_api.h>
 
 // SiZ-210 Sieve Algorithm
 

@@ -1,4 +1,4 @@
-#include <iZ.h>
+#include <test_api.h>
 
 static int has_factor(mpz_t num, UI64_ARRAY *factors)
 {

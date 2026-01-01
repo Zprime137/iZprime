@@ -1,4 +1,4 @@
-#include <tests.h>
+#include <test_api.h>
 
 int RUN_TEST_UNITS(int verbose)
 {
