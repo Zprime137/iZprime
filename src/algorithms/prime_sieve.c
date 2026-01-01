@@ -19,10 +19,10 @@
  * * Sieve-iZ Algorithms:
  * - @b SiZ: Classic Sieve-iZ
  * - @b SiZm: Segmented Sieve-iZm
- * * * Sieve-iZm Range Algorithms:
+ * * Sieve-iZ range variants:
  * - @b SiZ_stream: Range-based variant that counts, and optionally
  *   streams, primes within an arbitrary numeric interval [Zs, Ze] using the
- *   Sieve-iZm machinery.
+ *   VX module.
  * - @b SiZ_count: Multi-process range counter that partitions the
  *   iZ index space across worker processes, aggregating per-process counts to
  *   obtain the total number of primes in [Zs, Ze].
@@ -61,7 +61,7 @@ static uint64_t est_pi_n(int64_t n)
 UI64_ARRAY *SoE(uint64_t n)
 {
     // Bound check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
     // Initialize the primes object with an estimated capacity
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
@@ -120,7 +120,7 @@ UI64_ARRAY *SoE(uint64_t n)
 UI64_ARRAY *SSoE(uint64_t n)
 {
     // Bound check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
     // Initialize UI64_ARRAY with an estimated capacity
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
@@ -231,7 +231,7 @@ UI64_ARRAY *SSoE(uint64_t n)
 UI64_ARRAY *SoEu(uint64_t n)
 {
     // Bound check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
     // initialization
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
@@ -295,7 +295,7 @@ UI64_ARRAY *SoEu(uint64_t n)
 UI64_ARRAY *SoS(uint64_t n)
 {
     // Bound check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
     // Calculate k as the odd numbers up to n.
     uint64_t k = (n - 1) / 2 + 1;
@@ -361,7 +361,7 @@ UI64_ARRAY *SoS(uint64_t n)
 UI64_ARRAY *SoA(uint64_t n)
 {
     // Bound check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
     assert(primes && "Memory allocation failed for primes array.");
@@ -470,14 +470,14 @@ UI64_ARRAY *SoA(uint64_t n)
  * and appended to the output array alongside the primes 2 and 3.
  *
  * @param n Upper bound (inclusive) for prime generation. Must satisfy
- *          10 < n <= N_LIMIT.
+ *          10 < n <= pow(10, 12).
  * @return Pointer to a UI64_ARRAY containing all primes <= n on success,
  *         or NULL if allocation fails.
  */
 UI64_ARRAY *SiZ(uint64_t n)
 {
     // Sanity check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
     // Initialize primes object with enough initial estimation
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
@@ -490,8 +490,7 @@ UI64_ARRAY *SiZ(uint64_t n)
     // Calculate x_n, max x value in iZ space for given n
     uint64_t x_n = n / 6 + 1;
 
-    // Create bitmap X-Arrays x5, x7, each of size x_n + 1 bits,
-    // thus, total (n/3) bits
+    // Create bitmap X-Arrays x5, x7, each of size x_n + 1 bits
     BITMAP *x5 = bitmap_init(x_n + 1, 1);
     BITMAP *x7 = bitmap_init(x_n + 1, 1);
 
@@ -506,7 +505,6 @@ UI64_ARRAY *SiZ(uint64_t n)
     uint64_t n_sqrt = sqrt(n) + 1;
 
     // Iterate through x values in range 0 < x < x_n
-    // This main loop makes (n/3) `is prime` operations
     for (uint64_t x = 1; x < x_n; x++)
     {
         // if x5[x], implying it's iZ- prime
@@ -523,7 +521,7 @@ UI64_ARRAY *SiZ(uint64_t n)
             }
         }
 
-        // Do the same if x7[x], inverting the signs
+        // Do the same if x7[x], inverting the xp signs
         if (bitmap_get_bit(x7, x))
         {
             uint64_t p = iZ(x, 1);
@@ -546,98 +544,6 @@ UI64_ARRAY *SiZ(uint64_t n)
         ui64_pop(primes);
 
     // Trim unused memory in primes object
-    ui64_resize_to_fit(primes);
-
-    return primes;
-}
-
-// space complexity is O(n / 210) bits + output
-// returns unordered list of primes up to n
-UI64_ARRAY *SiZ_210(uint64_t n)
-{
-    // Bounds check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
-
-    // if n is less than 10000, return SiZ(n)
-    if (n < 10000)
-        return SiZ(n);
-
-    // * 1. Initialization:
-    // Initialize primes array with enough capacity to avoid reallocs
-    UI64_ARRAY *primes = ui64_init(est_pi_n(n));
-    assert(primes && "Memory allocation failed for primes array in SiZm.");
-
-    uint64_t x_n = n / 6 + 1; // max x value up to n
-    uint64_t root_limit = sqrt(n) + 1;
-    int k = 4; // pointing at 11 in root_primes
-    int vx = 35;
-    int vy = x_n / vx + 1;
-
-    // Add root primes to primes array
-    UI64_ARRAY *root_primes = SiZ(root_limit);
-    memcpy(primes->array, root_primes->array, root_primes->count * sizeof(uint64_t));
-    primes->count = root_primes->count;
-
-    BITMAP *vy_bitmap = bitmap_init(vy + 8, 1);
-
-    // for each x in [2:vx] such that gcd(iZ(x, ±1), vx) == 1,
-    // sieve the corresponding column vy in the iZm space
-    for (int x = 2; x <= vx; x++)
-    {
-        if (gcd(iZ(x, -1), vx) == 1)
-        {
-            bitmap_set_all(vy_bitmap);
-            for (int i = k; i < root_primes->count; i++)
-            {
-                uint64_t p = root_primes->array[i];
-                bitmap_clear_steps_simd(vy_bitmap, p, iZm_solve_for_yp(-1, p, vx, x), vy);
-            }
-
-            for (int y = 0; y < vy - 1; y++)
-            {
-                if (bitmap_get_bit(vy_bitmap, y))
-                {
-                    uint64_t p = iZ(y * vx + x, -1);
-                    ui64_push(primes, p);
-                }
-            }
-            if (bitmap_get_bit(vy_bitmap, vy - 1))
-            {
-                uint64_t p = iZ((vy - 1) * vx + x, -1);
-                if (p < n)
-                    ui64_push(primes, p);
-            }
-        }
-
-        if (gcd(iZ(x, 1), vx) == 1)
-        {
-            bitmap_set_all(vy_bitmap);
-            for (int i = k; i < root_primes->count; i++)
-            {
-                uint64_t p = root_primes->array[i];
-                bitmap_clear_steps_simd(vy_bitmap, p, iZm_solve_for_yp(1, p, vx, x), vy);
-            }
-
-            for (int y = 0; y < vy - 1; y++)
-            {
-                if (bitmap_get_bit(vy_bitmap, y))
-                {
-                    uint64_t p = iZ(y * vx + x, 1);
-                    ui64_push(primes, p);
-                }
-            }
-            if (bitmap_get_bit(vy_bitmap, vy - 1))
-            {
-                uint64_t p = iZ((vy - 1) * vx + x, 1);
-                if (p < n)
-                    ui64_push(primes, p);
-            }
-        }
-    }
-    ui64_free(&root_primes);
-    bitmap_free(&vy_bitmap);
-
-    // Trim excess memory in primes array
     ui64_resize_to_fit(primes);
 
     return primes;
@@ -667,16 +573,16 @@ UI64_ARRAY *SiZ_210(uint64_t n)
  * it well-suited for enumerating primes up to large bounds.
  *
  * @param n Upper bound (inclusive) for prime generation. Must satisfy
- *          10 < n <= N_LIMIT.
+ *          10 < n <= pow(10, 12).
  * @return Pointer to a UI64_ARRAY containing all primes <= n on success,
  *         or NULL on allocation or initialization failure.
  */
 UI64_ARRAY *SiZm(uint64_t n)
 {
     // Bounds check:
-    assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
+    assert(n > 10 && n <= pow(10, 12) && "Input must be in the range (10, 10^12).");
 
-    // if n is less than 10000, return SiZ(n), doesn't worth segmenting
+    // if n < 10000, return SiZ(n), doesn't worth segmenting
     if (n < 10000)
         return SiZ(n);
 
@@ -685,44 +591,20 @@ UI64_ARRAY *SiZm(uint64_t n)
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
     assert(primes && "Memory allocation failed for primes array in SiZm.");
 
-    // Compute vx as product of maximum 6 small primes (> 3) for cache utilization
+    // Compute vx wheel size, maximum 6 primes (> 3)
     int vx = iZm_compute_limited_vx(n, 6);
-    // Initialize iZm structure using vx,
-    // containing pre-sieved vx base segment and some root primes
-
-    BITMAP *x5_base = bitmap_init(vx + 8, 0);
-    BITMAP *x7_base = bitmap_init(vx + 8, 0);
-    if (!x5_base || !x7_base)
+    // Initialize iZm/vx, containing pre-sieved base bitmaps and root primes
+    IZM *iZm = iZm_init(vx, sqrt(n) + 1);
+    if (!iZm)
     {
         ui64_free(&primes);
-        bitmap_free(&x5_base);
-        bitmap_free(&x7_base);
-        return NULL;
-    }
-    iZm_construct_vx_base(vx, x5_base, x7_base);
-
-    UI64_ARRAY *root_primes = SiZ(sqrt(n) + 1);
-    if (!root_primes)
-    {
-        ui64_free(&primes);
-        bitmap_free(&x5_base);
-        bitmap_free(&x7_base);
         return NULL;
     }
 
     // Add the pre-sieved k primes to primes array
-    ui64_push(primes, 2);
-    ui64_push(primes, 3);
-
-    int k = 2;
-    for (; k < 8; k++)
-    {
-        int p = root_primes->array[k];
-        if (vx % p == 0)
-            ui64_push(primes, p);
-        else
-            break;
-    }
+    int k = 0;
+    while ((6 * vx) % iZm->root_primes->array[k] == 0)
+        ui64_push(primes, iZm->root_primes->array[k++]);
 
     // * 2. Process vx segments for y in range [0:y_limit]
     uint64_t x_n = n / 6 + 1; // max x value up to n
@@ -736,8 +618,8 @@ UI64_ARRAY *SiZm(uint64_t n)
     for (int y = 0; y <= y_limit; y++)
     {
         // * a. Reset active bitmaps to base state
-        memcpy(x5->data, x5_base->data, x5->byte_size);
-        memcpy(x7->data, x7_base->data, x7->byte_size);
+        memcpy(x5->data, iZm->base_x5->data, x5->byte_size);
+        memcpy(x7->data, iZm->base_x7->data, x7->byte_size);
 
         // local x limit adjusted for last segment
         uint64_t x_limit = (y == y_limit) ? (x_n % vx) : vx;
@@ -745,10 +627,9 @@ UI64_ARRAY *SiZm(uint64_t n)
         uint64_t root_limit = sqrt(6 * (yvx + x_limit)) + 1;
 
         // * b. Mark composites of root primes in current segment
-        int i = k; // skipping the pre-sieved k primes
-        for (int i = k; i < root_primes->count; i++)
+        for (int i = k; i < iZm->root_primes->count; i++)
         {
-            uint64_t p = root_primes->array[i]; // current root prime
+            uint64_t p = iZm->root_primes->array[i]; // current root prime
             if (p > root_limit)
                 break;
 
@@ -771,9 +652,7 @@ UI64_ARRAY *SiZm(uint64_t n)
     }
 
     // * 3. Clean up and finalize
-    ui64_free(&root_primes);
-    bitmap_free(&x5_base);
-    bitmap_free(&x7_base);
+    iZm_free(&iZm);
     bitmap_free(&x5);
     bitmap_free(&x7);
 
@@ -830,9 +709,9 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
     uint64_t total = 0; // output: total prime count
 
-    const int vx = VX6; // Use VX6 segment size (1,616,615) for optimal results
-    // Miller-Rabin rounds, bounded [5, 40]
-    const int mr_rounds = MIN(MAX(input_range->mr_rounds, 5), 40);
+    int vx = VX6; // Use VX6 segment size (1,616,615) for optimal results
+    // Miller-Rabin rounds, bounded [5, 50]
+    int mr_rounds = MIN(MAX(input_range->mr_rounds, 5), 50);
 
     // Parse numeric bounds into mpz
     mpz_t Zs, Ze, Xs, Xe, Ys, Ye;

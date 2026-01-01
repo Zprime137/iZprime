@@ -34,9 +34,6 @@ UI64_ARRAY *SoA(uint64_t n);
 // Basic Sieve-iZ algorithm using the 6x +/- 1 wheel
 UI64_ARRAY *SiZ(uint64_t n);
 
-// A variant of Sieve-iZ using a 210-based wheel for improved performance
-UI64_ARRAY *SiZ_210(uint64_t n);
-
 // Segmented Sieve-iZm algorithm using dual-layered wheel factorization
 UI64_ARRAY *SiZm(uint64_t n);
 
@@ -57,6 +54,8 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num);
 int vy_random_prime(mpz_t p, int bit_size, int cores_num);
 int vx_random_prime(mpz_t p, int bit_size, int cores_num);
 int iZ_next_prime(mpz_t p, mpz_t base, int forward);
+
+// for benchmarking
 int iZ_random_next_prime(mpz_t p, int bit_size);
 int gmp_random_next_prime(mpz_t p, int bit_size);
 

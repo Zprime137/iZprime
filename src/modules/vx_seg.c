@@ -243,7 +243,7 @@ void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
     int end_x = vx_obj->end_x;
     int k = 2 + iZm->k_vx; // skip 2, 3 and pre-sieved k_vx primes
 
-    // if y < 2ˆ64, use iZm_solve_for_xp version for efficiency
+    // if y < 2^64, use iZm_solve_for_xp version for efficiency
     if (mpz_sizeinbase(vx_obj->y, 2) <= 64)
     {
         uint64_t y = mpz_get_ui(vx_obj->y);
@@ -349,6 +349,72 @@ static void vx_prob_sieve(VX_SEG *vx_obj)
             if (is_prime)
             {
                 vx_obj->p_count++;
+            }
+            else
+            {
+                bitmap_clear_bit(vx_obj->x7, x); // Clear composite from x7
+            }
+        }
+    }
+}
+
+// streams primes as they are found to the output file
+void vx_stream_file(IZM *iZm, VX_SEG *vx_obj, FILE *output)
+{
+    assert(iZm && "iZm is NULL in vx_stream_file");
+    assert(vx_obj->x5 && vx_obj->x7 && "vx_obj bitmaps are NULL in vx_stream_file");
+    assert(output && "output file is NULL in vx_stream_file");
+
+    vx_det_sieve(iZm, vx_obj);
+
+    // Initialize GMP reusable variables p, x_p
+    mpz_t p, x_p;
+    mpz_init(p);
+    mpz_init(x_p);
+
+    size_t prime_size = mpz_sizeinbase(vx_obj->yvx, 2) + 1;
+    char buffer[prime_size];
+
+    int r = vx_obj->mr_rounds;
+
+    // Iterate through x values in the range start_x <= x <= end_x
+    for (int x = vx_obj->start_x; x <= vx_obj->end_x; x++)
+    {
+        // Check if iZ(vx * y + x, -1) is prime, if not, clear x in x5
+        if (bitmap_get_bit(vx_obj->x5, x))
+        {
+            // Compute x_p = yvx + x
+            mpz_add_ui(x_p, vx_obj->yvx, x);
+            iZ_mpz(p, x_p, -1); // Compute p = iZ(x_p, -1)
+            int is_prime = (vx_obj->is_large_limit) ? mpz_probab_prime_p(p, r) : 1;
+            vx_obj->p_test_ops++;
+
+            // if is_prime, increment count and output prime, else clear composite from x5
+            if (is_prime)
+            {
+                vx_obj->p_count++;
+                gmp_snprintf(buffer, sizeof(buffer), "%Zd ", p);
+                fputs(buffer, output);
+            }
+            else
+            {
+                bitmap_clear_bit(vx_obj->x5, x); // Clear composite from x5
+            }
+        }
+
+        // test iZ(vx * y + x, 1) for primality
+        if (bitmap_get_bit(vx_obj->x7, x))
+        {
+            mpz_add_ui(x_p, vx_obj->yvx, x);
+            iZ_mpz(p, x_p, 1); // Compute p = iZ(x_p, 1)
+            int is_prime = (vx_obj->is_large_limit) ? mpz_probab_prime_p(p, r) : 1;
+            vx_obj->p_test_ops++;
+
+            if (is_prime)
+            {
+                vx_obj->p_count++;
+                gmp_snprintf(buffer, sizeof(buffer), "%Zd ", p);
+                fputs(buffer, output);
             }
             else
             {

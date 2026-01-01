@@ -3,6 +3,13 @@
 // Sieve function type, takes uint64_t limit and returns a UI64_ARRAY pointer
 typedef UI64_ARRAY *(*SIEVE_FN)(uint64_t);
 
+// Structure to define sieve limits
+typedef struct
+{
+    int base;
+    int exp;
+} SIEVE_LIMIT;
+
 // Structure to associate the sieve function with its name
 typedef struct
 {
@@ -10,14 +17,17 @@ typedef struct
     const char name[32];
 } SIEVE_MODEL;
 
-// List of available algorithms
-const SIEVE_MODEL _SoE = {SoE, "SoE"};             // * Sieve of Eratosthenes
-const SIEVE_MODEL _SSoE = {SSoE, "SSoE"};          // * Segmented Sieve of Eratosthenes
-const SIEVE_MODEL _SoEu = {SoEu, "SoEu"};          // * Sieve of Euler
-const SIEVE_MODEL _SoS = {SoS, "SoS"};             // * Sieve of Sundaram
-const SIEVE_MODEL _SoA = {SoA, "SoA"};             // * Sieve of Atkin
-const SIEVE_MODEL _SiZ = {SiZ, "SiZ"};             // * Sieve-iZ
-const SIEVE_MODEL _SiZm = {SiZm, "SiZm"};          // * Sieve-iZm
+// * List of available algorithms
+const SIEVE_MODEL _SoE = {SoE, "SoE"};    // * Sieve of Eratosthenes
+const SIEVE_MODEL _SSoE = {SSoE, "SSoE"}; // * Segmented Sieve of Eratosthenes
+const SIEVE_MODEL _SoEu = {SoEu, "SoEu"}; // * Sieve of Euler
+const SIEVE_MODEL _SoS = {SoS, "SoS"};    // * Sieve of Sundaram
+const SIEVE_MODEL _SoA = {SoA, "SoA"};    // * Sieve of Atkin
+const SIEVE_MODEL _SiZ = {SiZ, "SiZ"};    // * Sieve-iZ
+const SIEVE_MODEL _SiZm = {SiZm, "SiZm"}; // * Sieve-iZm
+
+// A variant of SiZ using a 210-based wheel for improved performance
+UI64_ARRAY *SiZ_210(uint64_t n);
 const SIEVE_MODEL _SiZ_210 = {SiZ_210, "SiZ_210"}; // * Sieve-iZ_210
 
 SIEVE_MODEL SIEVE_MODELS[] = {
@@ -152,9 +162,9 @@ int TEST_SIEVE_MODELS_INTEGRITY(int verbose)
  * @param n The upper limit for the sieve algorithm.
  * @return The execution time in microseconds.
  */
-static size_t print_sieve_time(SIEVE_MODEL model, int base, int exp)
+static size_t measure_sieve_time(SIEVE_MODEL model, SIEVE_LIMIT limit)
 {
-    uint64_t n = pow(base, exp);
+    uint64_t n = pow(limit.base, limit.exp);
     clock_t start, end;
     double cpu_time_used;
     UI64_ARRAY *primes;
@@ -166,7 +176,7 @@ static size_t print_sieve_time(SIEVE_MODEL model, int base, int exp)
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
     char n_str[32];
-    snprintf(n_str, sizeof(n_str), "%d^%d", base, exp);
+    snprintf(n_str, sizeof(n_str), "%d^%d", limit.base, limit.exp);
     printf("| %-16s", n_str);
     printf("| %-16d", primes->count);
     printf("| %-16lld", primes->array[primes->count - 1]);
@@ -180,18 +190,21 @@ static size_t print_sieve_time(SIEVE_MODEL model, int base, int exp)
 /**
  * @brief Saves the results of the sieve models to a file.
  *
- * This function creates a directory if it does not exist, generates a timestamped
- * filename, and writes the results of the sieve models to this file. The results
- * include metadata about the test range and the results of each sieve model.
+ * This function writes the results to a file named by timestamp in the default output directory.
+ * The results include metadata about the test range and the results of each sieve model.
  *
- * @param sieve_models The sieve models containing the algorithms and their names.
- * @param all_results A 2D array containing the results of the sieve models.
- * @param base The base number used in the test range.
- * @param min_exp The minimum exponent used in the test range.
- * @param max_exp The maximum exponent used in the test range.
+ * @param all_results A 2D array containing the results of each sieve model.
+ * @param limits_array An array of SIEVE_LIMIT structures defining the test limits.
+ * @param tests_count The number of tests conducted.
  */
-static void save_results_file(int all_results[][32], int base, int min_exp, int max_exp)
+static void save_results_file(int all_results[][32], SIEVE_LIMIT limits_array[], int tests_count)
 {
+    // this function writes the results to a file named by timestamp in the default output directory
+    // the output is in the format:
+    // Test Limits: [limit1, limit2, ...]
+    // Test Results:
+    // Sieve Model1: [time1, time2, ...]
+    // Sieve Model2: [time1, time2, ...]
 
     struct stat st = {0};
     if (stat(DIR_output, &st) == -1)
@@ -216,21 +229,27 @@ static void save_results_file(int all_results[][32], int base, int min_exp, int 
         return;
     }
 
-    // Write the test range metadata
-    fprintf(fp, "Test Range: %d^%d:%d^%d\n", base, min_exp, base, max_exp);
+    // Write the test limits array
+    fprintf(fp, "Test Limits: [%d^%d", limits_array[0].base, limits_array[0].exp);
 
-    // Write the results to the file
+    for (int i = 1; i < tests_count; i++)
+    {
+        SIEVE_LIMIT limit = limits_array[i];
+        fprintf(fp, ", %d^%d", limit.base, limit.exp);
+    }
+    fprintf(fp, "]\n");
+
+    // Write results header
+    fprintf(fp, "Test Results:\n");
+    // Write the results array for each model
     for (int i = 0; i < models_count; i++)
     {
         SIEVE_MODEL sieve_model = SIEVE_MODELS[i];
-
-        // P_SIEVE model = sieve_models.models_list[i];
-
         fprintf(fp, "%s: [", sieve_model.name);
-        for (int j = 0; j <= max_exp - min_exp; j++)
+        for (int j = 0; j < tests_count; j++)
         {
             fprintf(fp, "%d", all_results[i][j]);
-            if (j < max_exp - min_exp)
+            if (j < tests_count - 1)
                 fprintf(fp, ", ");
         }
         fprintf(fp, "]\n");
@@ -256,8 +275,17 @@ static void save_results_file(int all_results[][32], int base, int min_exp, int 
  */
 void BENCHMARK_SIEVE_MODELS(int save_results)
 {
-    int all_results[models_count][32];
-    int base = 10, min_exp = 4, max_exp = 9;
+    int times_array[models_count][32];
+    SIEVE_LIMIT limits_array[32];
+    int tests_count = 0;
+    // define limits: 10^4 to 10^9
+    for (int exp = 4; exp <= 9; exp++)
+    {
+        limits_array[tests_count++] = (SIEVE_LIMIT){10, exp};
+    }
+    // additional tests: 2^32, 10^10
+    // limits_array[tests_count++] = (SIEVE_LIMIT){2, 32};
+    // limits_array[tests_count++] = (SIEVE_LIMIT){10, 10};
 
     for (int i = 0; i < models_count; i++)
     {
@@ -276,26 +304,22 @@ void BENCHMARK_SIEVE_MODELS(int save_results)
         print_line(75, '-');
 
         // warmup
-        UI64_ARRAY *primes = model.function(pow(base, min_exp));
+        UI64_ARRAY *primes = model.function(10000);
         ui64_free(&primes);
 
-        for (int j = min_exp; j <= max_exp; j++)
-        {
-            results[k++] = print_sieve_time(model, base, j); // returns time in microseconds
-        }
-        // additional tests:
-        // results[k++] = print_sieve_time(model, 2, 32); // for 2^32
-        // results[k++] = print_sieve_time(model, 10, 10); // for 10^10
+        for (int j = 0; j < tests_count; j++)
+            results[k++] = measure_sieve_time(model, limits_array[j]); // returns time in microseconds
+
         print_line(75, '-');
         fflush(stdout);
 
         for (int j = 0; j < k; j++)
-            all_results[i][j] = results[j];
+            times_array[i][j] = results[j];
     }
 
     // save results file
     if (save_results)
-        save_results_file(all_results, base, min_exp, max_exp);
+        save_results_file(times_array, limits_array, tests_count);
 }
 
 // =======================================================================

@@ -44,12 +44,12 @@ IZM *iZm_init(size_t vx, uint64_t root_limit);
 IZM *iZm_clone(IZM *src);
 void iZm_free(IZM **iZm);
 
-// this constructs a pre-sieved iZm base segment of size vx
-void iZm_construct_vx_base(uint64_t vx, BITMAP *base_x5, BITMAP *base_x7);
-
 // compute vx functions
 uint64_t iZm_compute_limited_vx(uint64_t n, int max_k);
 void iZm_compute_max_vx(mpz_t vx, int bit_size);
+
+// this constructs a pre-sieved iZm base segment of size vx
+void iZm_construct_vx_base(uint64_t vx, BITMAP *base_x5, BITMAP *base_x7);
 
 // for horizontal sieving in iZm, solve for x, targets the first composite mark (x) of p in the vx segment of y
 uint64_t iZm_solve_for_xp(int m_id, uint64_t p, uint64_t vx, uint64_t y);

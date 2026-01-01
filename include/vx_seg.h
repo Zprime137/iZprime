@@ -60,7 +60,7 @@ typedef struct
     int end_x;          ///< Upper bound for indices x in the main loop, default vx.
     BITMAP *x5;         ///< Bitmap for iZm5/vx segment.
     BITMAP *x7;         ///< Bitmap for iZm7/vx segment.
-    int p_count;        ///< Number of elements in the p_gaps array.
+    int p_count;        ///< Number of primes found.
     UI16_ARRAY *p_gaps; ///< Pointer to the p_gaps array.
     int bit_ops;        ///< Number of bitwise mark operations performed.
     int p_test_ops;     ///< Number of primality test operations performed.
@@ -75,6 +75,7 @@ void vx_full_sieve(IZM *iZm, VX_SEG *vx_obj, int collect_p_gaps);
 void vx_collect_p_gaps(VX_SEG *vx_obj);
 int vx_nth_p(mpz_t p, VX_SEG *vx_obj, int n);
 
+void vx_stream_file(IZM *iZm, VX_SEG *vx_obj, FILE *output);
 int vx_write_file(VX_SEG *vx_obj, char *filename);
 VX_SEG *vx_read_file(char *filename);
 

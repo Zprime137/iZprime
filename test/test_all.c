@@ -193,8 +193,7 @@ void RUN_BENCHMARK_SIEVE_MODELS(int save_results)
 
 void RUN_BENCHMARK_P_GEN_ALGORITHMS(int save_results)
 {
-    // int bit_sizes[] = {1024, 2048, 4096};
-    int bit_sizes[] = {1024, 2048};
+    int bit_sizes[] = {1024, 2048, 4096};
     int count = sizeof(bit_sizes) / sizeof(bit_sizes[0]);
     int test_rounds = 5;
 
@@ -216,7 +215,8 @@ int main(void)
     int verbose = 1;
 
     // * Unit Tests:
-    RUN_TEST_UNITS(verbose);
+    // run all module unit tests or uncomment individual tests below
+    // RUN_TEST_UNITS(verbose);
     // TEST_BITMAP(verbose);
     // TEST_UI16_ARRAY(verbose);
     // TEST_UI32_ARRAY(verbose);
@@ -225,7 +225,8 @@ int main(void)
     // TEST_VX_SEG(verbose);
 
     // * Integration Tests:
-    RUN_TEST_INTEGRATIONS(verbose);
+    // run all integration tests or uncomment individual tests below
+    // RUN_TEST_INTEGRATIONS(verbose);
     // TEST_SIEVE_MODELS_INTEGRITY(verbose);
     // TEST_SiZ_stream(verbose);
     // TEST_SiZ_count(verbose);
@@ -234,13 +235,13 @@ int main(void)
     // TEST_vx_random_prime(verbose);
 
     // * Benchmarking:
-    int save_results = 0;
+    int save_results = 1;
 
     // * Benchmarking Sieve Algorithms:
     RUN_BENCHMARK_SIEVE_MODELS(save_results);
 
     // * Benchmarking Random Prime Generation Algorithms:
-    RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
+    // RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
 
     return 0;
 }

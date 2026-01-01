@@ -33,6 +33,7 @@
 // minimum and maximum macros
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) < (b)) ? (b) : (a))
+#define MINMAX(a, b, c) (MIN(MAX(a, b), c))
 
 // iZ utilities
 uint64_t iZ(uint64_t x, int i);

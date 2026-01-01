@@ -1,51 +1,32 @@
 #include <iZ.h>
 
-void example_sieve_iZm_stream(void)
+void example_sieve(void)
 {
-}
+    // example using sieve algorithms defined in iZ.h to get an array of primes up to n
+    uint64_t n = 1000000000;
+    // UI64_ARRAY *primes = SoE(n);
+    // UI64_ARRAY *primes = SSoE(n);
+    // UI64_ARRAY *primes = SoE(n);
+    // UI64_ARRAY *primes = SoS(n);
+    // UI64_ARRAY *primes = SoA(n);
+    // UI64_ARRAY *primes = SiZ(n);
+    UI64_ARRAY *primes = SiZm(n);
 
-void example_sieve_iZm_range(void)
-{
-    int cores_num = get_cpu_cores_count();
-    mpz_t end_range;
-    mpz_init(end_range);
-    struct timeval start, end;
-    double elapsed_seconds;
-    uint64_t test_count;
-    int result;
+    printf("Number of primes up to %llu: %d\n", n, primes->count);
+    // print last 10 primes
+    printf("Last 10 primes < %llu:\n", n);
+    for (int i = primes->count - 10; i < primes->count; i++)
+    {
+        printf("%llu ", primes->array[i]);
+    }
+    printf("\n");
 
-    char start_str[128] = "0";
-    // uint64_t test_range = 1000000000;
-    // uint64_t expected_count = 50847534;
-    uint64_t test_range = 1000000000000;
-    uint64_t expected_count = 37607912018;
-    mpz_set_str(end_range, start_str, 10);
-    mpz_add_ui(end_range, end_range, test_range);
-
-    INPUT_SIEVE_RANGE input_range = {
-        .start = start_str,
-        .range = test_range,
-        .mr_rounds = MR_ROUNDS,
-        .filepath = NULL,
-    };
-
-    gettimeofday(&start, NULL);
-    // test_count = sieve_iZm_range(&input_range); // using single core
-    test_count = SiZ_count(&input_range, cores_num); // using multiple cores
-    gettimeofday(&end, NULL);
-    elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    result = test_count == expected_count;
-
-    print_line(30, '=');
-    printf("Expected prime count: %-16llu\n", expected_count);
-    printf("Result prime count:   %-16llu\n", test_count);
-    printf("Execution time (s):   %-16f\n", elapsed_seconds);
-    fflush(stdout);
+    ui64_free(&primes);
 }
 
 int main(void)
 {
-    example_sieve_iZm_range();
+    example_sieve();
 
     return EXIT_SUCCESS;
 }
