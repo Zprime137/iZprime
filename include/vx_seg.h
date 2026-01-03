@@ -50,6 +50,7 @@
  */
 typedef struct
 {
+    IZM *iZm;           ///< Pointer to the associated IZM structure.
     int vx;             ///< The horizontal vector size.
     mpz_t y;            ///< mpz_t representation of the numeric y string.
     mpz_t yvx;          ///< mpz_t representation of y * vx.
@@ -58,26 +59,23 @@ typedef struct
     int mr_rounds;      ///< Number of Miller-Rabin rounds for primality testing.
     int start_x;        ///< First x value to start the main loop, default 1.
     int end_x;          ///< Upper bound for indices x in the main loop, default vx.
-    BITMAP *x5;         ///< Bitmap for iZm5/vx segment.
-    BITMAP *x7;         ///< Bitmap for iZm7/vx segment.
+    BITMAP *x5;         ///< Bitmap for iZm5 segment.
+    BITMAP *x7;         ///< Bitmap for iZm7 segment.
     int p_count;        ///< Number of primes found.
     UI16_ARRAY *p_gaps; ///< Pointer to the p_gaps array.
     int bit_ops;        ///< Number of bitwise mark operations performed.
     int p_test_ops;     ///< Number of primality test operations performed.
 } VX_SEG;
 
-VX_SEG *vx_init(int vx, char *y, int mr_rounds);
+VX_SEG *vx_init(IZM *iZm, char *y, int mr_rounds);
 void vx_free(VX_SEG **vx_obj);
 
-void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj);
-void vx_full_sieve(IZM *iZm, VX_SEG *vx_obj, int collect_p_gaps);
+void vx_det_sieve(VX_SEG *vx_obj);
+void vx_prob_sieve(VX_SEG *vx_obj);
+void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps);
 
 void vx_collect_p_gaps(VX_SEG *vx_obj);
-int vx_nth_p(mpz_t p, VX_SEG *vx_obj, int n);
-
-void vx_stream_file(IZM *iZm, VX_SEG *vx_obj, FILE *output);
-int vx_write_file(VX_SEG *vx_obj, char *filename);
-VX_SEG *vx_read_file(char *filename);
+void vx_stream_file(VX_SEG *vx_obj, FILE *output);
 
 int TEST_VX_SEG(int verbose);
 

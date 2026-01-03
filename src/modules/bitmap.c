@@ -361,6 +361,7 @@ void bitmap_clear_steps_simd(BITMAP *bitmap, uint64_t step, uint64_t start_idx, 
     }
 #endif
 }
+
 /**
  * @brief Creates a deep copy (clone) of an existing bitmap.
  *

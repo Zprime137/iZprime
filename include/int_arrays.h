@@ -121,6 +121,7 @@ void ui16_compute_hash(UI16_ARRAY *array);
 int ui16_verify_hash(UI16_ARRAY *array);
 int ui16_fwrite(UI16_ARRAY *array, FILE *file);
 UI16_ARRAY *ui16_fread(FILE *file);
+
 int TEST_UI16_ARRAY(int verbose);
 
 /** ========================================================================

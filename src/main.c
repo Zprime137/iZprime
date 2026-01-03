@@ -1,4 +1,4 @@
-#include <iZ.h>
+#include <iZ_api.h>
 
 void example_sieve(void)
 {

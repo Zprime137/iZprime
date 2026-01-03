@@ -512,7 +512,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
     }
 
     int vx = (mpz_sizeinbase(base, 2) > 2048) ? VX6 : VX5;
-    IZM *iZm = iZm_init(vx, pow(10, 7));
+    IZM *iZm = iZm_init(vx);
     if (!iZm)
     {
         log_error("iZm initialization failed in iZ_next_prime.");

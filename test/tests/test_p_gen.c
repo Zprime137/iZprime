@@ -17,6 +17,8 @@ int TEST_iZ_next_prime(int verbose)
 
     int failed_tests = 0;
 
+    printf("Comparing iZ_next_prime results with GMP's mpz_nextprime for the same base of various bit sizes...\n");
+
     // Test bit sizes [512, 1024, 2048, 4096]
     int bit_sizes[] = {512, 1024, 2048, 4096};
     int num_tests = sizeof(bit_sizes) / sizeof(bit_sizes[0]);

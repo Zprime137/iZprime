@@ -295,11 +295,11 @@ static void print_line(int length, char fill_char)
 void log_test_summary(char *module_name, int passed, int failed, int verbose)
 {
     print_line(60, '*');
-    printf("Test Summary for %s:", module_name);
+    printf("Results Summary for %s", module_name);
     print_line(60, '-');
-    printf("Total Tests:  %d\n", passed + failed);
-    printf("Passed:       %d\n", passed);
-    printf("Failed:       %d", failed);
+    printf("%-32s: %d\n", "Total Tests", passed + failed);
+    printf("%-32s: %d\n", "Passed", passed);
+    printf("%-32s: %d", "Failed", failed);
     print_line(60, '-');
     if (failed == 0)
     {

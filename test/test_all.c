@@ -69,10 +69,10 @@ int RUN_TEST_UNITS(int verbose)
     print_line(60, '*');
     printf("OVERALL UNITS TEST SUMMARY\n");
     print_line(60, '-');
-    printf("Total Modules Tested: %d\n", total_tests);
-    printf("Modules Passed:       %d\n", passed_tests);
-    printf("Modules Failed:       %d\n", failed_tests);
-    printf("Success Rate:         %.1f%%\n", (passed_tests * 100.0) / total_tests);
+    printf("%-32s: %d\n", "Total Modules Tested", total_tests);
+    printf("%-32s: %d\n", "Modules Passed", passed_tests);
+    printf("%-32s: %d\n", "Modules Failed", failed_tests);
+    printf("%-32s: %.1f%%\n", "Success Rate", (passed_tests * 100.0) / total_tests);
     print_line(60, '-');
 
     if (failed_tests == 0)
@@ -207,12 +207,31 @@ void RUN_BENCHMARK_P_GEN_ALGORITHMS(int save_results)
     print_centered_text(" Benchmarking Completed ", 60, '=');
 }
 
+void RUN_ALL_TESTS_AND_BENCHMARKS(int verbose, int save_results)
+{
+    // * Unit Tests
+    RUN_TEST_UNITS(verbose);
+
+    // * Integration Tests
+    RUN_TEST_INTEGRATIONS(verbose);
+
+    // * Benchmarking Sieve Models
+    RUN_BENCHMARK_SIEVE_MODELS(save_results);
+
+    // * Benchmarking Random Prime Generation Algorithms
+    RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
+}
+
 int main(void)
 {
     // Set log level to debug to log implementation errors
     log_set_log_level(LOG_DEBUG);
 
     int verbose = 1;
+    int save_results = 0;
+
+    // * Run all tests and benchmarks
+    // RUN_ALL_TESTS_AND_BENCHMARKS(verbose, save_results);
 
     // * Unit Tests:
     // run all module unit tests or uncomment individual tests below
@@ -233,9 +252,6 @@ int main(void)
     // TEST_iZ_next_prime(verbose);
     // TEST_vy_random_prime(verbose);
     // TEST_vx_random_prime(verbose);
-
-    // * Benchmarking:
-    int save_results = 1;
 
     // * Benchmarking Sieve Algorithms:
     RUN_BENCHMARK_SIEVE_MODELS(save_results);

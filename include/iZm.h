@@ -34,13 +34,13 @@ typedef struct
 {
     int vx;                  ///< Size of the segment
     int k_vx;                ///< Number of primes multiplied to form vx
-    BITMAP *base_x5;         ///< Base bitmap for iZm5/vx
-    BITMAP *base_x7;         ///< Base bitmap for iZm7/vx
-    UI64_ARRAY *root_primes; ///< Root primes used for sieving
+    BITMAP *base_x5;         ///< Base bitmap for iZm5/vx segment
+    BITMAP *base_x7;         ///< Base bitmap for iZm7/vx segment
+    UI64_ARRAY *root_primes; ///< Root primes < vx used for sieving
 } IZM;
 
-// initialization and free functions
-IZM *iZm_init(size_t vx, uint64_t root_limit);
+// iZm structure init, clone, and free functions
+IZM *iZm_init(size_t vx);
 IZM *iZm_clone(IZM *src);
 void iZm_free(IZM **iZm);
 

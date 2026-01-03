@@ -594,7 +594,7 @@ UI64_ARRAY *SiZm(uint64_t n)
     // Compute vx wheel size, maximum 6 primes (> 3)
     int vx = iZm_compute_limited_vx(n, 6);
     // Initialize iZm/vx, containing pre-sieved base bitmaps and root primes
-    IZM *iZm = iZm_init(vx, sqrt(n) + 1);
+    IZM *iZm = iZm_init(vx);
     if (!iZm)
     {
         ui64_free(&primes);
@@ -697,14 +697,12 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
     int stream_mode = (input_range->filepath != NULL);
     FILE *output = NULL;
-    if (stream_mode)
+
+    output = fopen(input_range->filepath, "w");
+    if (output == NULL)
     {
-        output = fopen(input_range->filepath, "w");
-        if (output == NULL)
-        {
-            log_error("Failed to open output file: %s", input_range->filepath);
-            return 0;
-        }
+        log_error("Failed to open output file: %s", input_range->filepath);
+        return 0;
     }
 
     uint64_t total = 0; // output: total prime count
@@ -749,9 +747,10 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
     int start_x = mpz_fdiv_ui(Xs, vx);
     int end_x = mpz_fdiv_ui(Xe, vx);
 
-    // if Ys = 0, use sieve_iZm for the first segment
+    // if Ys = 0, use SiZm for the first segment
     if (mpz_cmp_ui(Ys, 0) == 0)
     {
+
         uint64_t limit = mpz_cmp_ui(Ye, 0) > 0 ? vx : end_x;
         UI64_ARRAY *primes = SiZm(limit * 6 + 1);
         total += primes->count;
@@ -767,14 +766,12 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
             }
 
             // output collected primes in stream mode
-            if (stream_mode)
-            {
-                fprintf(output, "%llu ", primes->array[i]);
-            }
+            fprintf(output, "%llu ", primes->array[i]);
         }
+        start_x = 1;           // next segment starts at x=1
+        mpz_add_ui(Ys, Ys, 1); // increment Ys for the next segment
 
         ui64_free(&primes);
-        mpz_add_ui(Ys, Ys, 1); // increment Ys for the next segment
     }
 
     // If Ze < iZ(vx, 1), we are done
@@ -785,16 +782,32 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
         return total;
     }
 
-    // Initialize iZm assets
-    // if Ze < uint64_t max, set root_limit = sqrt(Ze) + 1, else set to INT32_MAX
-    uint64_t root_limit = mpz_cmp_ui(Ze, UINT64_MAX) < 0 ? sqrt(mpz_get_ui(Ze)) + 1 : INT32_MAX;
-    IZM *iZm = iZm_init(vx, root_limit);
+    // Initialize iZm
+    IZM *iZm = iZm_init(vx);
     if (!iZm)
     {
         // check logs for errors
         mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
         return 0;
     }
+
+    // if Ys < 19, stream the vx primes
+    // if (mpz_cmp_ui(Ys, 19) < 0)
+    // {
+    //     for (int i = 0; i < 8; i++)
+    //     {
+    //         int p = iZm->root_primes->array[i];
+    //         // if Ys < p, count it
+    //         if (mpz_cmp_ui(Ys, p) < 0)
+    //         {
+    //             total++;
+    //             if (stream_mode)
+    //             {
+    //                 fprintf(output, "%d ", p);
+    //             }
+    //         }
+    //     }
+    // }
 
     // Process remaining segments for y in (Ys:Ye)
     int y_range = mpz_get_ui(Ye) - mpz_get_ui(Ys);
@@ -803,7 +816,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
     for (int i = 0; i <= y_range; i++)
     {
-        VX_SEG *vx_obj = vx_init(vx, mpz_get_str(NULL, 10, Ys), mr_rounds);
+        VX_SEG *vx_obj = vx_init(iZm, mpz_get_str(NULL, 10, Ys), mr_rounds);
         if (!vx_obj)
         {
             // check logs for errors
@@ -814,61 +827,11 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
         vx_obj->start_x = i == 0 ? start_x : 1;
         vx_obj->end_x = i == y_range ? end_x : vx;
-
-        // Perform full sieve on the segment and update total count
-        vx_full_sieve(iZm, vx_obj, stream_mode);
-        total += vx_obj->p_count;
-
-        // output collected primes
-        if (stream_mode)
-        {
-            mpz_add_ui(prime_z, vx_obj->yvx, vx_obj->start_x - 1);
-            iZ_mpz(prime_z, prime_z, 1);
-            // get size of prime_z in base 2
-            size_t prime_size = mpz_sizeinbase(prime_z, 2) + 1;
-            char buffer[prime_size];
-
-            for (int j = 0; j < vx_obj->p_count; j++)
-            {
-                mpz_add_ui(prime_z, prime_z, vx_obj->p_gaps->array[j]);
-                gmp_snprintf(buffer, sizeof(buffer), "%Zd ", prime_z);
-                fputs(buffer, output);
-            }
-        }
+        vx_stream_file(vx_obj, output);
+        total += vx_obj->p_count; // accumulate prime count
+        mpz_add_ui(Ys, Ys, 1);    // increment Ys for the next segment
 
         vx_free(&vx_obj);
-        mpz_add_ui(Ys, Ys, 1); // increment Ys for the next segment
-    }
-
-    if (stream_mode)
-        fclose(output);
-
-    // Handle edge cases:
-    // if Ys > 0 and Zs % 6 <= 1
-    if (mpz_cmp_ui(Ys, 0) > 0 && mpz_fdiv_ui(Zs, 6) <= 1)
-    {
-        // handle edge case: if iZ(Xs, -1) < Zs and prime, decrement total
-        iZ_mpz(prime_z, Xs, -1);
-        if (mpz_cmp(prime_z, Zs) < 0)
-        {
-            if (mpz_probab_prime_p(prime_z, 25))
-            {
-                total--;
-            }
-        }
-    }
-    // if Ye > 0 and Ze % 6 <= 1
-    if (mpz_cmp_ui(Ye, 0) > 0 && mpz_fdiv_ui(Ze, 6) <= 1)
-    {
-        // handle edge case: if iZ(Xe, 1) > Ze and prime, decrement total
-        iZ_mpz(prime_z, Xe, 1);
-        if (mpz_cmp(prime_z, Ze) > 0)
-        {
-            if (mpz_probab_prime_p(prime_z, 25))
-            {
-                total--;
-            }
-        }
     }
 
     // Cleanup
@@ -989,7 +952,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
     int remainder_segments = total_segments % cores_num;
 
     uint64_t root_limit = mpz_cmp_ui(Ze, INT64_MAX) < 0 ? sqrt(mpz_get_ui(Ze)) + 1 : INT32_MAX;
-    IZM *iZm = iZm_init(vx, root_limit);
+    IZM *iZm = iZm_init(vx);
     if (!iZm)
     {
         // check logs for errors
@@ -1072,13 +1035,13 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
 
                 for (int i = 0; i < local_segments; i++)
                 {
-                    VX_SEG *vx_obj = vx_init(vx, mpz_get_str(NULL, 10, local_Ys), input_range->mr_rounds);
+                    VX_SEG *vx_obj = vx_init(iZm_local, mpz_get_str(NULL, 10, local_Ys), input_range->mr_rounds);
 
                     // Apply boundary handling only for first/last overall segments
                     vx_obj->start_x = (core == 0 && i == 0) ? start_x : 1;
                     vx_obj->end_x = (core == cores_num - 1 && i == local_segments - 1) ? end_x : vx;
 
-                    vx_full_sieve(iZm_local, vx_obj, 0);
+                    vx_full_sieve(vx_obj, 0);
                     child_total += vx_obj->p_count;
 
                     vx_free(&vx_obj);

@@ -29,7 +29,7 @@ static int compute_k_vx(IZM *iZm)
  *
  * @return A pointer to the initialized IZM structure.
  */
-IZM *iZm_init(size_t vx, uint64_t root_limit)
+IZM *iZm_init(size_t vx)
 {
     // validate vx
     assert(vx % 2 != 0 && vx % 3 != 0 && vx >= 35 && "vx must be at least 35.");
@@ -43,8 +43,7 @@ IZM *iZm_init(size_t vx, uint64_t root_limit)
 
     iZm->vx = vx;
     // get root primes for deterministic sieving
-    root_limit = MIN(root_limit, INT32_MAX);
-    iZm->root_primes = SiZ(root_limit);
+    iZm->root_primes = SiZ(vx);
     // iZm->root_primes = root_limit < pow(10, 7) ? SiZ(root_limit) : SiZm(root_limit);
     if (!iZm->root_primes)
     {
