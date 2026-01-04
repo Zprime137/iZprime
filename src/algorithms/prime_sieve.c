@@ -42,7 +42,7 @@ static uint64_t est_pi_n(int64_t n)
 }
 
 // =========================================================
-// * Classic Sieve Algorithms: Implementations
+// * Classic Sieve Algorithms
 // =========================================================
 
 /**
@@ -450,7 +450,7 @@ UI64_ARRAY *SoA(uint64_t n)
 }
 
 // =========================================================
-// * Sieve-iZ Algorithms: Implementations
+// * Sieve-iZ Algorithms
 // =========================================================
 
 /**
@@ -591,7 +591,7 @@ UI64_ARRAY *SiZm(uint64_t n)
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
     assert(primes && "Memory allocation failed for primes array in SiZm.");
 
-    // Compute vx wheel size, maximum 6 primes (> 3)
+    // Compute vx wheel size of maximum 6 primes (> 3)
     int vx = iZm_compute_limited_vx(n, 6);
     // Initialize iZm/vx, containing pre-sieved base bitmaps and root primes
     IZM *iZm = iZm_init(vx);
@@ -606,7 +606,7 @@ UI64_ARRAY *SiZm(uint64_t n)
     while ((6 * vx) % iZm->root_primes->array[k] == 0)
         ui64_push(primes, iZm->root_primes->array[k++]);
 
-    // * 2. Process vx segments for y in range [0:y_limit]
+    // * 2. Process vx segments for y in range [0:y_limit] (inclusive)
     uint64_t x_n = n / 6 + 1; // max x value up to n
     int y_limit = x_n / vx;   // limit for y iterations
 
@@ -638,7 +638,7 @@ UI64_ARRAY *SiZm(uint64_t n)
             bitmap_clear_steps_simd(x7, p, iZm_solve_for_xp(1, p, vx, y), x_limit);
         }
 
-        // * c. Collect unmarked indices as primes
+        // * c. Collect unmarked indices as primes in current segment
         for (uint64_t x = 2; x <= x_limit; x++)
         {
             if (bitmap_get_bit(x5, x)) // i.e. iZ- prime
@@ -648,7 +648,7 @@ UI64_ARRAY *SiZm(uint64_t n)
                 ui64_push(primes, iZ(yvx + x, 1));
         }
 
-        yvx += vx; // increment yvx for next segment
+        yvx += vx; // advance yvx for next segment
     }
 
     // * 3. Clean up and finalize
@@ -753,20 +753,17 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
         uint64_t limit = mpz_cmp_ui(Ye, 0) > 0 ? vx : end_x;
         UI64_ARRAY *primes = SiZm(limit * 6 + 1);
-        total += primes->count;
         uint64_t s = mpz_get_ui(Zs);
 
         for (int i = 0; i < primes->count; i++)
         {
-            // Skip primes < Zs
-            if (primes->array[i] < s)
+            // only primes > Zs
+            if (primes->array[i] > s)
             {
-                total--;
-                continue;
+                total++;
+                // output prime
+                fprintf(output, "%llu ", primes->array[i]);
             }
-
-            // output collected primes in stream mode
-            fprintf(output, "%llu ", primes->array[i]);
         }
         start_x = 1;           // next segment starts at x=1
         mpz_add_ui(Ys, Ys, 1); // increment Ys for the next segment
@@ -790,24 +787,6 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
         mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
         return 0;
     }
-
-    // if Ys < 19, stream the vx primes
-    // if (mpz_cmp_ui(Ys, 19) < 0)
-    // {
-    //     for (int i = 0; i < 8; i++)
-    //     {
-    //         int p = iZm->root_primes->array[i];
-    //         // if Ys < p, count it
-    //         if (mpz_cmp_ui(Ys, p) < 0)
-    //         {
-    //             total++;
-    //             if (stream_mode)
-    //             {
-    //                 fprintf(output, "%d ", p);
-    //             }
-    //         }
-    //     }
-    // }
 
     // Process remaining segments for y in (Ys:Ye)
     int y_range = mpz_get_ui(Ye) - mpz_get_ui(Ys);
@@ -874,21 +853,9 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
     int vx = VX6;             // use VX6 segment size for optimal results
     int vx_interval = 6 * vx; // covers a range of 9,699,690
     cores_num = MIN(cores_num, get_cpu_cores_count());
-    input_range->filepath = NULL; // disable streaming for counting mode
 
     uint64_t range = input_range->range;
     int total_segments = (range / vx_interval) + 1;
-
-    // if total_segments < cores_num, adjust cores_num
-    if (total_segments < cores_num)
-    {
-        cores_num = total_segments;
-    }
-
-    if (cores_num == 1)
-    {
-        return SiZ_stream(input_range);
-    }
 
     // Parse numeric bounds into mpz
     mpz_t Zs, Ze, Xs, Xe, Ys, Ye;
@@ -947,11 +914,6 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
         total_segments--;
     }
 
-    // Multi-process processing of remaining segments
-    int segments_per_core = total_segments / cores_num;
-    int remainder_segments = total_segments % cores_num;
-
-    uint64_t root_limit = mpz_cmp_ui(Ze, INT64_MAX) < 0 ? sqrt(mpz_get_ui(Ze)) + 1 : INT32_MAX;
     IZM *iZm = iZm_init(vx);
     if (!iZm)
     {
@@ -959,6 +921,72 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
         mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
         return 0;
     }
+
+    // Handle edge cases:
+    mpz_t prime_z;
+    mpz_init(prime_z);
+    // if Ys > 0 and Zs % 6 <= 1
+    if (mpz_cmp_ui(Ys, 0) > 0 && mpz_fdiv_ui(Zs, 6) <= 1)
+    {
+        // if iZ(Xs, -1) < Zs and prime, decrement total
+        iZ_mpz(prime_z, Xs, -1);
+        if (mpz_cmp(prime_z, Zs) < 0)
+        {
+            if (mpz_probab_prime_p(prime_z, 25))
+            {
+                total--;
+            }
+        }
+    }
+    // if Ye > 0 and Ze % 6 <= 1
+    if (mpz_cmp_ui(Ye, 0) > 0 && mpz_fdiv_ui(Ze, 6) <= 1)
+    {
+        // if iZ(Xe, 1) > Ze and prime, decrement total
+        iZ_mpz(prime_z, Xe, 1);
+        if (mpz_cmp(prime_z, Ze) > 0)
+        {
+            if (mpz_probab_prime_p(prime_z, 25))
+            {
+                total--;
+            }
+        }
+    }
+    mpz_clear(prime_z);
+
+    // Single-process processing of all segments
+    if (cores_num == 1)
+    {
+        for (int i = 0; i < total_segments; i++)
+        {
+            VX_SEG *vx_obj = vx_init(iZm, mpz_get_str(NULL, 10, Ys), input_range->mr_rounds);
+
+            // Apply boundary handling only for first/last overall segments
+            vx_obj->start_x = (i == 0) ? start_x : 1;
+            vx_obj->end_x = (i == total_segments - 1) ? end_x : vx;
+
+            vx_full_sieve(vx_obj, 0);
+            total += vx_obj->p_count;
+
+            vx_free(&vx_obj);
+            mpz_add_ui(Ys, Ys, 1);
+        }
+        mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+        iZm_free(&iZm);
+
+        return total;
+    }
+
+    // Multi-process processing of remaining segments
+    // if total_segments < cores_num, adjust cores_num
+    if (total_segments < cores_num)
+    {
+        cores_num = total_segments;
+    }
+
+    int segments_per_core = total_segments / cores_num;
+    int remainder_segments = total_segments % cores_num;
+
+    // uint64_t root_limit = mpz_cmp_ui(Ze, INT64_MAX) < 0 ? sqrt(mpz_get_ui(Ze)) + 1 : INT32_MAX;
 
     int pipe_fds[cores_num][2];
     pid_t pids[cores_num];
@@ -1069,7 +1097,6 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
             pipe_fds[core][1] = -1;
         }
     }
-    iZm_free(&iZm);
 
     // Collect results
     for (int core = 0; core < cores_num; core++)
@@ -1121,38 +1148,9 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
         }
     }
 
-    // Handle edge cases:
-    mpz_t prime_z;
-    mpz_init(prime_z);
-    // if Ys > 0 and Zs % 6 <= 1
-    if (mpz_cmp_ui(Ys, 0) > 0 && mpz_fdiv_ui(Zs, 6) <= 1)
-    {
-        // if iZ(Xs, -1) < Zs and prime, decrement total
-        iZ_mpz(prime_z, Xs, -1);
-        if (mpz_cmp(prime_z, Zs) < 0)
-        {
-            if (mpz_probab_prime_p(prime_z, 25))
-            {
-                total--;
-            }
-        }
-    }
-    // if Ye > 0 and Ze % 6 <= 1
-    if (mpz_cmp_ui(Ye, 0) > 0 && mpz_fdiv_ui(Ze, 6) <= 1)
-    {
-        // if iZ(Xe, 1) > Ze and prime, decrement total
-        iZ_mpz(prime_z, Xe, 1);
-        if (mpz_cmp(prime_z, Ze) > 0)
-        {
-            if (mpz_probab_prime_p(prime_z, 25))
-            {
-                total--;
-            }
-        }
-    }
-    mpz_clear(prime_z);
-
     // Cleanup
     mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+    iZm_free(&iZm);
+
     return total;
 }

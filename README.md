@@ -1,13 +1,11 @@
-# iZprime
-
-A high-performance C library for high-scale prime generation tasks.
+# iZprime, A Prime Generation Toolkit
 
 [![CMake](https://img.shields.io/badge/CMake-4%2B-blue.svg)](https://cmake.org/)
 [![GCC](https://img.shields.io/badge/GCC-17%2B-red.svg)](https://gcc.gnu.org/)
 
 ## Table of Contents
 
-- [iZprime](#izprime)
+- [iZprime, A Prime Generation Toolkit](#izprime-a-prime-generation-toolkit)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
     - [Classic Sieve-iZ Algorithm](#classic-sieve-iz-algorithm)
@@ -27,8 +25,8 @@ A high-performance C library for high-scale prime generation tasks.
 
 ## Introduction
 
-**iZprime** is a development toolkit which contains essential data structure modules designed for efficient prime generation.
-It includes some of the classic sieve algorithms, as well as a new sieve system, that applies the basic $6x \pm 1$ wheel, combined with other wheels to achieve:
+**iZprime** is a C toolkit which contains essential data structure modules designed for efficient prime generation.
+It includes some of the classic sieve algorithms, as well as new wheel sieve algorithms.
 
 - Significant constant factor improvements to the $O(n \log \log n)$ complexity,
 - Constant auxiliary space O(1).

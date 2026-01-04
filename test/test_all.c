@@ -248,13 +248,13 @@ int main(void)
     // RUN_TEST_INTEGRATIONS(verbose);
     // TEST_SIEVE_MODELS_INTEGRITY(verbose);
     // TEST_SiZ_stream(verbose);
-    // TEST_SiZ_count(verbose);
+    TEST_SiZ_count(verbose);
     // TEST_iZ_next_prime(verbose);
     // TEST_vy_random_prime(verbose);
     // TEST_vx_random_prime(verbose);
 
     // * Benchmarking Sieve Algorithms:
-    RUN_BENCHMARK_SIEVE_MODELS(save_results);
+    // RUN_BENCHMARK_SIEVE_MODELS(save_results);
 
     // * Benchmarking Random Prime Generation Algorithms:
     // RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);

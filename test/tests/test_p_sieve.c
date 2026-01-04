@@ -319,26 +319,27 @@ int TEST_SiZ_stream(int verbose)
     struct timeval start, end;
     double elapsed_seconds = 0;
 
-    mpz_t end_range;
-    mpz_init(end_range);
+    mpz_t end_num;
+    mpz_init(end_num);
 
     print_line(60, '*');
     print_centered_text("TESTING SiZ_stream", 60, '=');
     print_line(60, '*');
     fflush(stdout);
 
-    char start_str[128] = "1000000000000";
+    char start_str[128] = "0";
     uint64_t test_range = 1000000;
-    uint64_t expected_count = 36249;
-    mpz_set_str(end_range, start_str, 10);
-    mpz_add_ui(end_range, end_range, test_range);
+    uint64_t expected_count = 78498;
 
     INPUT_SIEVE_RANGE input_range = {
         .start = start_str,
         .range = test_range,
         .mr_rounds = MR_ROUNDS,
-        .filepath = "./output/test_SiZ_stream.txt",
+        .filepath = "./output/SiZ_stream_test1.txt",
     };
+
+    mpz_set_str(end_num, input_range.start, 10);
+    mpz_add_ui(end_num, end_num, test_range);
 
     gettimeofday(&start, NULL);
     test_count = SiZ_stream(&input_range);
@@ -349,7 +350,41 @@ int TEST_SiZ_stream(int verbose)
     if (test_count != expected_count)
         failed_tests++;
 
-    printf("Test 1: Streaming primes in range [%s:%s]\n", start_str, mpz_get_str(NULL, 10, end_range));
+    printf("Test 1: Streaming primes in range [%s:%s]\n", input_range.start, mpz_get_str(NULL, 10, end_num));
+    if (verbose)
+    {
+        printf("%-32s: %llu\n", "Expected primes count", expected_count);
+        printf("%-32s: %llu\n", "Result primes count", test_count);
+        printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
+        printf("%-32s: %s\n", "Output File", input_range.filepath);
+    }
+    else
+    {
+        if (test_count != expected_count)
+        {
+            printf("Expected primes count: %llu, Got: %llu\n", expected_count, test_count);
+        }
+    }
+    // ===================================
+    // Test 2
+    print_line(60, '=');
+    input_range.start = "1000000000000";
+    expected_count = 36249;
+    input_range.filepath = "./output/SiZ_stream_test2.txt";
+
+    mpz_set_str(end_num, input_range.start, 10);
+    mpz_add_ui(end_num, end_num, test_range);
+
+    gettimeofday(&start, NULL);
+    test_count = SiZ_stream(&input_range);
+    gettimeofday(&end, NULL);
+    elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+
+    // Check result
+    if (test_count != expected_count)
+        failed_tests++;
+
+    printf("Test 2: Streaming primes in range [%s:%s]\n", input_range.start, mpz_get_str(NULL, 10, end_num));
     if (verbose)
     {
         printf("%-32s: %llu\n", "Expected primes count", expected_count);
@@ -378,7 +413,7 @@ int TEST_SiZ_stream(int verbose)
     print_line(60, '*');
     fflush(stdout);
 
-    mpz_clear(end_range);
+    mpz_clear(end_num);
     return result;
 }
 
@@ -399,33 +434,35 @@ int TEST_SiZ_count(int verbose)
     mpz_init(end_num);
 
     print_line(60, '*');
-    printf("TESTING SiZm_count with %d cores\n", cores_num);
+    printf("TESTING SiZm_count\n");
     print_line(60, '*');
-    fflush(stdout);
 
-    char start_str[] = "0";
     uint64_t interval = pow(10, 9);
-    uint64_t expected_count = 50847534;
-    // set end_num = start_num + interval
-    mpz_set_str(end_num, start_str, 10);
-    mpz_add_ui(end_num, end_num, interval);
 
     INPUT_SIEVE_RANGE input_range = {
-        .start = start_str,
+        .start = "0",
         .range = interval,
         .mr_rounds = MR_ROUNDS,
         .filepath = NULL,
     };
 
+    printf("Test 1: Counting primes in range [%s:%s] using single core\n", input_range.start, mpz_get_str(NULL, 10, end_num));
+    fflush(stdout);
+
     gettimeofday(&start, NULL);
-    test_count = SiZ_count(&input_range, cores_num);
+    test_count = SiZ_count(&input_range, 1);
     gettimeofday(&end, NULL);
     elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+
+    // set end_num = start_num + interval
+    mpz_set_str(end_num, input_range.start, 10);
+    mpz_add_ui(end_num, end_num, interval);
+
+    uint64_t expected_count = 50847534;
     result = test_count == expected_count;
 
     if (verbose)
     {
-        printf("Test 1: Counting primes in range [%s:%s]\n", start_str, mpz_get_str(NULL, 10, end_num));
         printf("%-32s: %llu\n", "Expected prime count", expected_count);
         printf("%-32s: %llu\n", "Result prime count", test_count);
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
@@ -433,30 +470,33 @@ int TEST_SiZ_count(int verbose)
     }
 
     // ===========
-    // interval = pow(10, 12);
-    // expected_count = 37607912018;
 
-    // mpz_set_str(end_num, start_str, 10);
-    // mpz_add_ui(end_num, end_num, interval);
+    print_line(30, '=');
+    printf("Test 2: Counting primes in range [%s:%s] using %d cores\n", input_range.start, mpz_get_str(NULL, 10, end_num), cores_num);
 
-    // input_range.start = start_str;
-    // input_range.range = interval;
+    interval = pow(10, 12);
+    input_range.range = interval;
+    mpz_set_str(end_num, input_range.start, 10);
+    mpz_add_ui(end_num, end_num, input_range.range);
 
-    // gettimeofday(&start, NULL);
-    // test_count = SiZ_count(&input_range, cores_num);
-    // gettimeofday(&end, NULL);
-    // elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    // result = test_count == expected_count;
+    gettimeofday(&start, NULL);
+    test_count = SiZ_count(&input_range, cores_num);
+    gettimeofday(&end, NULL);
+    elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
 
-    // if (verbose)
-    // {
-    //     print_line(30, '=');
-    //     printf("Test 2: Counting primes in range [%s:%s] using SiZm_count with %d cores\n", start_str, mpz_get_str(NULL, 10, end_num), cores_num);
-    //     printf("%-32s: %llu\n", "Expected prime count", expected_count);
-    //     printf("%-32s: %llu\n", "Result prime count", test_count);
-    //     printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
-    //     fflush(stdout);
-    // }
+    mpz_set_str(end_num, input_range.start, 10);
+    mpz_add_ui(end_num, end_num, interval);
+
+    expected_count = 37607912018;
+    result = test_count == expected_count;
+
+    if (verbose)
+    {
+        printf("%-32s: %llu\n", "Expected prime count", expected_count);
+        printf("%-32s: %llu\n", "Result prime count", test_count);
+        printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
+        fflush(stdout);
+    }
     // =========
 
     print_line(60, '*');

@@ -1,8 +1,6 @@
-- finish pseudocode.pdf
 - finish examples/
 - complete Doxy style documentation
-- make userManual.pdf using the 
-- finish plot_tools/
+- make Doxy userManual.pdf 
 
 
 - create Zprime book app
