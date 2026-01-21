@@ -219,7 +219,7 @@ void RUN_ALL_TESTS_AND_BENCHMARKS(int verbose, int save_results)
     RUN_BENCHMARK_SIEVE_MODELS(save_results);
 
     // * Benchmarking Random Prime Generation Algorithms
-    RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
+    // RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
 }
 
 int main(void)
@@ -235,7 +235,7 @@ int main(void)
 
     // * Unit Tests:
     // run all module unit tests or uncomment individual tests below
-    // RUN_TEST_UNITS(verbose);
+    // RUN_TEST_UNITS(verbose); // * run all unit tests
     // TEST_BITMAP(verbose);
     // TEST_UI16_ARRAY(verbose);
     // TEST_UI32_ARRAY(verbose);
@@ -245,16 +245,16 @@ int main(void)
 
     // * Integration Tests:
     // run all integration tests or uncomment individual tests below
-    // RUN_TEST_INTEGRATIONS(verbose);
+    // RUN_TEST_INTEGRATIONS(verbose); // * run all integration tests
     // TEST_SIEVE_MODELS_INTEGRITY(verbose);
     // TEST_SiZ_stream(verbose);
-    TEST_SiZ_count(verbose);
+    // TEST_SiZ_count(verbose);
     // TEST_iZ_next_prime(verbose);
     // TEST_vy_random_prime(verbose);
     // TEST_vx_random_prime(verbose);
 
     // * Benchmarking Sieve Algorithms:
-    // RUN_BENCHMARK_SIEVE_MODELS(save_results);
+    RUN_BENCHMARK_SIEVE_MODELS(save_results);
 
     // * Benchmarking Random Prime Generation Algorithms:
     // RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);

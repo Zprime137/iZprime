@@ -185,7 +185,6 @@ int vy_random_prime(mpz_t p, int bit_size, int cores_num)
             forks_created++;
         }
     }
-    mpz_clear(vx);
 
     // 4. Parent reads first result from the pipe.
     close(fd[1]); // Close the write-end.
@@ -195,6 +194,7 @@ int vy_random_prime(mpz_t p, int bit_size, int cores_num)
         log_error("No child processes were created in vy_random_prime, falling back to in-process search");
         close(fd[0]);
         found = vy_search_prime(p, 0, vx);
+        mpz_clear(vx);
         return found;
     }
 
@@ -238,6 +238,8 @@ int vy_random_prime(mpz_t p, int bit_size, int cores_num)
         kill(pids[i], SIGTERM);    // Terminate child process
         waitpid(pids[i], NULL, 0); // Wait for child process to terminate
     }
+
+    mpz_clear(vx);
 
     return found;
 }

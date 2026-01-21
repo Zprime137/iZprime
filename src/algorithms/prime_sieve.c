@@ -16,10 +16,10 @@
  * - @b Sieve_Euler: Sieve of Euler
  * - @b Sieve_Sundaram: Sieve of Sundaram
  * - @b Sieve_Atkin: Sieve of Atkin
- * * Sieve-iZ Algorithms:
+ * * SiZ Algorithms:
  * - @b SiZ: Classic Sieve-iZ
  * - @b SiZm: Segmented Sieve-iZm
- * * Sieve-iZ range variants:
+ * * SiZ range variants:
  * - @b SiZ_stream: Range-based variant that counts, and optionally
  *   streams, primes within an arbitrary numeric interval [Zs, Ze] using the
  *   VX module.
@@ -68,8 +68,8 @@ UI64_ARRAY *SoE(uint64_t n)
     assert(primes && "Memory allocation failed for primes array.");
 
     // Create a bitmap to mark prime numbers
-    BITMAP *n_bits = bitmap_init(n + 1, 1);
-    if (n_bits == NULL)
+    BITMAP *sieve = bitmap_init(n + 1, 1);
+    if (sieve == NULL)
     {
         ui64_free(&primes);
         return NULL;
@@ -77,24 +77,22 @@ UI64_ARRAY *SoE(uint64_t n)
 
     uint64_t n_sqrt = sqrt(n);
 
-    // Add 2, the only even prime so we can skip even numbers
-    ui64_push(primes, 2);
-
     // Sieve logic: collect unmarked primes and mark their multiples if p <= sqrt(n),
     // skipping even numbers
+    ui64_push(primes, 2);
     for (uint64_t p = 3; p <= n; p += 2)
     {
-        if (bitmap_get_bit(n_bits, p))
+        if (bitmap_get_bit(sieve, p))
         {
             ui64_push(primes, p);
             if (p <= n_sqrt)
             {
-                bitmap_clear_steps_simd(n_bits, 2 * p, p * p, n + 1);
+                bitmap_clear_steps_simd(sieve, 2 * p, p * p, n + 1);
             }
         }
     }
 
-    bitmap_free(&n_bits);
+    bitmap_free(&sieve);
 
     // Resize primes array to fit the exact number of primes found
     ui64_resize_to_fit(primes);
@@ -130,84 +128,68 @@ UI64_ARRAY *SSoE(uint64_t n)
     uint64_t segment_size = (uint64_t)sqrt(n);
 
     // Step 1: Sieve small primes up to sqrt(n) using the traditional sieve
-    BITMAP *n_bits = bitmap_init(segment_size + 1, 1); // +1 to include segment_size
-    if (n_bits == NULL)
+    BITMAP *segment = bitmap_init(segment_size + 8, 1);
+    if (segment == NULL)
     {
         ui64_free(&primes);
         return NULL;
     }
 
-    primes->array[primes->count++] = 2; // Add 2 as the first prime
-
-    // Sieve odd numbers starting from 3 up to segment_size
-    for (uint64_t p = 3; p <= segment_size; p += 2)
+    // process first segment to collect root primes up to sqrt(n)
+    ui64_push(primes, 2);
+    for (uint64_t i = 3; i <= segment_size; i += 2)
     {
-        if (bitmap_get_bit(n_bits, p))
+        if (bitmap_get_bit(segment, i))
         {
-            ui64_push(primes, p);
-
-            // Start marking multiples of p from p*p within the small_bits
-            for (uint64_t multiple = p * p; multiple <= segment_size; multiple += 2 * p)
-                bitmap_clear_bit(n_bits, multiple);
+            ui64_push(primes, i);
+            if (i * i <= segment_size)
+                bitmap_clear_steps_simd(segment, 2 * i, i * i, segment_size + 1);
         }
     }
 
     // Step 2: Segmented sieve
     uint64_t low = segment_size + 1;
     uint64_t high = low + segment_size - 1;
-    if (high > n)
-        high = n;
 
     // Iterate over segments
     while (low <= n)
     {
-        bitmap_set_all(n_bits);
+        bitmap_set_all(segment); // Reset segment bitmap
 
-        // Sieve the current segment using the small primes
-        for (int i = 0; i < primes->count; i++)
+        // Sieve the current segment using primes <= sqrt(high)
+        for (int i = 1; i < primes->count; i++) // skip 2
         {
             uint64_t p = primes->array[i];
-            if (p * p > high)
+            uint64_t p_sq = p * p;
+            if (p_sq > high)
                 break;
 
             // Find the minimum number in [low, high] that is a multiple of p
             uint64_t start = (low / p) * p;
-            if (start < low)
-                start += p;
-            if (start < p * p)
-                start = p * p;
+            start += (start < low) ? p : 0;    // ensure start >= low
+            start += (start % 2 == 0) ? p : 0; // ensure start is odd
+            start = MAX(p_sq, start);          // start from p^2 or higher
 
             // Mark multiples of p within the segment
-            for (uint64_t j = start; j <= high; j += p)
-            {
-                // Skip even multiples
-                if (j % 2 == 0)
-                    continue;
-
-                size_t index = j - low;
-                bitmap_clear_bit(n_bits, index);
-            }
+            bitmap_clear_steps_simd(segment, 2 * p, start - low, high - low + 1);
         }
 
         // Collect primes from the current segment
-        for (uint64_t i = low; i <= high; i++)
+        for (uint64_t i = (low % 2 == 0) ? low + 1 : low; i <= high; i += 2) // skip even numbers
         {
-            // Skip even numbers
-            if (i % 2 == 0)
-                continue;
-
-            if (bitmap_get_bit(n_bits, i - low))
+            if (bitmap_get_bit(segment, i - low))
                 ui64_push(primes, i);
         }
 
         // Move to the next segment
-        low = high + 1;
-        high = low + segment_size - 1;
+        low += segment_size;
+        high += segment_size;
         if (high > n)
             high = n;
     }
 
     // Step 3: Finalize
+    bitmap_free(&segment);
     // Trim the primes array to the exact number of primes found
     ui64_resize_to_fit(primes);
 
@@ -237,8 +219,8 @@ UI64_ARRAY *SoEu(uint64_t n)
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
     assert(primes && "Memory allocation failed for primes array.");
 
-    BITMAP *n_bits = bitmap_init(n + 1, 1);
-    if (n_bits == NULL)
+    BITMAP *sieve = bitmap_init(n + 1, 1);
+    if (sieve == NULL)
     {
         ui64_free(&primes);
         return NULL;
@@ -250,7 +232,7 @@ UI64_ARRAY *SoEu(uint64_t n)
     // sieve logic: iterate through odd numbers, marking composites by clearing multiples of primes
     for (uint64_t i = 3; i <= n; i += 2)
     {
-        if (bitmap_get_bit(n_bits, i))
+        if (bitmap_get_bit(sieve, i))
             ui64_push(primes, i);
 
         // Mark multiples of the current prime
@@ -261,7 +243,7 @@ UI64_ARRAY *SoEu(uint64_t n)
             if (p * i > n)
                 break;
 
-            bitmap_clear_bit(n_bits, p * i);
+            bitmap_clear_bit(sieve, p * i);
 
             if (i % p == 0)
                 break;
@@ -269,7 +251,7 @@ UI64_ARRAY *SoEu(uint64_t n)
     }
 
     // cleanup
-    bitmap_free(&n_bits);
+    bitmap_free(&sieve);
 
     // Resize primes array to fit the exact number of primes found
     ui64_resize_to_fit(primes);
@@ -307,8 +289,8 @@ UI64_ARRAY *SoS(uint64_t n)
     ui64_push(primes, 2);
 
     // Create a bitmap with size k+1.
-    BITMAP *k_bits = bitmap_init(k + 1, 1);
-    if (k_bits == NULL)
+    BITMAP *sieve = bitmap_init(k + 8, 1);
+    if (sieve == NULL)
     {
         ui64_free(&primes);
         return NULL;
@@ -316,28 +298,26 @@ UI64_ARRAY *SoS(uint64_t n)
 
     uint64_t n_sqrt = sqrt(n) + 1;
 
+    // iterate through odd numbers
     for (uint64_t i = 1; i < k; ++i)
     {
-        if (bitmap_get_bit(k_bits, i))
+        if (bitmap_get_bit(sieve, i))
         {
             uint64_t p = 2 * i + 1;
             ui64_push(primes, p);
             if (p < n_sqrt)
             {
-                // Smallest composite mark of p (when j=i) is 2i + 2i^2
-                uint64_t x = 2 * i * i + 2 * i;
-                // Mark composites of p in the bitmap
-                bitmap_clear_steps_simd(k_bits, p, x, k);
+                // First composite mark xp in the bitmap is given by:
+                // xp = 2 * i * i + 2 * i = p * i + i, corresponding to p^2 in the odd set
+                uint64_t xp = p * i + i;
+                // Mark composites of p additively in the bitmap using step size p
+                bitmap_clear_steps_simd(sieve, p, xp, k);
             }
         }
     }
 
     // Cleanup
-    bitmap_free(&k_bits);
-
-    // Handle edge case: if last prime > n, remove it
-    if (primes->array[primes->count - 1] > n)
-        primes->count--;
+    bitmap_free(&sieve);
 
     // Resize primes array to fit the exact number of primes found
     ui64_resize_to_fit(primes);
@@ -367,8 +347,8 @@ UI64_ARRAY *SoA(uint64_t n)
     assert(primes && "Memory allocation failed for primes array.");
 
     // Create a bitmap to mark potential primes
-    BITMAP *n_bits = bitmap_init(n + 1, 0);
-    if (n_bits == NULL)
+    BITMAP *sieve = bitmap_init(n + 1, 0);
+    if (sieve == NULL)
     {
         ui64_free(&primes);
         return NULL;
@@ -388,7 +368,7 @@ UI64_ARRAY *SoA(uint64_t n)
             uint64_t b = a + y * y;
             // if 4x^2 + y^2 ≡ 1 or 5 (mod 12), flip the bit
             if (b % 12 == 1 || b % 12 == 5)
-                bitmap_flip_bit(n_bits, b);
+                bitmap_flip_bit(sieve, b);
         }
     }
 
@@ -401,7 +381,7 @@ UI64_ARRAY *SoA(uint64_t n)
             uint64_t b = a + y * y;
             // if 3x^2 + y^2 ≡ 7 (mod 12), flip the bit
             if (b % 12 == 7)
-                bitmap_flip_bit(n_bits, b);
+                bitmap_flip_bit(sieve, b);
         }
     }
 
@@ -409,7 +389,7 @@ UI64_ARRAY *SoA(uint64_t n)
     for (uint64_t x = 1; 2 * x * x < n; x++) // Approximation for loop bound
     {
         uint64_t a = 3 * x * x;
-        for (uint64_t y = x - 1; y >= 1; y--)
+        for (uint64_t y = x - 1; y > 0; y--)
         {
             uint64_t b = a - y * y;
             if (b > n)
@@ -417,7 +397,7 @@ UI64_ARRAY *SoA(uint64_t n)
 
             // if 3x^2 - y^2 ≡ 11 (mod 12), flip the bit
             if (b % 12 == 11)
-                bitmap_flip_bit(n_bits, b);
+                bitmap_flip_bit(sieve, b);
         }
     }
 
@@ -425,23 +405,23 @@ UI64_ARRAY *SoA(uint64_t n)
     uint64_t n_sqrt = sqrt(n);
     for (uint64_t p = 5; p <= n_sqrt; p += 2)
     {
-        if (bitmap_get_bit(n_bits, p))
+        if (bitmap_get_bit(sieve, p))
         {
             // Mark odd multiples of p^2 as non-prime
             // starting at p^2 with step size 2p^2
-            bitmap_clear_steps_simd(n_bits, 2 * p * p, p * p, n + 1);
+            bitmap_clear_steps_simd(sieve, 2 * p * p, p * p, n + 1);
         }
     }
 
     // 3. Collect primes from the bitmap
     for (uint64_t p = 5; p <= n; p += 2)
     {
-        if (bitmap_get_bit(n_bits, p))
+        if (bitmap_get_bit(sieve, p))
             ui64_push(primes, p);
     }
 
     // cleanup
-    bitmap_free(&n_bits);
+    bitmap_free(&sieve);
 
     // Resize primes array to fit the exact number of primes found
     ui64_resize_to_fit(primes);
@@ -629,7 +609,7 @@ UI64_ARRAY *SiZm(uint64_t n)
         // * b. Mark composites of root primes in current segment
         for (int i = k; i < iZm->root_primes->count; i++)
         {
-            uint64_t p = iZm->root_primes->array[i]; // current root prime
+            uint64_t p = iZm->root_primes->array[i];
             if (p > root_limit)
                 break;
 
@@ -692,13 +672,11 @@ UI64_ARRAY *SiZm(uint64_t n)
  */
 uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 {
-    assert(input_range && input_range->start && input_range->range >= 100 &&
-           "Invalid INPUT_SIEVE_RANGE passed to SiZ_stream.");
+    assert(input_range && input_range->start && "Invalid INPUT_SIEVE_RANGE passed to SiZ_stream.");
+    assert(input_range->filepath && "Output filepath is NULL in SiZ_stream.");
+    input_range->range = MAX(input_range->range, 100); // enforce minimum range of 100
 
-    int stream_mode = (input_range->filepath != NULL);
-    FILE *output = NULL;
-
-    output = fopen(input_range->filepath, "w");
+    FILE *output = fopen(input_range->filepath, "w");
     if (output == NULL)
     {
         log_error("Failed to open output file: %s", input_range->filepath);
@@ -725,18 +703,16 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
     {
         log_error("Invalid numeric string for start.");
         mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+        if (output)
+            fclose(output);
         return 0;
     }
 
-    // Ze = Zs + range - 1
-    mpz_add_ui(Ze, Zs, input_range->range - 1);
+    // Ze = Zs + range
+    mpz_add_ui(Ze, Zs, input_range->range);
 
     // Convert bounds to iZ index space:
     mpz_fdiv_q_ui(Xs, Zs, 6); // Xs = Zs/6
-    // if Zs % 6 > 1, increment Xs
-    if (mpz_fdiv_ui(Zs, 6) > 1)
-        mpz_add_ui(Xs, Xs, 1);
-
     mpz_fdiv_q_ui(Xe, Ze, 6); // Xe = Ze/6
 
     // Ys = Xs / vx, Ye = Xe / vx
@@ -747,10 +723,15 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
     int start_x = mpz_fdiv_ui(Xs, vx);
     int end_x = mpz_fdiv_ui(Xe, vx);
 
+    // Map modulo 0 to vx to stay in the inclusive x-index range [1..vx]
+    if (start_x == 0)
+        start_x = 1;
+    if (end_x == 0)
+        end_x = vx;
+
     // if Ys = 0, use SiZm for the first segment
     if (mpz_cmp_ui(Ys, 0) == 0)
     {
-
         uint64_t limit = mpz_cmp_ui(Ye, 0) > 0 ? vx : end_x;
         UI64_ARRAY *primes = SiZm(limit * 6 + 1);
         uint64_t s = mpz_get_ui(Zs);
@@ -762,7 +743,8 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
             {
                 total++;
                 // output prime
-                fprintf(output, "%llu ", primes->array[i]);
+                if (output)
+                    fprintf(output, "%llu ", primes->array[i]);
             }
         }
         start_x = 1;           // next segment starts at x=1
@@ -771,15 +753,17 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
         ui64_free(&primes);
     }
 
-    // If Ze < iZ(vx, 1), we are done
-    if (mpz_cmp_ui(Ze, iZ(vx, 1)) < 0)
+    // If Ye = 0, we are done
+    if (mpz_cmp_ui(Ye, 0) == 0)
     {
         // cleanup
         mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+        if (output)
+            fclose(output);
         return total;
     }
 
-    // Initialize iZm
+    // Initialize iZm structure for vx segments
     IZM *iZm = iZm_init(vx);
     if (!iZm)
     {
@@ -795,27 +779,35 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
     for (int i = 0; i <= y_range; i++)
     {
-        VX_SEG *vx_obj = vx_init(iZm, mpz_get_str(NULL, 10, Ys), mr_rounds);
+        int seg_start_x = (i == 0) ? start_x : 1;
+        int seg_end_x = (i == y_range) ? end_x : vx;
+        VX_SEG *vx_obj = vx_init(iZm, seg_start_x, seg_end_x, mpz_get_str(NULL, 10, Ys), mr_rounds);
         if (!vx_obj)
         {
             // check logs for errors
             iZm_free(&iZm);
             mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, prime_z, NULL);
+            if (output)
+                fclose(output);
             return 0;
         }
 
-        vx_obj->start_x = i == 0 ? start_x : 1;
-        vx_obj->end_x = i == y_range ? end_x : vx;
-        vx_stream_file(vx_obj, output);
+        if (output)
+            vx_stream_file(vx_obj, output);
+        else
+            vx_full_sieve(vx_obj, 0);
         total += vx_obj->p_count; // accumulate prime count
-        mpz_add_ui(Ys, Ys, 1);    // increment Ys for the next segment
 
         vx_free(&vx_obj);
+        mpz_add_ui(Ys, Ys, 1); // increment Ys for the next segment
     }
 
     // Cleanup
     iZm_free(&iZm);
     mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, prime_z, NULL);
+
+    if (output)
+        fclose(output);
 
     return total;
 }
@@ -901,7 +893,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
 
         for (int i = 0; i < primes->count; i++)
         {
-            // Skip primes < Zs
+            // decrement primes < Zs
             if (primes->array[i] < s)
             {
                 total--;
@@ -958,11 +950,15 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
     {
         for (int i = 0; i < total_segments; i++)
         {
-            VX_SEG *vx_obj = vx_init(iZm, mpz_get_str(NULL, 10, Ys), input_range->mr_rounds);
-
-            // Apply boundary handling only for first/last overall segments
-            vx_obj->start_x = (i == 0) ? start_x : 1;
-            vx_obj->end_x = (i == total_segments - 1) ? end_x : vx;
+            int seg_start_x = (i == 0) ? start_x : 1;
+            int seg_end_x = (i == total_segments - 1) ? end_x : vx;
+            VX_SEG *vx_obj = vx_init(iZm, seg_start_x, seg_end_x, mpz_get_str(NULL, 10, Ys), input_range->mr_rounds);
+            if (!vx_obj)
+            {
+                mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+                iZm_free(&iZm);
+                return 0;
+            }
 
             vx_full_sieve(vx_obj, 0);
             total += vx_obj->p_count;
@@ -1060,14 +1056,25 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
 
                 // Each child has its own IZM to avoid data races
                 IZM *iZm_local = iZm_clone(iZm);
+                if (!iZm_local)
+                {
+                    mpz_clear(local_Ys);
+                    close(pipe_fds[core][1]);
+                    exit(1);
+                }
 
                 for (int i = 0; i < local_segments; i++)
                 {
-                    VX_SEG *vx_obj = vx_init(iZm_local, mpz_get_str(NULL, 10, local_Ys), input_range->mr_rounds);
-
-                    // Apply boundary handling only for first/last overall segments
-                    vx_obj->start_x = (core == 0 && i == 0) ? start_x : 1;
-                    vx_obj->end_x = (core == cores_num - 1 && i == local_segments - 1) ? end_x : vx;
+                    int seg_start_x = (core == 0 && i == 0) ? start_x : 1;
+                    int seg_end_x = (core == cores_num - 1 && i == local_segments - 1) ? end_x : vx;
+                    VX_SEG *vx_obj = vx_init(iZm_local, seg_start_x, seg_end_x, mpz_get_str(NULL, 10, local_Ys), input_range->mr_rounds);
+                    if (!vx_obj)
+                    {
+                        iZm_free(&iZm_local);
+                        mpz_clear(local_Ys);
+                        close(pipe_fds[core][1]);
+                        exit(1);
+                    }
 
                     vx_full_sieve(vx_obj, 0);
                     child_total += vx_obj->p_count;
@@ -1132,12 +1139,14 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
                 log_error("SiZ_count: Child %d exited with status %d.", core, WEXITSTATUS(status));
                 // propagate child failure as an overall error
                 mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+                iZm_free(&iZm);
                 return 0;
             }
             else if (WIFSIGNALED(status))
             {
                 log_error("SiZ_count: Child %d terminated by signal %d.", core, WTERMSIG(status));
                 mpz_clears(Zs, Ze, Xs, Xe, Ys, Ye, NULL);
+                iZm_free(&iZm);
                 return 0;
             }
         }

@@ -13,30 +13,33 @@
 // * Classic Prime Sieve Algorithms
 // ========================================================================
 
-// Classic sieve of Eratosthenes with established speedups
+// * Classic sieve of Eratosthenes with speedups
 UI64_ARRAY *SoE(uint64_t n);
 
-// Segmented sieve of Eratosthenes for large ranges
+// * Segmented sieve of Eratosthenes for large ranges
 UI64_ARRAY *SSoE(uint64_t n);
 
-// Sieve of Euler algorithm
+// * Sieve of Euler algorithm
 UI64_ARRAY *SoEu(uint64_t n);
 
-// Sieve of Sundaram algorithm
+// * Sieve of Sundaram algorithm
 UI64_ARRAY *SoS(uint64_t n);
 
-// Sieve of Atkin algorithm
+// * Sieve of Atkin algorithm
 UI64_ARRAY *SoA(uint64_t n);
 
 // ========================================================================
 // * iZ-based Sieve Algorithms
 // ========================================================================
-// Basic Sieve-iZ algorithm using the 6x +/- 1 wheel
+// * Basic Sieve-iZ algorithm using the 6x +/- 1 wheel
 UI64_ARRAY *SiZ(uint64_t n);
 
-// Segmented Sieve-iZm algorithm using dual-layered wheel factorization
+// * Segmented Sieve-iZm algorithm using dual-layered wheel factorization
 UI64_ARRAY *SiZm(uint64_t n);
 
+// * SiZ Range Variants:
+
+// * Input structure for sieving a range
 typedef struct
 {
     char *start;    // start of range (numeric string)
@@ -45,7 +48,9 @@ typedef struct
     char *filepath; // path for output results (NULL for no output)
 } INPUT_SIEVE_RANGE;
 
+// * Streams primes in a range to file
 uint64_t SiZ_stream(INPUT_SIEVE_RANGE *range);
+// * Counts primes in range using multiple cores
 uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num);
 
 // ========================================================================

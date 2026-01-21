@@ -9,7 +9,7 @@
  * @api:
  * @struct VX_SEG:
  * * ** VX_SEG related functions:
- * - @vx_init: Initializes a new VX_SEG structure with the given y string.
+ * - @vx_init: Initializes a new VX_SEG structure for a bounded x-window within a segment.
  * - @vx_free: Frees the memory allocated for the VX_SEG structure.
  * - @vx_det_sieve: Initializes and sieves the x5 and x7 bitmaps for root primes in iZm.
  * - @vx_prob_sieve: Performs probabilistic sieving on the VX_SEG structure.
@@ -50,7 +50,6 @@
  */
 typedef struct
 {
-    IZM *iZm;           ///< Pointer to the associated IZM structure.
     int vx;             ///< The horizontal vector size.
     mpz_t y;            ///< mpz_t representation of the numeric y string.
     mpz_t yvx;          ///< mpz_t representation of y * vx.
@@ -58,7 +57,7 @@ typedef struct
     int is_large_limit; ///< Flag indicating if probabilistic tests are needed.
     int mr_rounds;      ///< Number of Miller-Rabin rounds for primality testing.
     int start_x;        ///< First x value to start the main loop, default 1.
-    int end_x;          ///< Upper bound for indices x in the main loop, default vx.
+    int end_x;          ///< Upper bound for x in the main loop, default vx.
     BITMAP *x5;         ///< Bitmap for iZm5 segment.
     BITMAP *x7;         ///< Bitmap for iZm7 segment.
     int p_count;        ///< Number of primes found.
@@ -67,14 +66,11 @@ typedef struct
     int p_test_ops;     ///< Number of primality test operations performed.
 } VX_SEG;
 
-VX_SEG *vx_init(IZM *iZm, char *y, int mr_rounds);
+VX_SEG *vx_init(IZM *iZm, int start_x, int end_x, char *y_str, int mr_rounds);
 void vx_free(VX_SEG **vx_obj);
 
-void vx_det_sieve(VX_SEG *vx_obj);
-void vx_prob_sieve(VX_SEG *vx_obj);
-void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps);
-
 void vx_collect_p_gaps(VX_SEG *vx_obj);
+void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps);
 void vx_stream_file(VX_SEG *vx_obj, FILE *output);
 
 int TEST_VX_SEG(int verbose);

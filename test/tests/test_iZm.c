@@ -13,7 +13,7 @@ int TEST_IZM(int verbose)
     // * Test 1: iZm_init
     current_test_idx++;
     int vx = VX4;
-    IZM *iZm = iZm_init(vx, vx);
+    IZM *iZm = iZm_init(vx);
     if (iZm == NULL || iZm->base_x5 == NULL || iZm->base_x7 == NULL || iZm->root_primes == NULL)
     {
         printf("[FATAL] TEST_IZM failed critically at iZm_init. Aborting further tests.\n");

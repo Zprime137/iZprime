@@ -43,7 +43,7 @@ int TEST_VX_SEG(int verbose)
 
     // * Test vx_init
     current_test_idx++;
-    VX_SEG *test_obj = vx_init(iZm, "1000000000", 5);
+    VX_SEG *test_obj = vx_init(iZm, 1, vx, "1000000000", 5);
 
     if (test_obj == NULL)
     {
@@ -55,20 +55,12 @@ int TEST_VX_SEG(int verbose)
         passed_tests++;
         if (verbose)
         {
-            log_test(1, current_test_idx, "vx_init", "IZM initialization successful with vx=%d", vx);
+            log_test(1, current_test_idx, "vx_init", "test_obj initialization successful with vx=%d", vx);
         }
     }
 
     // * Test vx_det_sieve
     current_test_idx++;
-    vx_det_sieve(test_obj);
-    if (test_obj->x5 == NULL && test_obj->x7 == NULL)
-    {
-        printf("TEST_VX_SEG failed critically at vx_det_sieve. Aborting further tests.\n");
-        iZm_free(&iZm);
-        vx_free(&test_obj);
-        return 0;
-    }
 
     mpz_t test_num;
     mpz_init(test_num);
@@ -217,7 +209,7 @@ int TEST_VX_SEG(int verbose)
     FILE *stream_file = fopen("./output/test_vx_seg_streamed_primes.txt", "w");
     if (stream_file)
     {
-        VX_SEG *vx_s = vx_init(iZm, "1000000000000000", 25);
+        VX_SEG *vx_s = vx_init(iZm, 1, vx, "1000000000000000", 25);
         vx_stream_file(vx_s, stream_file);
         fclose(stream_file);
         vx_free(&vx_s);

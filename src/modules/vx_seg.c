@@ -11,7 +11,7 @@
 // * VX_SEG:
 // ===================================
 
-static int vx_set_base_values(VX_SEG *vx_obj, char *y_str)
+int vx_set_base_values(VX_SEG *vx_obj, char *y_str)
 {
 
     // assert y_str is numeric
@@ -44,137 +44,15 @@ static int vx_set_base_values(VX_SEG *vx_obj, char *y_str)
 }
 
 /**
- * @brief Initialize the members of the VX_SEG structure with the given parameters and defaults.
- *
- * @description:
- * This function allocates memory for a VX_SEG structure and initializes its members.
- * The count is initialized to 0, and the p_gaps array is allocated with
- * an initial size of (vx/2).
- *
- * Parameters:
- * @param y_str A character pointer representing a numeric string.
- *
- * @return VX_SEG* A pointer to the initialized VX_SEG structure.
- *        NULL if memory allocation fails or y_str is not a numeric string.
- */
-VX_SEG *vx_init(IZM *iZm, char *y_str, int mr_rounds)
-{
-    // assert vx > 5 and not a multiple of 2 or 3
-    assert(iZm && "iZm is NULL in vx_init");
-    assert(y_str && "y_str is NULL in vx_init");
-
-    VX_SEG *vx_obj = malloc(sizeof(VX_SEG));
-    if (vx_obj == NULL)
-    {
-        log_error("Memory allocation failed in vx_init\n");
-        return NULL;
-    }
-
-    // Initialize struct members
-    vx_obj->iZm = iZm;
-    vx_obj->vx = iZm->vx;
-
-    // Set base values
-    if (!vx_set_base_values(vx_obj, y_str))
-    {
-        // check logs
-        free(vx_obj);
-        return NULL;
-    }
-
-    vx_obj->mr_rounds = (mr_rounds == 0) ? MR_ROUNDS : mr_rounds; // default 25 rounds
-    vx_obj->start_x = 1;                                          // default starting index
-    vx_obj->end_x = vx_obj->vx;                                   // default end index
-    vx_obj->x5 = bitmap_clone(iZm->base_x5);
-    vx_obj->x7 = bitmap_clone(iZm->base_x7);
-    vx_obj->p_count = 0;
-    vx_obj->p_gaps = NULL;
-    vx_obj->bit_ops = 0;
-    vx_obj->p_test_ops = 0;
-
-    return vx_obj;
-}
-
-/**
- * @brief Free the VX_SEG structure.
- *
- * @description:
- * This function frees all memory associated with the VX_SEG structure.
- *
- * Parameters:
- * @param vx_obj Pointer to the VX_SEG structure to be freed.
- */
-void vx_free(VX_SEG **vx_obj)
-{
-    assert((vx_obj != NULL || *vx_obj != NULL) && "vx_obj is NULL in vx_free");
-
-    // clear bitmaps
-    bitmap_free(&(*vx_obj)->x5);
-    bitmap_free(&(*vx_obj)->x7);
-
-    // clear p_gaps array
-    ui16_free(&(*vx_obj)->p_gaps);
-
-    // clear mpz_t variables
-    mpz_clears((*vx_obj)->y, (*vx_obj)->yvx, (*vx_obj)->root_limit, NULL);
-
-    free(*vx_obj);
-    *vx_obj = NULL;
-}
-
-// Important: should be used after sieving
-void vx_collect_p_gaps(VX_SEG *vx_obj)
-{
-    assert(vx_obj && vx_obj->p_count > 0 && "Invalid vx_obj in vx_collect_p_gaps");
-    assert(mpz_cmp_ui(vx_obj->y, 0) > 0 && "First segment requires special handling in vx_collect_p_gaps");
-
-    vx_obj->p_gaps = ui16_init(vx_obj->p_count + 2);
-    assert(vx_obj->p_gaps && "Memory allocation failed for vx_obj->p_gaps in vx_collect_p_gaps");
-
-    // Initialize gap counter
-    int gap = 0;
-
-    // Iterate through x values in the range start_x <= x <= end_x
-    for (int x = vx_obj->start_x; x <= vx_obj->end_x; x++)
-    {
-        // Increment gap by 4 since: iZ(x, -1) - iZ(x-1, 1) = 4
-        gap += 4;
-
-        // Check if iZ(vx * y + x, -1) is prime
-        if (bitmap_get_bit(vx_obj->x5, x))
-        {
-            // Append gap to p_gaps
-            ui16_push(vx_obj->p_gaps, gap);
-            gap = 0; // Reset gap
-        }
-
-        // Increment gap by 2
-        gap += 2;
-
-        // Check if iZ(vx * y + x, 1) is prime
-        if (bitmap_get_bit(vx_obj->x7, x))
-        {
-            // Append gap to p_gaps
-            ui16_push(vx_obj->p_gaps, gap);
-            gap = 0; // Reset gap
-        }
-    }
-
-    // append final gap for backward calculations
-    ui16_push(vx_obj->p_gaps, gap);
-}
-
-/**
  * @brief Perform deterministic sieving on the VX_SEG structure.
  *
- * @param iZm Pointer to the IZM structure containing sieve resources.
  * @param vx_obj Pointer to the VX_SEG structure to be processed.
  */
-void vx_det_sieve(VX_SEG *vx_obj)
+void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
 {
+    assert(iZm && "iZm is NULL in vx_det_sieve");
     assert(vx_obj && "vx_obj is NULL in vx_det_sieve");
 
-    IZM *iZm = vx_obj->iZm;
     int vx = vx_obj->vx; // segment size
 
     // * Deterministic Sieve: Mark composites of primes < vx in x5, x7
@@ -233,7 +111,11 @@ void vx_det_sieve(VX_SEG *vx_obj)
     }
 }
 
-// Must not be used without prior deterministic sieving
+/**
+ * @brief Perform probabilistic sieving on the VX_SEG structure.
+ *
+ * @param vx_obj Pointer to the VX_SEG structure to be processed.
+ */
 void vx_prob_sieve(VX_SEG *vx_obj)
 {
     // If is_large_limit is false, no need for probabilistic testing
@@ -241,11 +123,6 @@ void vx_prob_sieve(VX_SEG *vx_obj)
     {
         log_info("vx_obj->is_large_limit is false, no need for probabilistic testing");
         return;
-    }
-    if (vx_obj->bit_ops == 0)
-    {
-        log_info("vx_obj->bit_ops is 0, performing deterministic sieving before probabilistic sieving");
-        vx_det_sieve(vx_obj);
     }
 
     // Initialize GMP reusable variables p, x_p
@@ -297,6 +174,142 @@ void vx_prob_sieve(VX_SEG *vx_obj)
             }
         }
     }
+
+    vx_obj->is_large_limit = 0; // all composites cleared
+
+    // Cleanup
+    mpz_clears(p, x_p, NULL);
+}
+
+/**
+ * @brief Initialize the members of the VX_SEG structure with the given parameters and defaults.
+ *
+ * @description:
+ * This function allocates memory for a VX_SEG structure and initializes its members.
+ * The count is initialized to 0, and the p_gaps array is allocated with
+ * an initial size of (vx/2).
+ *
+ * Parameters:
+ * @param y_str A character pointer representing a numeric string.
+ *
+ * @return VX_SEG* A pointer to the initialized VX_SEG structure.
+ *        NULL if memory allocation fails or y_str is not a numeric string.
+ */
+VX_SEG *vx_init(IZM *iZm, int start_x, int end_x, char *y_str, int mr_rounds)
+{
+    // assert vx > 5 and not a multiple of 2 or 3
+    assert(iZm && "iZm is NULL in vx_init");
+    assert(y_str && "y_str is NULL in vx_init");
+
+    VX_SEG *vx_obj = malloc(sizeof(VX_SEG));
+    if (vx_obj == NULL)
+    {
+        log_error("Memory allocation failed in vx_init\n");
+        return NULL;
+    }
+
+    // Initialize struct members
+    // vx_obj->iZm = iZm;
+    vx_obj->vx = iZm->vx;
+
+    // Set base values
+    if (!vx_set_base_values(vx_obj, y_str))
+    {
+        // check logs
+        free(vx_obj);
+        return NULL;
+    }
+
+    vx_obj->mr_rounds = (mr_rounds == 0) ? MR_ROUNDS : mr_rounds; // default 25 rounds
+
+    int vx = vx_obj->vx;
+    vx_obj->start_x = MAX(start_x, 1);
+    vx_obj->end_x = MIN(end_x, vx);
+    vx_obj->x5 = bitmap_clone(iZm->base_x5);
+    vx_obj->x7 = bitmap_clone(iZm->base_x7);
+    vx_obj->p_count = 0;
+    vx_obj->p_gaps = NULL;
+    vx_obj->bit_ops = 0;
+    vx_obj->p_test_ops = 0;
+
+    // perform deterministic sieving to prepare for probabilistic sieving or streaming
+    vx_det_sieve(iZm, vx_obj);
+
+    return vx_obj;
+}
+
+/**
+ * @brief Free the VX_SEG structure.
+ *
+ * @description:
+ * This function frees all memory associated with the VX_SEG structure.
+ *
+ * Parameters:
+ * @param vx_obj Pointer to the VX_SEG structure to be freed.
+ */
+void vx_free(VX_SEG **vx_obj)
+{
+    if (vx_obj == NULL || *vx_obj == NULL)
+        return;
+
+    // clear bitmaps
+    bitmap_free(&(*vx_obj)->x5);
+    bitmap_free(&(*vx_obj)->x7);
+
+    // clear p_gaps array
+    ui16_free(&(*vx_obj)->p_gaps);
+
+    // clear mpz_t variables
+    mpz_clears((*vx_obj)->y, (*vx_obj)->yvx, (*vx_obj)->root_limit, NULL);
+
+    free(*vx_obj);
+    *vx_obj = NULL;
+}
+
+// Important: should be used after sieving
+void vx_collect_p_gaps(VX_SEG *vx_obj)
+{
+    assert(vx_obj && vx_obj->p_count > 0 && "Invalid vx_obj in vx_collect_p_gaps");
+    assert(mpz_cmp_ui(vx_obj->y, 0) > 0 && "First segment requires special handling in vx_collect_p_gaps");
+    if (vx_obj->is_large_limit)
+    {
+        vx_full_sieve(vx_obj, 0);
+    }
+
+    vx_obj->p_gaps = ui16_init(vx_obj->p_count + 2);
+    assert(vx_obj->p_gaps && "Memory allocation failed for vx_obj->p_gaps in vx_collect_p_gaps");
+
+    // Initialize gap counter
+    int gap = 0;
+
+    // Iterate through x values in the range start_x <= x <= end_x
+    for (int x = vx_obj->start_x; x <= vx_obj->end_x; x++)
+    {
+        // Increment gap by 4 since: iZ(x, -1) - iZ(x-1, 1) = 4
+        gap += 4;
+
+        // Check if iZ(vx * y + x, -1) is prime
+        if (bitmap_get_bit(vx_obj->x5, x))
+        {
+            // Append gap to p_gaps
+            ui16_push(vx_obj->p_gaps, gap);
+            gap = 0; // Reset gap
+        }
+
+        // Increment gap by 2
+        gap += 2;
+
+        // Check if iZ(vx * y + x, 1) is prime
+        if (bitmap_get_bit(vx_obj->x7, x))
+        {
+            // Append gap to p_gaps
+            ui16_push(vx_obj->p_gaps, gap);
+            gap = 0; // Reset gap
+        }
+    }
+
+    // append final gap for backward calculations
+    ui16_push(vx_obj->p_gaps, gap);
 }
 
 /**
@@ -317,9 +330,6 @@ void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps)
 {
     assert(vx_obj && "vx_obj is NULL in vx_full_sieve");
 
-    // Perform deterministic sieving
-    vx_det_sieve(vx_obj);
-
     // If is_large_limit is true, perform probabilistic primality tests
     if (vx_obj->is_large_limit)
         vx_prob_sieve(vx_obj);
@@ -332,19 +342,13 @@ void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps)
 // streams primes incrementally to the output file
 void vx_stream_file(VX_SEG *vx_obj, FILE *output)
 {
+    assert(vx_obj && "vx_obj is NULL in vx_stream_file");
     assert(output && "output file is NULL in vx_stream_file");
-
-    // Perform deterministic sieving if not already done
-    if (vx_obj->bit_ops == 0)
-        vx_det_sieve(vx_obj);
 
     // Initialize GMP reusable variables p, x_p
     mpz_t p, x_p;
     mpz_init(p);
     mpz_init(x_p);
-
-    size_t buffer_size = mpz_sizeinbase(vx_obj->yvx, 2) + 4;
-    char buffer[buffer_size];
 
     int r = vx_obj->mr_rounds;
 
@@ -371,8 +375,7 @@ void vx_stream_file(VX_SEG *vx_obj, FILE *output)
                 {
                     vx_obj->p_count++; // otherwise already counted in det_sieve
                 }
-                gmp_snprintf(buffer, sizeof(buffer), "%Zd ", p);
-                fputs(buffer, output);
+                gmp_fprintf(output, "%Zd ", p);
             }
             else
             {
@@ -399,8 +402,7 @@ void vx_stream_file(VX_SEG *vx_obj, FILE *output)
                 {
                     vx_obj->p_count++;
                 }
-                gmp_snprintf(buffer, sizeof(buffer), "%Zd ", p);
-                fputs(buffer, output);
+                gmp_fprintf(output, "%Zd ", p);
             }
             else
             {

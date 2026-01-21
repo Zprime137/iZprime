@@ -6,7 +6,7 @@
 
 // space complexity is O(n / 210) bits + output
 // returns unordered list of primes up to n
-UI64_ARRAY *SiZ_210(uint64_t n)
+UI64_ARRAY *SiZm_vy(uint64_t n)
 {
     // Bounds check:
     assert(n > 10 && n <= N_LIMIT && "Input must be in the range (10, 10000000000).");
@@ -24,6 +24,11 @@ UI64_ARRAY *SiZ_210(uint64_t n)
     uint64_t root_limit = sqrt(n) + 1;
     int k = 4; // pointing at 11 in root_primes
     int vx = 35;
+    if (n > pow(10, 9))
+    {
+        vx *= 11;
+        k++;
+    }
     int vy = x_n / vx + 1;
 
     // Add root primes to primes array

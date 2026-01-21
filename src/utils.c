@@ -229,6 +229,71 @@ int get_cpu_cores_count(void)
     return cores;
 }
 
+/**
+ * @brief Get the CPU L2 cache size in kilobytes.
+ *
+ * @description:
+ * This function retrieves the L2 cache size using platform-specific methods:
+ * - Linux: Reads from sysfs (/sys/devices/system/cpu/cpu0/cache/index2/size)
+ * - macOS/BSD: Uses sysctl to query hw.l2cachesize
+ * - Fallback: Returns 256 KB as a conservative default
+ *
+ * The function attempts multiple detection methods to ensure robustness
+ * across different architectures and operating systems.
+ *
+ * @return int The L2 cache size in kilobytes, or 256 KB if unable to determine.
+ */
+int get_cpu_L2_cache_size_kb(void)
+{
+    int size_kb = 0;
+
+#ifdef __linux__
+    // Linux: Try reading from sysfs
+    FILE *fp = fopen("/sys/devices/system/cpu/cpu0/cache/index2/size", "r");
+    if (fp != NULL)
+    {
+        char buffer[32];
+        if (fgets(buffer, sizeof(buffer), fp) != NULL)
+        {
+            // Parse size with K suffix (e.g., "256K")
+            if (sscanf(buffer, "%dK", &size_kb) == 1)
+            {
+                fclose(fp);
+                return size_kb;
+            }
+        }
+        fclose(fp);
+    }
+#endif
+
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+    // macOS and BSD: Use sysctl
+    size_t size_bytes = 0;
+    size_t len = sizeof(size_bytes);
+
+    // Try hw.l2cachesize (macOS/some BSDs)
+    if (sysctlbyname("hw.l2cachesize", &size_bytes, &len, NULL, 0) == 0)
+    {
+        if (size_bytes > 0)
+        {
+            return (int)(size_bytes / 1024); // Convert bytes to KB
+        }
+    }
+
+    // Fallback: Try machdep.cpu.cache.L2_cache_size (older macOS)
+    if (sysctlbyname("machdep.cpu.cache.L2_cache_size", &size_bytes, &len, NULL, 0) == 0)
+    {
+        if (size_bytes > 0)
+        {
+            return (int)(size_bytes / 1024); // Convert bytes to KB
+        }
+    }
+#endif
+
+    // Conservative fallback: 256 KB is common for L2 cache per core
+    return 256;
+}
+
 // * Test utility functions
 void print_module_header(char *module_name)
 {

@@ -19,6 +19,12 @@
 #include <sys/time.h> // For gettimeofday
 #include <sys/wait.h> // For waitpid
 
+// Platform-specific includes for sysctl (macOS/BSD)
+#if defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#endif
+
 #include <gmp.h>         // GMP library for arbitrary precision arithmetic
 #include <openssl/sha.h> // For SHA-256 hashing
 
@@ -31,8 +37,8 @@
 #define MAX_CORES get_cpu_cores_count() ///< Maximum CPU cores available
 
 // minimum and maximum macros
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) < (b)) ? (b) : (a))
+// #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+// #define MAX(a, b) (((a) < (b)) ? (b) : (a))
 #define MINMAX(a, b, c) (MIN(MAX(a, b), c))
 
 // iZ utilities
@@ -59,6 +65,7 @@ void gmp_seed_randstate(gmp_randstate_t state);
 
 // system utilities
 int get_cpu_cores_count(void);
+int get_cpu_L2_cache_size_kb(void);
 
 // test utils
 void print_module_header(char *module_name);

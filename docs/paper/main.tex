@@ -1,0 +1,541 @@
+\documentclass{article}
+
+% Packages
+\usepackage{amsfonts, amsthm, amsmath, amssymb}
+\usepackage{graphicx, svg, subfigure}
+\usepackage{geometry, enumitem, parskip, listings}
+% \usepackage{cancel}
+
+% Algorithm environments
+\usepackage{float}  % Required by algorithm
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{appendix}
+\usepackage{url}
+\usepackage[hidelinks=true]{hyperref}
+
+% content
+% abstract
+% introduction: brief literature review, current challenges in large-scale prime generation, and motivation for iZprime
+% theoretical foundations
+% iZprime framework: data structures and algorithms
+% experiments and results
+% conclusion
+
+% Document
+\begin{document}
+
+\include{style}
+
+\title{iZprime Framework:\\A Prime Generation Toolkit}
+\author{Hazem Mounir}
+\maketitle
+
+% Abstract
+\begin{abstract}
+This paper introduces the \emph{iZprime Framework}, a novel approach to large-scale prime generation that combines a minimal wheel structure with a 2-D segmented sieve design. By leveraging the $\iZ$ set (numbers congruent to $\pm1 \pmod{6}$) and a standardized segmentation modulus, the framework achieves constant auxiliary space and reduced per-segment bit-work. Implemented in the open-source \emph{iZprime} library, this framework offers efficient and scalable prime enumeration suitable for cryptographic applications and computational number theory.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% Main content
+\section{Introduction}
+Large scale prime generation presents an enduring and instructive challenge in computational mathematics and algorithm design, serving as an ideal testbed for practicing techniques like space-time optimization, data structures, and segmentation—core areas of interest in modern algorithm engineering.
+
+\subsection{Materials and Methods}
+We implement the framework in C as the open-source \emph{iZprime} library. Algorithms are presented in language-agnostic pseudocode. 
+For artifact-quality reproducibility, the library provides unit tests, benchmark drivers, and tools to regenerate all figures/tables used in this paper.
+
+\subsubsection{Dependencies}
+Beside the standard C libraries, the following libraries are required:
+\begin{itemize}
+    \item \textbf{GMP} (GNU Multiple Precision Arithmetic Library) (version 6.2.1) for large integer arithmetic
+    \item \textbf{OpenSSL} (version 3.0.7) for cryptographic functions
+\end{itemize}
+
+\subsubsection{Results Replication}
+Benchmarks in this paper were produced under the following environment; full scripts and configuration files in the repository reproduce every figure/table:
+\begin{itemize}
+    \item \textbf{Hardware:} Apple MacBook Pro (M1, 8\,GB unified memory).
+    \item \textbf{Environment:} macOS (Apple Silicon) with \ttt{Apple clang 17} (\ttt{clang-1700.0.13.5}) and flags \ttt{-O3 -flto}.
+\end{itemize}
+
+\subsection{Road Map}
+
+\vspace*{\fill}
+\begin{center}
+    \textit{\large{To Aurel Stevens,}}
+\end{center}
+\newpage
+
+
+\section{Prime Sieve: Theoretic and Algorithmic Foundations} \label{sec:foundations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section establishes the mathematics and data layout that make the iZprime Framework practical: a reduced search space, an additive composite-marking identity, and a 2-D segmentation model that yields cache-sized, reusable segments. 
+
+\subsection{Number Theory Basics}
+A prime $p$ is a natural number greater than 1 with no divisors other than $1$ and $p$. 
+We write $\bb{P}$ for the set of primes and $\pi(n)$ for the prime-counting function, with asymptotic approximation given by the \emph{prime number theorem}:
+\begin{equation}
+    \label{eq:prime_number_theorem}
+    \pi(n) \sim \frac{n}{\log n}.
+\end{equation}
+The sum of prime reciprocals diverges to infinity asymptotically as
+\begin{equation}
+    \label{eq:sum_primes}
+    \sum_{p \le n} \frac{1}{p} \sim \log \log n,
+\end{equation}
+this result underpins the $O(n\log\log n)$ cost model of Eratosthenes-type sieves. 
+
+\noindent
+Finally, we recall Euler’s totient function $\varphi(n)$—the count of numbers up to $n$ that are coprime to $n$—given by
+\begin{equation}
+    \varphi(n) = n \prod_{p \mid n} \Bigl( 1 - \frac{1}{p} \Bigr),
+\end{equation}
+Notably, for a prime $p$, this function simplifies to $\varphi(p) = p - 1$.
+
+\subsection{Prime Sieving Core Concepts}
+
+The core concept behind prime sieving is the \emph{fundamental theorem of arithmetic}, which states that every integer greater than 1 is either a prime itself or can be uniquely factored into primes. This theorem implies that to determine the primality of numbers up to a limit $n$, it suffices to identify and \textit{eliminate} multiples of known primes up to $\sqrt{n}$ to \textit{isolate} the primes.
+In other words, prime sieving is the systematic marking of composites to reveal the primes.
+
+\subsubsection{Basic Data Structures: Bitmaps and Integer Arrays}
+
+Prime sieving algorithms typically rely on two basic data structures:
+
+\begin{itemize}
+    \item \textbf{Bitmaps:} Compact arrays of bits to represent a range of numbers where each bit represents the primality state (prime or composite) of a corresponding integer. Bitmaps enable efficient storage and fast bitwise operations for marking composites.
+    In our framework, we provide the \ttt{BITMAP} type with a suite of operations including initialization, bit setting/clearing, and bit querying. A summary of the \ttt{BITMAP} module is provided in Appendix~\ref{appendix:bitmap_module}.
+    \item \textbf{Integer Arrays:} Dynamic arrays that store the list of identified primes. These arrays facilitate easy appending and retrieval of prime numbers during the sieving process.
+    In our framework, we provide three fixed-size integer arrays: \ttt{UI16\_ARRAY} for \ttt{uint16\_t}, \ttt{UI32\_ARRAY} for \ttt{uint32\_t}, and \ttt{UI64\_ARRAY} for \ttt{uint64\_t}, each with operations for initialization, appending, and accessing elements. A summary of the \ttt{INT\_ARRAY} module is provided in Appendix~\ref{appendix:int_array_module}.
+\end{itemize}
+
+\subsubsection{Sieve of Eratosthenes (SoE)}
+
+The archetypal sieve method and the foundation to our optimizations is the \emph{Sieve of Eratosthenes}, attributed to Eratosthenes of Cyrene (circa 200 BCE), remains influential due to its conceptual clarity, ease of implementation, and practical efficiency.
+
+Modern implementations with established speed ups operate as described in \ref{alg:soe}.
+
+\subsubsection*{Pseudocode: \ttt{SoE}} \label{alg:soe}
+\begin{algorithm}[H]
+    \caption{Sieve of Eratosthenes (SoE)}
+    \begin{algorithmic}[1]        
+        \Procedure{SoE}{$\ttt{int}: n$}{$\rightarrow \ttt{INT\_ARRAY}$}
+            \Require{\ttt{int:} $n$} \algocomment{upper limit}
+            \Ensure{\ttt{INT\_ARRAY:} $primes$} \algocomment{array of integers containing primes up to $n$}
+            
+            \State \Comment{\textbf{1. Initialization}}
+            \State \ttt{INT\_ARRAY:} \emph{primes} $\gets$ \{2\} \algocomment{initialize primes array with the only even prime}
+            \State \ttt{BITMAP:} $n\_bits \gets \Call{bitmap\_init}{n + 1, 1}$ \algocomment{create a bitmap of size $n + 1$, and all bits set to 1}
+
+            \State \Comment{\textbf{2. Sieve Process: Marking composites and collecting primes}}
+            \State \ttt{int:} $n\_sqrt \gets \lceil\sqrt{n}\rceil$ \algocomment{root limit}
+            \For{\ttt{int:} $x \gets 3$ to $n$ with step 2} \algocomment{iterate through odd numbers up to $n$}
+                \If{\Call{bitmap\_get\_bit}{$n\_bits, x$}} \algocomment{is prime check}
+                    \State \Call{int\_array\_push}{$primes, x$} \algocomment{append x to primes array}
+                    \If{$x \leq n\_sqrt$} \algocomment{if x is a root prime}
+                        \State \Call{bitmap\_clear\_steps}{$n\_bits, 2x, x^2, n$} \algocomment{mark odd multiples of $x$ starting from $x^2$}
+                    \EndIf
+                \EndIf
+            \EndFor
+            \State \Comment{\textbf{3. Return the result}}
+            \State \Return \emph{primes}
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\noindent
+\textbf{Space Complexity:} Due to the bitmap of size $n+1$, the SoE requires $O(n)$ auxiliary space.
+
+\noindent
+\textbf{Time Complexity:} The outer loop iterates over all odd numbers up to $n$, and for each prime found, the inner marking loop marks its odd multiples. The bit-work after applying the speed ups is
+\[
+O\!\left(\frac{n}{2}\sum_{p=3}^{\sqrt n}\frac{1}{p}\right)
+\]
+bit-operations, which from~[\ref{eq:sum_primes}], grows like $O(n \log \log n)$.
+
+Next, we discuss important optimizations that are widely used to enhance the SoE's scalability and performance.
+
+\subsubsection{Important Sieve Optimizations Techniques}
+Given how space and time complexities limit the scalability of prime sieves, two key optimization techniques have been developed over the years to address these challenges.
+
+\subsubsection*{Segmentation}
+The most urgent performance bottleneck in the classic SoE (and all \emph{Solid Sieves}) is the linear space requirement $O(n)$, which becomes prohibitive even for moderate $n$. 
+To overcome this, \emph{Segmented Sieves} partition the sieve range $n$ into smaller segments of size $\Delta$ (often $\sqrt{n}$). Each segment is processed independently, allowing us to process large ranges without exceeding our memory capacity, significantly mitigating the space bottleneck.
+
+The first \emph{Segmented-SoE} (SSoE) is attributed to Bays/Hudson from 1977~\cite{BaysHudson1977}, then refined over the years by many authors.
+
+\subsubsection*{The Wheel Concept}
+In the context of prime sieving, a \emph{wheel W} (often $W_k=\prod_{i=1}^k p_i$) is a precomputed structure that filters out entire classes of composite numbers based on their residue classes modulo $W$.
+
+In modular arithmetic terms, a modulus $m = p_1 p_2$ partitions the integers into $m$ residue classes: $mx + i$ for $i \in \{0, 1, 2, \dots, m-1\}$. 
+Only partitions where $i$ is coprime to $m$ can host primes, otherwise, it's a multiple of $p_1$ or $p_2$ and thus composite.
+
+\paragraph{Examples.}
+For $W_2= 2\times 3=6$, other than 2 and 3, primes can only be found in the classes $\{1,5\}\bmod 6$. 
+For $W_3=W_2 \times 5=30$, the residue classes to consider for primes are $\{1,7,11,13,17,19,23,29\} \bmod 30$. And so on.
+
+\paragraph{Effect on density.}
+The candidate density under a wheel $W$ is
+\[
+\frac{\varphi(W)}{W} \;=\; \prod_{p\mid W}\Bigl(1-\frac{1}{p}\Bigr),
+\]
+so the wheel removes a constant fraction of non-candidates determined by the included primes.
+
+\paragraph{Advantages.}
+A wheel performs \emph{bulk elimination} of non-candidates before any per-prime work, optimizing both space and time. It reduces the candidate set size, leading to fewer bits to store and process, and decreases the number of composite markings required during sieving.
+
+\paragraph{Limitations.}
+Each additional prime \(p\) in the wheel reduces per-prime marking work only by its \(1/p\) share, but increases the wheel size and memory traffic by a factor of \(p\). Thus, beyond small bounded wheels, returns diminish and cache behavior degrades.
+
+The wheel concept has a long history in prime sieving, starting from 1960s by Chartres and Singleton, then significant developments by Pritchard and Sorenson, introducing families of wheel based sieves (static and dynamic) and their integration with segmentation.
+
+In our framework, we build upon this rich heritage to design a two-layered wheel structure that balances simplicity, space efficiency, and per-segment performance.
+\paragraph{Two-layered wheel design.}
+We deliberately separate between two wheel roles:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Basic static wheel} $6x\pm1$: excludes multiples of 2 and 3 and reduces the candidate universe to only two symmetric partitions $\pm1 \pmod 6$, which we call the $\iZ$ set, a threefold reduction to the original $\bb{N}$.    
+    \item \textbf{Extended wheel} $vx_k$ (product of the first $k$ primes $>3$): used as \emph{a segmentation modulus} within the $\iZ$ space to standardize cache-sized tiles and allow pre-sieving of primes dividing $vx$, further optimizing the candidate set ($\iZ$) by a factor of $\varphi(vx)/vx$.
+\end{enumerate}
+This combination decouples segmentation from the input size, enabling \textbf{constant auxiliary space} $O(1)$ per segment, while also reducing the per-segment work by skipping many small primes (constant-factor improvement).
+
+In the following sections, we formalize this structure and apply it in practice to develop a suite of efficient prime sieving tools, capable of scaling to very large limits.
+
+
+\section{The iZ Structure: Basic Wheel Optimization} \label{sec:iz_structure}
+
+A first, low-cost optimization is the basic wheel of $6x\pm1$, which gets rid of all multiples of 2 and 3, which account for two thirds of $\bb{N}$, leaving only two partitions $\pm1 \pmod 6$.
+We favor this minimal wheel over larger choices like $30x+i$ because it preserves a tiny branching factor (two lanes instead of eight) while already cutting the candidate set to one third of $\bb{N}$.
+
+Now, we need to develop an efficient mechanism to mark composites within this reduced candidate set.
+Below, we formalize this approach and introduce the \Xp-Identity–an efficient additive mechanism for marking composites within the $\iZ$ space.
+
+\subsection{iZ Definitions}
+\begin{definition}[The $\iZ$ set]    
+    The union of two disjoint partitions modulo 6:
+    \[
+    \iZ \;=\; \{ z\in\N : z\equiv \pm 1 \pmod{6} \} \;=\; \iZ^-\,\dot\cup\,\iZ^+,
+    \quad \iZ^- = \{6x-1:x\in\N\},\ \ \iZ^+ = \{6x+1:x\in\N\},
+    \]
+    with cardinality $|\iZ| = \frac{1}{3} |\N|$.
+\end{definition}
+
+To map between indices $x$ and $6x\pm1$ values we use the $iZ$ function
+\begin{definition}[The $iZ$ function]
+    Let $\I = \{-1,+1\}$ denote the set of residues for the two $\iZ$ partitions.
+    \[
+    \boxed{\ iZ(x \in\N,\ i \in\I)=6x+i\ }.
+    \]
+    Here, $x$ is the \emph{index} in a partition and $i$ is the \emph{residue}, indicating which partition ($-1$ for $\iZ^-$ and $+1$ for $\iZ^+$).
+\end{definition}
+
+In our code, we provide two implementations of the $iZ$ function with the following signatures:
+\begin{lstlisting}[style=C, caption={File: utils.h}]
+uint64_t iZ(uint64_t x, int i); // for values < 2^64
+void iZ_mpz(mpz_t z, mpz_t x, int i); // for arbitrary values using GMP
+\end{lstlisting}
+
+\paragraph{X-Arrays.}
+In sieving the $\iZ$ set up to a limit $n$, we maintain two separate bitmaps, one per partition, each of length $ x_n = \lceil \frac{n}{6} \rceil$ bits:
+\begin{itemize}
+    \item \ttt{X5[$x$]} encodes the candidate $6x-1$ (the $\iZ^-$ lane),
+    \item \ttt{X7[$x$]} encodes the candidate $6x+1$ (the $\iZ^+$ lane).
+\end{itemize}
+
+\subsection{The \Xp-Identity: Composite Detection within iZ} \label{sec:xp_id}
+The \Xp-Identity is the engine of our index-based, additive marking. Derived from Lemma \ref{lem:iZ}
+\begin{definition}[\Xp-Identity]
+    Let $p=iZ(x_p,i_p)\in\bb{P}$. Then the composite indices of $p$ in the X-Arrays are
+    \[
+    \begin{aligned}
+        \texttt{X5:}&\quad \big\{\ p\,x_q - i_p\,x_p\ :\ x_q\ge x_p \in\N\ \big\} \text{ maps to the composites of $p$ in $\iZ^-$},\\
+        \texttt{X7:}&\quad \big\{\ p\,x_q + i_p\,x_p\ :\ x_q\ge x_p \in\N\ \big\} \text{ maps to the composites of $p$ in $\iZ^+$}.
+    \end{aligned}
+    \]
+    Here, the lower bound $x_q\ge x_p$ (for the first hit) is to avoid duplicate marking of composites whose smaller cofactor would have been handled earlier.
+\end{definition}
+
+\paragraph{Example:} Let us apply the \Xp-Identity to generate the composite indices of the first few primes in the X-arrays and their corresponding values in $\iZ$.
+
+\( 
+5 = iZ(1, -1) \ 
+\begin{cases}        
+    \texttt{X5:} \quad x \in \big\{5 \cdot 1 + 1 = 6,\ 11,\ ++5 \big\} & iZ(x, -1) \rightarrow \{35,\  65,\ ++30\} \in\iZ^-,\\
+    \texttt{X7:} \quad x \in \big\{5 \cdot 1 - 1 = 4,\ 9,\ ++5 \big\} & iZ(x, +1) \rightarrow \{25,\  55,\ ++30\} \in\iZ^+.
+\end{cases}
+\)
+
+\( 
+7 = iZ(1, +1) \
+\begin{cases}        
+    \texttt{X5:} \quad x \in \big\{7 \cdot 1 - 1 = 6,\ 13,\ ++7 \big\} & iZ(x, -1) \rightarrow \{35,\  77,\ ++42\} \in\iZ^-,\\
+    \texttt{X7:} \quad x \in \big\{7 \cdot 1 + 1 = 8,\ 15,\ ++7 \big\} & iZ(x, +1) \rightarrow \{49,\  91,\ ++42\} \in\iZ^+.
+\end{cases}
+\)
+
+\( 
+11 = iZ(2, -1) 
+\begin{cases}        
+    \texttt{X5:} \quad x \in \big\{11 \cdot 2 + 2 = 24,\ 35,\ ++11 \big\} & iZ(x, -1) \rightarrow \{143,\  209,\ ++66\} \in\iZ^-,\\
+    \texttt{X7:} \quad x \in \big\{11 \cdot 2 - 2 = 20,\ 31,\ ++11 \big\} & iZ(x, +1) \rightarrow \{121,\  187,\ ++66\} \in\iZ^+.
+\end{cases}
+\)
+
+\( 
+13 = iZ(2, +1)
+\begin{cases}        
+    \texttt{X5:} \quad x \in \big\{13 \cdot 2 - 2 = 24,\ 37,\ ++13 \big\} & iZ(x, -1) \rightarrow \{143,\  221,\ ++78\} \in\iZ^-,\\
+    \texttt{X7:} \quad x \in \big\{13 \cdot 2 + 2 = 28,\ 41,\ ++13 \big\} & iZ(x, +1) \rightarrow \{169,\  247,\ ++78\} \in\iZ^+.
+\end{cases}
+\)
+
+\paragraph{Sieve Logic.}
+By marking all composite indices of root primes $5 \le p \le \sqrt{n}$ in the X-arrays, we can collect the unmarked indices as the primes greater than 3 and up to $n$. 
+
+\paragraph{Bit-work consequence.} Using two bitmaps, each of length $\lceil n/6\rceil$, and strictly additive stepping, a solid (non-segmented) sieve performs
+\[
+O\!\left(\frac{n}{3}\sum_{p=5}^{\sqrt n}\frac{1}{p}\right)
+\]
+bit operations—a constant-factor improvement ($n/3$ instead of $n/2$) while retaining the classical $\sum 1/p$ behavior.
+
+\subsection{The Classic Sieve-iZ Algorithm (SiZ)} \label{sec:siz}
+
+To quantify the benefit of the $6x\pm1$ reduction alone, the \emph{Classic Sieve-iZ} targets moderate limits (e.g., up to $2^{32}$). It maintains two bitmaps––each of size $n/6$ bits––and uses the \Xp-Identity to mark composites.
+
+\subsubsection*{Pseudocode: \ttt{SiZ}} \label{alg:siz}
+\begin{algorithm}
+    \caption{Classic Sieve-iZ (SiZ)}
+    \begin{algorithmic}[1]
+        \Procedure{SiZ}{$\ttt{int}: n$}{$\rightarrow \ttt{INT\_ARRAY}$}
+            \Require{\ttt{int:} $n$} \algocomment{upper limit}
+            \Ensure{\ttt{INT\_ARRAY:} $primes$} \algocomment{array of integers containing primes up to $n$}
+            
+            \State \Comment{\textbf{1. Initialization}}
+            \State \ttt{INT\_ARRAY:} $primes \gets$ \{2,3\} \algocomment{initialize primes array with the wheel base primes}
+            \State \ttt{int:} $x_n \gets \left\lceil\tfrac{n+1}{6}\right\rceil$ \algocomment{iZ upper index limit}
+            \State \ttt{BITMAP:} $x5 \gets \Call{bitmap\_init}{x_n, 1}$ \algocomment{create a bitmap of size $x_n$, and all bits set to 1}
+            \State \ttt{BITMAP:} $x7 \gets \Call{bitmap\_init}{x_n, 1}$ \algocomment{create a bitmap of size $x_n$, and all bits set to 1}
+            
+            \State \Comment{\textbf{2. Sieve: mark composites and collect primes}}
+            \State \ttt{int:} $n\_sqrt \gets \lceil\sqrt{n}\rceil$ \algocomment{root limit}
+            \For{\ttt{int:} $x \gets 1$ to $x_n$}
+                \If{\Call{bitmap\_get\_bit}{$x5, x$}} \algocomment{i.e., iZ- prime}
+                    \State \ttt{int:} $p \gets iZ(x,-1)$ \algocomment{construct p from x using the iZ function}
+                    \State \Call{int\_array\_push}{$primes, p$} \algocomment{append p to primes}
+                    \If{$p < n\_sqrt$} \algocomment{i.e., root prime}
+                        \State \Call{bitmap\_clear\_steps}{$x5, p, p\cdot x + x, x_n$} \algocomment{marking composites of p in $\iZ^-$}
+                        \State \Call{bitmap\_clear\_steps}{$x7, p, p\cdot x - x, x_n$} \algocomment{marking composites of p in $\iZ^+$}
+                    \EndIf
+                \EndIf
+                \If{\Call{bitmap\_get\_bit}{$x7, x$}} \algocomment{i.e., iZ+ prime, repeat for the other partition}
+                    \State \ttt{int:} $p \gets iZ(x,1)$
+                    \State \Call{int\_array\_push}{$primes, p$}
+                    \If{$p < n\_sqrt$}
+                        \State \Call{bitmap\_clear\_steps}{$x5, p, p\cdot x - x, x_n$}
+                        \State \Call{bitmap\_clear\_steps}{$x7, p, p\cdot x + x, x_n$}
+                    \EndIf
+                \EndIf
+            \EndFor
+
+            \State \Comment{\textbf{3. Return the result}}
+            \State \Return $primes$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\noindent
+\textbf{Space Complexity:} Uses linear space $O(n/3)$.
+
+\noindent
+\textbf{Time Complexity:} Additive marking within $\iZ$ yields bit-cost
+$$O\left( \frac{n}{3} \sum_{p = 5}^{\sqrt{n}} \frac{1}{p} \right),$$
+which is still $O(n \log \log n)$, but with a constant-factor improvement over classic SoE.
+
+\paragraph{Limitations.} Linear workspace makes the solid sieve unsuitable for large $n$; segmentation remedies this.
+
+
+\section{The iZm Structure: Extended Wheel Optimization} \label{sec:izm_structure}
+
+\newpage
+
+\subsubsection*{Pseudocode: \ttt{SiZ}} \label{alg:sizm}
+\begin{algorithm}[H]
+    \caption{Segmented Sieve-iZm (SiZm)}
+    \begin{algorithmic}[1]
+        \Procedure{SiZm}{$\ttt{int}: n$}{$\rightarrow \ttt{INT\_ARRAY}$}
+            \Require{\ttt{int:} $n$} \algocomment{upper limit}
+            \Ensure{\ttt{INT\_ARRAY:} $primes$} \algocomment{array of integers containing primes up to $n$}
+            
+            \State \Comment{\textbf{1. Initialization}}
+            \State \ttt{int:} $x_n \gets \left\lceil\tfrac{n+1}{6}\right\rceil$ \algocomment{iZ upper index limit}
+            \State \ttt{int:} $n\_sqrt \gets \lceil\sqrt{n}\rceil$ \algocomment{root limit}
+
+            \State \ttt{int:} $vx \gets \Call{iZm\_compute\_limited\_vx}{n, 6}$ \algocomment{compute the segment length vx}
+            \State \ttt{IZM:} $iZm \gets \Call{iZm\_init}{vx, n\_sqrt}$
+
+            \State \ttt{INT\_ARRAY:} $primes \gets$ \{\} \algocomment{initialize empty primes array}
+            \State \ttt{int:} $k \gets 0$ \algocomment{keeps track of how many pre-sieved primes}
+            \While{$(6 \cdot vx) \ \% \ iZm.root\_primes[k] == 0$} \algocomment{add pre-sieved primes (those dividing $6 \cdot vx$)}
+                \State \Call{int\_array\_push}{$primes, iZm.root\_primes[k]$} \algocomment{append pre-sieved prime to primes array}
+                \State $k \gets k + 1$ \algocomment{update $k$, the count of pre-sieved primes to skip later}
+            \EndWhile
+
+            
+            \State \Comment{\textbf{2. Sieve vx segments for y in [0, y\_limit]}}
+            \State \ttt{int:} $y\_limit \gets \lfloor x_n / vx \rfloor$ \algocomment{limit for y iterations}
+            \State \ttt{int:} $x\_limit \gets vx$ \algocomment{default x limit for full segments}
+            \State \ttt{int:} $yvx \gets 0$ \algocomment{current base value ($y \times vx$)}
+
+            \For{\ttt{int:} $y \gets 0$ to $y\_limit$ (inclusive)}
+                \State \Comment{\textbf{a. Initialize active bitmaps from iZm base bitmaps}}
+                \State \ttt{BITMAP:} $x5 \gets \Call{bitmap\_clone}{iZm.base\_x5}$ \algocomment{bitmap for active sieve in iZm5}
+                \State \ttt{BITMAP:} $x7 \gets \Call{bitmap\_clone}{iZm.base\_x7}$ \algocomment{bitmap for active sieve in iZm7}
+                    
+                \If{$y == y\_limit$}
+                    \State $x\_limit \gets x_n \ \% \ vx$ \algocomment{adjust x limit for last segment}
+                \EndIf
+        
+                \State \Comment{\textbf{b. Mark composites of root primes in current segment}}
+                \State \ttt{int:} $root\_limit \gets \sqrt{6 \cdot (yvx + x\_limit)} + 1$ \algocomment{local root limit for current segment}
+                \For{\ttt{int:} $i \gets k$ to $iZm.root\_primes.count$} \algocomment{for each root prime, skipping the first k primes}
+                    \State \ttt{int:} $p \gets iZm.root\_primes[i]$ \algocomment{current root prime}
+                    \If{$p > root\_limit$} \algocomment{beyond local root limit}
+                        \State \textbf{break}
+                    \EndIf
+                    \State \Comment{mark composites of p in current segment using iZm xp solver}
+                    \State \Call{bitmap\_clear\_steps}{$x5, p, iZm\_solve\_for\_xp(-1, p, vx, y), x\_limit$} 
+                    \State \Call{bitmap\_clear\_steps}{$x7, p, iZm\_solve\_for\_xp(1, p, vx, y), x\_limit$}
+                \EndFor
+                \State \Comment{\textbf{c. Collect unmarked indices as primes}}   
+                \For{\ttt{int:} $x \gets 1$ to $x\_limit$}
+                    \If{\Call{bitmap\_get\_bit}{$x5, x$}} \algocomment{i.e. iZ- prime}
+                        \State \Call{int\_array\_push}{$primes, iZ(yvx + x, -1)$}
+                    \EndIf
+
+                    \If{\Call{bitmap\_get\_bit}{$x7, x$}} \algocomment{i.e. iZ+ prime}
+                        \State \Call{int\_array\_push}{$primes, iZ(yvx + x, 1)$}
+                    \EndIf
+                \EndFor
+                \State $yvx \gets yvx + vx$ \algocomment{advance base value for next segment}
+                
+            \EndFor
+
+            \State \Comment{\textbf{3. Return the result}}
+            \State \Return $primes$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\section{The VX\_SEG Module: Large-Scale Hybrid Sieve Tools}
+\section{Random Prime Generation Tools}
+\section{Conclusions}
+
+
+% ============================================
+\appendix
+% ============================================
+
+\section{Algebraic Study on the iZ Function}
+
+\medskip
+\begin{lemma}
+    \label{lem:iZ}
+    Let $m > 1 \in \N$ be a constant modulus.
+    Let $\I$ be the set of residues coprime to $m$, closed under multiplication.
+    Let $iZ(x \in \N, i \in \I) = mx + i$.
+
+    \noindent 
+    Let $p=iZ(x_p,i_p)$ and $q=iZ(x_q,i_q)$, then their product $z=pq=iZ(x_z,i_z)\in\iZ$, where
+    \[
+    x_z = m x_p x_q + i_p x_q + i_q x_p,
+    \quad
+    i_z = (i_p i_q) \in \I.
+    \]
+
+    \noindent 
+    Consequently, this equivalence holds for each prime factor $p$ that divides $z$:
+    \[
+    p \mid z \quad \Longleftrightarrow \quad x_z \equiv (\frac{i_z}{i_p}) x_p \pmod{p}.
+    \]
+\end{lemma}
+
+\begin{proof} \label{proof:iZ}
+Expanding the product $z = pq$ gives:
+\[
+z = pq = (m x_p + i_p)(m x_q + i_q) = m^2 x_p x_q + m i_p x_q + m i_q x_p + i_p i_q.
+\]
+\noindent Grouping terms,
+\[
+z = m (m x_p x_q + i_p x_q + i_q x_p) + i_p i_q = m x_z + i_z.
+\]
+This shows that $z$ can be expressed in the form $iZ(x_z, i_z)$, where
+\begin{itemize}[leftmargin=*]
+    \item The \emph{product residue} $i_z \in\I$ is the product of the factors residues $i_p$ and $i_q$, yielding:
+    $$
+    i_z = \begin{cases}
+    1 & \text{if } i_p = i_q,\\
+    -1 & \text{if } i_p \neq i_q.
+    \end{cases}
+    $$
+    \item The \emph{product index} $x_z$ can be expressed in terms of the factors $p$ and $q$ as:
+    $$
+    x_z = m x_p x_q + i_p x_q + i_q x_p = p x_q + i_q x_p = q x_p + i_p x_q,
+    $$
+    such that $x_z$ satisfies
+    $$
+    x_z \equiv \begin{cases}
+    i_q x_p \pmod{p},\\
+    i_p x_q \pmod{q}.
+    \end{cases}
+    $$
+    From this equivalence, we derived the \Xp-Identity, which pinpoints the composite indices of a given prime $p$ in the X-arrays using additive steps of $p$.
+\end{itemize}
+\end{proof}
+
+\section{Data Structures}
+
+\subsection{Bitmap Module} \label{appendix:bitmap_module}
+
+\subsection{Integer Array Module} \label{appendix:int_array_module}
+
+\begin{thebibliography}{9}
+    \bibitem{iZ-library} \url{https://github.com/Zprime137/iZ-library}
+    
+    \bibitem{C} International Organization for Standardization. 
+    \newblock Programming languages -- C ISO/IEC 9899:2018 International Organization for Standardization, Geneva, Switzerland, 2018.
+    
+    \bibitem{2024study}
+    Ghidarcea, M., and Popescu, D.
+    \textit{Prime Number Sieving—A Systematic Review with Performance Analysis}. Algorithms (2024), 17, 157.
+
+    \bibitem{BaysHudson1977}
+    Bays, C.; Hudson, R.H. The Segmented Sieve of Eratosthenes and Primes in Arithmetic Progressions to 1012. BIT 1977, 17, 121–127.
+    [CrossRef]
+
+    \bibitem{PritchardSieve}
+    Paul Pritchard.
+    Linear prime-number sieves: a family tree.
+    \emph{Science of Computer Programming}, 9(1):17–35, 1987.
+
+    \bibitem{EulerSieve}
+    Leonhard Euler. Variae observationes circa series infinitas.
+    % \emph{Commentarii academiae scientiarum Petropolitanae}, 9:160–188, 1744.
+
+    \bibitem{AtkinSieve}
+    A. O. L. Atkin and Daniel J. Bernstein.
+    Prime sieves using binary quadratic forms.
+    \emph{Mathematics of Computation}, 73(246):1023–1030, 2004.
+
+    \bibitem{Chartres1967}
+    Charters, B.A. Algorithm 311: Prime Number Generator 2. Commun. ACM 1967, 10, 570.
+
+    \bibitem{Singletons}
+    Singleton, R.C. Algorithm 357: An Efficient Prime Number Generator [A1]. Commun. ACM 1969, 12, 563–564.
+\end{thebibliography}
+
+
+\end{document}

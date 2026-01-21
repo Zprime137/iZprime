@@ -11,20 +11,20 @@ const SIEVE_MODEL _SoA = {SoA, "SoA"};    // * Sieve of Atkin
 const SIEVE_MODEL _SiZ = {SiZ, "SiZ"};    // * Sieve-iZ
 const SIEVE_MODEL _SiZm = {SiZm, "SiZm"}; // * Sieve-iZm
 
-// A variant of SiZ using a 210-based wheel for improved performance, however,
+// A variant of SiZm, sieving the vy dimension for improved performance, however,
 // it returns unordered list of primes, so it will fail the integrity test
-UI64_ARRAY *SiZ_210(uint64_t n);
-const SIEVE_MODEL _SiZ_210 = {SiZ_210, "SiZ_210"}; // * Sieve-iZ_210
+UI64_ARRAY *SiZm_vy(uint64_t n);
+const SIEVE_MODEL _SiZm_vy = {SiZm_vy, "SiZm_vy"}; // * Sieve-iZm_vy
 
 SIEVE_MODEL SIEVE_MODELS[] = {
-    // _SoE,
-    // _SSoE,
-    // _SoEu,
-    // _SoS,
-    // _SoA,
+    _SoE,
+    _SSoE,
+    _SoEu,
+    _SoS,
+    _SoA,
     _SiZ,
     _SiZm,
-    // _SiZ_210,
+    // _SiZm_vy,
 };
 
 int models_count = sizeof(SIEVE_MODELS) / sizeof(SIEVE_MODELS[0]);
@@ -264,14 +264,11 @@ void BENCHMARK_SIEVE_MODELS(int save_results)
     int times_array[models_count][32];
     SIEVE_LIMIT limits_array[32];
     int tests_count = 0;
-    // define limits: 10^4 to 10^9
-    for (int exp = 4; exp <= 9; exp++)
+    // define limits: 10^4 to 10^10
+    for (int exp = 4; exp < 10; exp++)
     {
         limits_array[tests_count++] = (SIEVE_LIMIT){10, exp};
     }
-    // additional tests: 2^32, 10^10
-    // limits_array[tests_count++] = (SIEVE_LIMIT){2, 32};
-    // limits_array[tests_count++] = (SIEVE_LIMIT){10, 10};
 
     for (int i = 0; i < models_count; i++)
     {
@@ -421,6 +418,8 @@ int TEST_SiZ_stream(int verbose)
 // * Testing SiZm_count
 // =======================================================================
 
+// testing SiZm_count for 10^9 range both single and multi-core
+// additional test for 10^12 range can be added but it takes longer time
 int TEST_SiZ_count(int verbose)
 {
     int result = 1;
@@ -437,6 +436,7 @@ int TEST_SiZ_count(int verbose)
     printf("TESTING SiZm_count\n");
     print_line(60, '*');
 
+    // * Test 1: 0 to 10^9 single-core
     uint64_t interval = pow(10, 9);
 
     INPUT_SIEVE_RANGE input_range = {
@@ -446,6 +446,10 @@ int TEST_SiZ_count(int verbose)
         .filepath = NULL,
     };
 
+    // set end_num = start_num + interval
+    mpz_set_str(end_num, input_range.start, 10);
+    mpz_add_ui(end_num, end_num, interval);
+
     printf("Test 1: Counting primes in range [%s:%s] using single core\n", input_range.start, mpz_get_str(NULL, 10, end_num));
     fflush(stdout);
 
@@ -453,10 +457,6 @@ int TEST_SiZ_count(int verbose)
     test_count = SiZ_count(&input_range, 1);
     gettimeofday(&end, NULL);
     elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-
-    // set end_num = start_num + interval
-    mpz_set_str(end_num, input_range.start, 10);
-    mpz_add_ui(end_num, end_num, interval);
 
     uint64_t expected_count = 50847534;
     result = test_count == expected_count;
@@ -470,14 +470,10 @@ int TEST_SiZ_count(int verbose)
     }
 
     // ===========
-
+    // * Test 2: 0 to 10^9 multi-core
     print_line(30, '=');
     printf("Test 2: Counting primes in range [%s:%s] using %d cores\n", input_range.start, mpz_get_str(NULL, 10, end_num), cores_num);
-
-    interval = pow(10, 12);
-    input_range.range = interval;
-    mpz_set_str(end_num, input_range.start, 10);
-    mpz_add_ui(end_num, end_num, input_range.range);
+    fflush(stdout);
 
     gettimeofday(&start, NULL);
     test_count = SiZ_count(&input_range, cores_num);
@@ -487,7 +483,7 @@ int TEST_SiZ_count(int verbose)
     mpz_set_str(end_num, input_range.start, 10);
     mpz_add_ui(end_num, end_num, interval);
 
-    expected_count = 37607912018;
+    expected_count = 50847534;
     result = test_count == expected_count;
 
     if (verbose)
@@ -497,6 +493,35 @@ int TEST_SiZ_count(int verbose)
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
         fflush(stdout);
     }
+    // =========
+
+    // * Test 3: 0 to 10^12 range multi-core (optional, uncomment to run)
+    // print_line(30, '=');
+    // printf("Test 3: Counting primes in range [%s:%s] using %d cores\n", input_range.start, mpz_get_str(NULL, 10, end_num), cores_num);
+
+    // interval = pow(10, 12);
+    // input_range.range = interval;
+    // mpz_set_str(end_num, input_range.start, 10);
+    // mpz_add_ui(end_num, end_num, input_range.range);
+
+    // gettimeofday(&start, NULL);
+    // test_count = SiZ_count(&input_range, cores_num);
+    // gettimeofday(&end, NULL);
+    // elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+
+    // mpz_set_str(end_num, input_range.start, 10);
+    // mpz_add_ui(end_num, end_num, interval);
+
+    // expected_count = 37607912018;
+    // result = test_count == expected_count;
+
+    // if (verbose)
+    // {
+    //     printf("%-32s: %llu\n", "Expected prime count", expected_count);
+    //     printf("%-32s: %llu\n", "Result prime count", test_count);
+    //     printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
+    //     fflush(stdout);
+    // }
     // =========
 
     print_line(60, '*');
