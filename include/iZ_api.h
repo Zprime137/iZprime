@@ -1,11 +1,8 @@
 #ifndef IZ_API_H
 #define IZ_API_H
 
-#include <utils.h> ///< For utility functions and common includes.
-
-// Data structure modules
-#include <iZm.h>    ///< iZ-Matrix related structures and functions.
-#include <vx_seg.h> ///< VX segment for encapsulating a segment in the iZ-Matrix structure.
+#include <utils.h>      ///< For utility functions and common includes.
+#include <iZ_toolkit.h> ///< iZ-Matrix related structures and functions.
 
 #define N_LIMIT (1000000000000ULL) ///< Maximum sieve limit (10^12) for standard sieve algorithms.
 
@@ -35,7 +32,8 @@ UI64_ARRAY *SoA(uint64_t n);
 UI64_ARRAY *SiZ(uint64_t n);
 
 // * Segmented Sieve-iZm algorithm using dual-layered wheel factorization
-UI64_ARRAY *SiZm(uint64_t n);
+UI64_ARRAY *SiZm(uint64_t n);    // processes iZm rows
+UI64_ARRAY *SiZm_vy(uint64_t n); // processes iZm columns (faster, unordered)
 
 // * SiZ Range Variants:
 
@@ -48,9 +46,9 @@ typedef struct
     char *filepath; // path for output results (NULL for no output)
 } INPUT_SIEVE_RANGE;
 
-// * Streams primes in a range to file
+// * Streams primes within range to file
 uint64_t SiZ_stream(INPUT_SIEVE_RANGE *range);
-// * Counts primes in range using multiple cores
+// * Counts primes within range using multiple cores
 uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num);
 
 // ========================================================================
@@ -59,9 +57,5 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num);
 int vy_random_prime(mpz_t p, int bit_size, int cores_num);
 int vx_random_prime(mpz_t p, int bit_size, int cores_num);
 int iZ_next_prime(mpz_t p, mpz_t base, int forward);
-
-// for benchmarking
-int iZ_random_next_prime(mpz_t p, int bit_size);
-int gmp_random_next_prime(mpz_t p, int bit_size);
 
 #endif // IZ_API_H

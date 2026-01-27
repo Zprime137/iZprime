@@ -41,10 +41,6 @@
 // #define MAX(a, b) (((a) < (b)) ? (b) : (a))
 #define MINMAX(a, b, c) (MIN(MAX(a, b), c))
 
-// iZ utilities
-uint64_t iZ(uint64_t x, int i);
-void iZ_mpz(mpz_t z, mpz_t x, int i);
-
 // file utilities
 int create_dir(const char *dir);
 

@@ -1,50 +1,6 @@
 #include <utils.h>
 
 /**
- * @brief Computes 6x + i for a given x and i.
- *
- * @description:
- * This function calculates the value of `6x + i`, where `x` is a positive integer
- * and `i` is either -1 or 1. The result is returned as a 64-bit unsigned integer.
- *
- * Parameters:
- * @param x (uint64_t) The value of `x` in `6x + i`. Must be greater than 0.
- * @param i (int) The value of `i` in `6x + i`. Must be -1 or 1.
- *
- * @return The computed value `6x + i` as a 64-bit unsigned integer.
- */
-inline uint64_t iZ(uint64_t x, int i)
-{
-    // Return the value of 6x + i
-    return 6 * x + i;
-}
-
-/**
- * @brief Computes 6x + i for arbitrary precision values using GMP.
- *
- * @description:
- * This function computes `6x + i` using the GNU MP (GMP) library, allowing
- * for arbitrary-precision arithmetic. The result is stored in `z` which is an
- * `mpz_t` type, while `x` is the input `mpz_t` type representing the value of `x`.
- * The parameter `i` should be either -1 or 1, representing the value to add or
- * subtract from the product `6x`.
- *
- * Parameters:
- * @param z (mpz_t) The result of the calculation `6x + i`.
- * @param x (mpz_t) The input value of `x` in `6x + i`. Must be greater than 0.
- * @param i (int) The value of `i` in `6x + i`. Must be -1 or 1.
- */
-void iZ_mpz(mpz_t z, mpz_t x, int i)
-{
-    mpz_mul_ui(z, x, 6); // z = 6 * x
-
-    if (i > 0)
-        mpz_add_ui(z, z, i); // z = z + i
-    else
-        mpz_sub_ui(z, z, -i); // z = z - i
-}
-
-/**
  * @brief Check if a string is numeric.
  *
  * @param str Pointer to the string.

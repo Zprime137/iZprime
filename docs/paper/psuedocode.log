@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.8.11)  21 JAN 2026 22:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.8.11)  23 JAN 2026 15:24
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -596,11 +596,11 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 39.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 40.
 
 
 [2{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 88.
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 93.
 
 
 [3]
@@ -623,27 +623,35 @@ Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on inp
 
 [12]
 
-[13] (./psuedocode.aux (./style.aux))
+[13]
+
+[14]
+
+[15]
+
+[16]
+
+[17] (./psuedocode.aux (./style.aux))
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `psuedocode.out' has not changed.
-(rerunfilecheck)             Checksum: 9B03A92BADB819A6956D6155C2CA00A5;2305.
+(rerunfilecheck)             Checksum: 1C565B68EBEF759D1B292FE4E4959D20;2305.
  ) 
 Here is how much of TeX's memory you used:
- 15875 strings out of 473190
- 259149 string characters out of 5715800
- 713427 words of memory out of 5000000
- 38751 multiletter control sequences out of 15000+600000
+ 15889 strings out of 473190
+ 259385 string characters out of 5715800
+ 707649 words of memory out of 5000000
+ 38759 multiletter control sequences out of 15000+600000
  573410 words of font info for 91 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 94i,13n,93p,703b,469s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 94i,13n,93p,605b,578s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on psuedocode.pdf (13 pages, 304683 bytes).
+Output written on psuedocode.pdf (17 pages, 316459 bytes).
 PDF statistics:
- 323 PDF objects out of 1000 (max. 8388607)
- 261 compressed objects within 3 object streams
- 80 named destinations out of 1000 (max. 500000)
+ 345 PDF objects out of 1000 (max. 8388607)
+ 279 compressed objects within 3 object streams
+ 86 named destinations out of 1000 (max. 500000)
  117 words of extra memory for PDF output out of 10000 (max. 10000000)
 

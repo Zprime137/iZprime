@@ -2,6 +2,71 @@
 
 #include <openssl/bn.h>
 
+/**
+ * @brief A wrapper function to generate a random prime number using
+ * the iZ_next_prime function.
+ *
+ * @param p The mpz_t variable to store the generated prime number.
+ * @param bit_size The bit size of the prime number to be generated.
+ */
+int iZ_random_next_prime(mpz_t p, int bit_size)
+{
+    // Check if the bit size is within the valid range
+    bit_size = MAX(bit_size, 10);
+
+    // Set the initial random number within the magnitude range
+    mpz_t base;
+    mpz_init(base);
+
+    // initialize the random state
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_seed_randstate(state); // seed random state
+
+    // Generate a random number in the given range
+    mpz_urandomb(base, state, bit_size);
+
+    // Find the next prime number after the random base
+    int found = iZ_next_prime(p, base, 1);
+
+    // cleanup
+    mpz_clear(base);
+    gmp_randclear(state);
+
+    return found;
+}
+
+/**
+ * @brief A wrapper function to generate a random prime number using
+ * the GMP's mpz_nextprime function.
+ *
+ * @param p The mpz_t variable to store the generated prime number.
+ * @param bit_size The bit size of the prime number to be generated.
+ */
+int gmp_random_next_prime(mpz_t p, int bit_size)
+{
+    bit_size = MAX(bit_size, 10);
+
+    // Set the initial random number within the magnitude range
+    mpz_t base;
+    mpz_init(base);
+
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_seed_randstate(state); // seed random state
+
+    // Generate a random number in the given range
+    mpz_urandomb(base, state, bit_size);
+
+    // Find the next prime number after the random base
+    mpz_nextprime(p, base);
+
+    mpz_clear(base);
+    gmp_randclear(state);
+
+    return 1;
+}
+
 // ========================================================================
 // * Testing iZ_next_prime Function
 // ========================================================================

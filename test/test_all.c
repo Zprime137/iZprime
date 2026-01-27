@@ -234,7 +234,7 @@ int main(void)
     // RUN_ALL_TESTS_AND_BENCHMARKS(verbose, save_results);
 
     // * Unit Tests:
-    // run all module unit tests or uncomment individual tests below
+    // run all units tests or uncomment individual tests below
     // RUN_TEST_UNITS(verbose); // * run all unit tests
     // TEST_BITMAP(verbose);
     // TEST_UI16_ARRAY(verbose);
@@ -244,7 +244,7 @@ int main(void)
     // TEST_VX_SEG(verbose);
 
     // * Integration Tests:
-    // run all integration tests or uncomment individual tests below
+    // run all integrations tests or uncomment individual tests below
     // RUN_TEST_INTEGRATIONS(verbose); // * run all integration tests
     // TEST_SIEVE_MODELS_INTEGRITY(verbose);
     // TEST_SiZ_stream(verbose);
