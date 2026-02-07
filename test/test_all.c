@@ -1,4 +1,10 @@
+/**
+ * @file test_all.c
+ * @brief Test runner for unit, integration, and benchmark suites.
+ */
+
 #include <test_api.h>
+#include <string.h>
 
 int RUN_TEST_UNITS(int verbose)
 {
@@ -89,7 +95,7 @@ int RUN_TEST_UNITS(int verbose)
     printf("\n\n");
     print_centered_text(" Tests Completed ", 60, '=');
 
-    return result;
+    return failed_tests == 0;
 }
 
 int RUN_TEST_INTEGRATIONS(int verbose)
@@ -179,7 +185,25 @@ int RUN_TEST_INTEGRATIONS(int verbose)
     printf("\n");
     print_centered_text(" Integration Tests Completed ", 60, '=');
 
-    return result;
+    return failed_tests == 0;
+}
+
+static void print_usage(const char *prog)
+{
+    printf("Usage: %s [options]\n", prog);
+    printf("\n");
+    printf("Test selection (default: --unit --integration):\n");
+    printf("  --all            Run unit + integration tests\n");
+    printf("  --unit           Run unit tests\n");
+    printf("  --integration    Run integration tests\n");
+    printf("  --benchmark      Run sieve benchmarks (alias for --benchmark-p-sieve)\n");
+    printf("  --benchmark-p-sieve  Run prime sieve model benchmarks\n");
+    printf("  --benchmark-p-gen    Run random prime generation benchmarks\n");
+    printf("\n");
+    printf("Output/options:\n");
+    printf("  -v, --verbose    Verbose test output\n");
+    printf("  --save-results   Save benchmark results (if supported)\n");
+    printf("  -h, --help       Show this help\n");
 }
 
 void RUN_BENCHMARK_SIEVE_MODELS(int save_results)
@@ -219,45 +243,95 @@ void RUN_ALL_TESTS_AND_BENCHMARKS(int verbose, int save_results)
     RUN_BENCHMARK_SIEVE_MODELS(save_results);
 
     // * Benchmarking Random Prime Generation Algorithms
-    // RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
+    RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
     // Set log level to debug to log implementation errors
     log_set_log_level(LOG_DEBUG);
 
-    int verbose = 1;
+    int verbose = 0;
     int save_results = 0;
 
-    // * Run all tests and benchmarks
-    // RUN_ALL_TESTS_AND_BENCHMARKS(verbose, save_results);
+    int run_units = 0;
+    int run_integrations = 0;
+    int run_benchmarks_sieve = 0;
+    int run_benchmarks_p_gen = 0;
 
-    // * Unit Tests:
-    // run all units tests or uncomment individual tests below
-    // RUN_TEST_UNITS(verbose); // * run all unit tests
-    // TEST_BITMAP(verbose);
-    // TEST_UI16_ARRAY(verbose);
-    // TEST_UI32_ARRAY(verbose);
-    // TEST_UI64_ARRAY(verbose);
-    // TEST_IZM(verbose);
-    // TEST_VX_SEG(verbose);
+    if (argc == 1)
+    {
+        run_units = 1;
+        run_integrations = 1;
+    }
+    else
+    {
+        for (int i = 1; i < argc; i++)
+        {
+            const char *arg = argv[i];
 
-    // * Integration Tests:
-    // run all integrations tests or uncomment individual tests below
-    // RUN_TEST_INTEGRATIONS(verbose); // * run all integration tests
-    // TEST_SIEVE_MODELS_INTEGRITY(verbose);
-    // TEST_SiZ_stream(verbose);
-    // TEST_SiZ_count(verbose);
-    // TEST_iZ_next_prime(verbose);
-    // TEST_vy_random_prime(verbose);
-    // TEST_vx_random_prime(verbose);
+            if (strcmp(arg, "--all") == 0)
+            {
+                run_units = 1;
+                run_integrations = 1;
+            }
+            else if (strcmp(arg, "--unit") == 0)
+            {
+                run_units = 1;
+            }
+            else if (strcmp(arg, "--integration") == 0)
+            {
+                run_integrations = 1;
+            }
+            else if (strcmp(arg, "--benchmark") == 0)
+            {
+                run_benchmarks_sieve = 1; // backward compatible default
+            }
+            else if (strcmp(arg, "--benchmark-p-sieve") == 0)
+            {
+                run_benchmarks_sieve = 1;
+            }
+            else if (strcmp(arg, "--benchmark-p-gen") == 0)
+            {
+                run_benchmarks_p_gen = 1;
+            }
+            else if (strcmp(arg, "--save-results") == 0)
+            {
+                save_results = 1;
+            }
+            else if (strcmp(arg, "-v") == 0 || strcmp(arg, "--verbose") == 0)
+            {
+                verbose = 1;
+            }
+            else if (strcmp(arg, "-h") == 0 || strcmp(arg, "--help") == 0)
+            {
+                print_usage(argv[0]);
+                return 0;
+            }
+            else
+            {
+                fprintf(stderr, "Unknown option: %s\n\n", arg);
+                print_usage(argv[0]);
+                return 2;
+            }
+        }
+    }
 
-    // * Benchmarking Sieve Algorithms:
-    RUN_BENCHMARK_SIEVE_MODELS(save_results);
+    if (!run_units && !run_integrations && !run_benchmarks_sieve && !run_benchmarks_p_gen)
+    {
+        run_units = 1;
+        run_integrations = 1;
+    }
 
-    // * Benchmarking Random Prime Generation Algorithms:
-    // RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
+    int ok = 1;
+    if (run_units)
+        ok = ok && RUN_TEST_UNITS(verbose);
+    if (run_integrations)
+        ok = ok && RUN_TEST_INTEGRATIONS(verbose);
+    if (run_benchmarks_sieve)
+        RUN_BENCHMARK_SIEVE_MODELS(save_results);
+    if (run_benchmarks_p_gen)
+        RUN_BENCHMARK_P_GEN_ALGORITHMS(save_results);
 
-    return 0;
+    return ok ? 0 : 1;
 }

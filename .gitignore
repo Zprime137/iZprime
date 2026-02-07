@@ -96,6 +96,19 @@ Temporary Items
 output/
 logs/
 
+# Build artifacts
+build/
+
+# Generated Doxygen output
+docs/api/
+
+# LaTeX build artifacts (docs/paper)
+docs/paper/*.aux
+docs/paper/*.fdb_latexmk
+docs/paper/*.fls
+docs/paper/*.toc
+docs/paper/*.log
+
 # Local History for Visual Studio Code
 .history
 

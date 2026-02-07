@@ -19,6 +19,7 @@
  * * SiZ Algorithms:
  * - @b SiZ: Solid Sieve-iZ
  * - @b SiZm: Segmented Sieve-iZm
+ * - @b SiZm_vy: Segmented Sieve-iZm with vy dimension sieving
  */
 
 #include <iZ_api.h>
@@ -38,20 +39,21 @@ static uint64_t est_pi_n(int64_t n)
 // * Classic Sieve Algorithms
 // =========================================================
 
-static void process_eratosthenes_bitmap(UI64_ARRAY *primes, BITMAP *sieve, uint64_t limit)
+static void process_eratosthenes_bitmap(UI64_ARRAY *primes, BITMAP *sieve_bitmap, uint64_t limit)
 {
+    ui64_push(primes, 2); // Add 2 to primes, we will skip even numbers in the loop
     uint64_t n_sqrt = sqrt(limit);
 
     // Sieve logic: collect unmarked primes and mark their multiples if p <= sqrt(n),
     // skipping even numbers
     for (uint64_t i = 3; i <= limit; i += 2)
     {
-        if (bitmap_get_bit(sieve, i))
+        if (bitmap_get_bit(sieve_bitmap, i))
         {
             ui64_push(primes, i);
             if (i <= n_sqrt)
             {
-                bitmap_clear_steps_simd(sieve, 2 * i, i * i, limit + 1);
+                bitmap_clear_steps_simd(sieve_bitmap, 2 * i, i * i, limit + 1);
             }
         }
     }
@@ -78,7 +80,6 @@ UI64_ARRAY *SoE(uint64_t n)
     // Initialize the primes object with an estimated capacity
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
     assert(primes && "Memory allocation failed for primes array.");
-    ui64_push(primes, 2);
 
     // Create a bitmap to mark prime numbers
     BITMAP *sieve = bitmap_init(n + 1, 1);
@@ -121,7 +122,6 @@ UI64_ARRAY *SSoE(uint64_t n)
     // Initialize UI64_ARRAY with an estimated capacity
     UI64_ARRAY *primes = ui64_init(est_pi_n(n));
     assert(primes && "Memory allocation failed for primes array.");
-    ui64_push(primes, 2);
 
     // Define the segment size; can be tuned based on memory constraints
     uint64_t segment_size = (uint64_t)sqrt(n);
@@ -423,42 +423,6 @@ UI64_ARRAY *SoA(uint64_t n)
 // * Sieve-iZ Algorithms
 // =========================================================
 
-static void process_iZ_bitmaps(UI64_ARRAY *primes, BITMAP *x5, BITMAP *x7, uint64_t x_limit)
-{
-    uint64_t n_sqrt = sqrt(6 * x_limit) + 1;
-
-    // Iterate through x values in range 0 < x < x_n
-    for (uint64_t x = 1; x < x_limit; x++)
-    {
-        // if x5[x], implying it's iZ- prime
-        if (bitmap_get_bit(x5, x))
-        {
-            uint64_t p = iZ(x, -1); // compute p = iZ(x, -1)
-            ui64_push(primes, p);   // add p to primes
-
-            // if p is root prime, mark its multiples in x5, x7
-            if (p < n_sqrt)
-            {
-                bitmap_clear_steps_simd(x5, p, p * x + x, x_limit);
-                bitmap_clear_steps_simd(x7, p, p * x - x, x_limit);
-            }
-        }
-
-        // Do the same if x7[x], inverting the xp signs
-        if (bitmap_get_bit(x7, x))
-        {
-            uint64_t p = iZ(x, 1);
-            ui64_push(primes, p);
-
-            if (p < n_sqrt)
-            {
-                bitmap_clear_steps_simd(x5, p, p * x - x, x_limit);
-                bitmap_clear_steps_simd(x7, p, p * x + x, x_limit);
-            }
-        }
-    }
-}
-
 /**
  * @brief Classic Sieve-iZ algorithm for prime generation up to n.
  *
@@ -598,7 +562,7 @@ UI64_ARRAY *SiZm(uint64_t n)
         bitmap_free(&base_x7);
         return NULL;
     }
-    process_iZ_bitmaps(primes, x5, x7, vx);
+    process_iZ_bitmaps(primes, x5, x7, vx + 1);
 
     // * 3. Process remaining segments (y >= 1) to collect primes:
     int y_limit = x_n / vx; // number of segments to process
@@ -647,9 +611,7 @@ UI64_ARRAY *SiZm(uint64_t n)
     if (primes->array[primes->count - 1] > n)
         ui64_pop(primes);
 
-    // Trim excess memory in primes array
-    ui64_resize_to_fit(primes);
-
+    ui64_resize_to_fit(primes); // Trim excess memory in primes array
     return primes;
 }
 
@@ -668,83 +630,82 @@ UI64_ARRAY *SiZm_vy(uint64_t n)
     UI64_ARRAY *primes = ui64_init(n / log(n) * 1.4);
     assert(primes && "Memory allocation failed for primes array in SiZm.");
 
-    uint64_t x_n = n / 6 + 1; // max x value up to n
+    uint64_t x_n = n / 6 + 1; // iZ limit for n
     uint64_t root_limit = sqrt(n) + 1;
+
+    get_root_primes(primes, root_limit);
+    int root_count = primes->count;
+
     int k = 4; // pointing at 11 in root_primes
     int vx = 35;
-    if (n > pow(10, 9))
+    if (n >= pow(10, 9))
     {
         vx *= 11;
         k++;
     }
-    int vy = x_n / vx + 1;
 
-    // Add root primes to primes array
-    UI64_ARRAY *root_primes = SiZ(root_limit);
-    memcpy(primes->array, root_primes->array, root_primes->count * sizeof(uint64_t));
-    primes->count = root_primes->count;
-
+    int vy = x_n / vx;
     BITMAP *vy_bitmap = bitmap_init(vy + 8, 1);
 
-    // for each x in [2:vx] such that gcd(iZ(x, ±1), vx) == 1,
-    // sieve the corresponding column vy in the iZm space
+    // * 2. Sieve logic: Process segments in vy dimension
     for (int x = 2; x <= vx; x++)
     {
+        // handle iZ- case
         if (gcd(iZ(x, -1), vx) == 1)
         {
-            bitmap_set_all(vy_bitmap);
-            for (int i = k; i < root_primes->count; i++)
+            // * a. reset vy_bitmap
+            bitmap_set_all(vy_bitmap); // set all bits
+
+            // * b. mark composites of root primes in vy_bitmap
+            for (int i = k; i < root_count; i++)
             {
-                uint64_t p = root_primes->array[i];
-                bitmap_clear_steps_simd(vy_bitmap, p, iZm_solve_for_yp(-1, p, vx, x), vy);
+                uint64_t p = primes->array[i];
+                int64_t y_0 = iZm_solve_for_yp(-1, p, vx, x);
+                bitmap_clear_steps_simd(vy_bitmap, p, y_0, vy);
             }
 
-            for (int y = 0; y < vy - 1; y++)
+            // * c. collect primes from vy_bitmap
+            for (int y = 0; y < vy; y++)
             {
                 if (bitmap_get_bit(vy_bitmap, y))
-                {
-                    uint64_t p = iZ(y * vx + x, -1);
-                    ui64_push(primes, p);
-                }
+                    ui64_push(primes, iZ(y * vx + x, -1));
             }
-            if (bitmap_get_bit(vy_bitmap, vy - 1))
+            // handle partial last row
+            if (bitmap_get_bit(vy_bitmap, vy))
             {
-                uint64_t p = iZ((vy - 1) * vx + x, -1);
+                uint64_t p = iZ(vy * vx + x, -1);
                 if (p < n)
                     ui64_push(primes, p);
             }
         }
 
+        // handle iZ+ case
         if (gcd(iZ(x, 1), vx) == 1)
         {
-            bitmap_set_all(vy_bitmap);
-            for (int i = k; i < root_primes->count; i++)
+            bitmap_set_all(vy_bitmap); // reset vy_bitmap
+            for (int i = k; i < root_count; i++)
             {
-                uint64_t p = root_primes->array[i];
-                bitmap_clear_steps_simd(vy_bitmap, p, iZm_solve_for_yp(1, p, vx, x), vy);
+                uint64_t p = primes->array[i];
+                int64_t y_0 = iZm_solve_for_yp(1, p, vx, x);
+                bitmap_clear_steps_simd(vy_bitmap, p, y_0, vy);
             }
 
-            for (int y = 0; y < vy - 1; y++)
+            for (int y = 0; y < vy; y++)
             {
                 if (bitmap_get_bit(vy_bitmap, y))
-                {
-                    uint64_t p = iZ(y * vx + x, 1);
-                    ui64_push(primes, p);
-                }
+                    ui64_push(primes, iZ(y * vx + x, 1));
             }
-            if (bitmap_get_bit(vy_bitmap, vy - 1))
+            if (bitmap_get_bit(vy_bitmap, vy))
             {
-                uint64_t p = iZ((vy - 1) * vx + x, 1);
+                uint64_t p = iZ(vy * vx + x, 1);
                 if (p < n)
                     ui64_push(primes, p);
             }
         }
     }
-    ui64_free(&root_primes);
+
+    // * 3. Clean up and finalize:
     bitmap_free(&vy_bitmap);
-
-    // Trim excess memory in primes array
-    ui64_resize_to_fit(primes);
-
+    ui64_resize_to_fit(primes); // Trim excess memory in primes array
     return primes;
 }

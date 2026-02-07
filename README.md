@@ -1,24 +1,10 @@
-# iZprime, A Prime Generation Toolkit
+# iZprime — Prime Sieving & Generation Toolkit (C)
 
-[![CMake](https://img.shields.io/badge/CMake-4%2B-blue.svg)](https://cmake.org/)
-[![GCC](https://img.shields.io/badge/GCC-17%2B-red.svg)](https://gcc.gnu.org/)
-
-## Table of Contents
-
-- [iZprime, A Prime Generation Toolkit](#izprime-a-prime-generation-toolkit)
-  - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [How to Use the Library](#how-to-use-the-library)
-    - [Dependencies](#dependencies)
-      - [Installing Dependencies](#installing-dependencies)
-    - [Compilation](#compilation)
-    - [Testing](#testing)
-    - [API](#api)
-      - [Sieve Methods](#sieve-methods)
+Build system: `make` (see [Makefile](Makefile) and [Makefile.md](Makefile.md)).
 
 ## Introduction
 
-**iZprime** is a C toolkit for efficient prime generation.
+**iZprime** is a C toolkit for prime sieving and prime generation.
 
 <!-- basic data structure: [bitmap, int_arrays] -->
 <!-- sieve modules: [iZm, vx_seg] -->
@@ -31,14 +17,10 @@
 ### Dependencies
 
 - **Compiler:** GCC or Clang
-
 - **Build System:** Make
-
-- **Libraries:** Beside the standard C libraries, the following libraries are required:
-
-  - GMP (GNU Multiple Precision Arithmetic Library) for large integer arithmetic: version 6.2.1
-
-  - OpenSSL for cryptographic functions: version 3.0.7
+- **Libraries:**
+  - GMP (GNU Multiple Precision Arithmetic Library)
+  - OpenSSL 3 (libssl + libcrypto)
 
 #### Installing Dependencies
 
@@ -46,10 +28,10 @@
 
 ```bash
 # Install C dependencies
-brew install gcc make gmp openssl
+brew install gcc make gmp openssl@3
 
 # For Python utilities and benchmarking tools
-pip install matplotlib
+pip install -r py_tools/requirements.txt
 ```
 
 **Linux:**
@@ -73,10 +55,25 @@ Navigate to the root directory and run:
 make
 ```
 
-This compiles the project, builds the executable, and runs the entry point _main.c_.
+This compiles the project, builds the executable, and runs the entry point `src/main.c`.
 
 ### Testing
+
+```bash
+make test-all
+```
+
+Other useful targets:
+
+```bash
+make test-unit
+make test-integration
+make benchmark-p_sieve
+make benchmark-p_gen
+```
 
 ### API
 
 #### Sieve Methods
+
+Public headers live under `include/`.

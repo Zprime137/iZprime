@@ -1,44 +1,59 @@
+/**
+ * @file test_api.h
+ * @brief Public test/benchmark entry points for the iZ library.
+ *
+ * Doxygen can include this header when documenting the project to expose the
+ * test harness API and benchmark entry points.
+ */
+
 #ifndef TESTS_H
 #define TESTS_H
 
+/** @defgroup iz_tests Tests and Benchmarks
+ *  @brief Test harness entry points.
+ *  @{
+ */
+
 #include <iZ_api.h>
 
-// Sieve function type, takes uint64_t limit and returns a UI64_ARRAY pointer
+/** Sieve function type: takes a limit and returns a prime list. */
 typedef UI64_ARRAY *(*SIEVE_FN)(uint64_t);
 
-// Structure to define sieve limits in base^exp format
+/** Limit specification as $base^{exp}$. */
 typedef struct
 {
     int base;
     int exp;
 } SIEVE_LIMIT;
 
-// Structure to associate the sieve function with its name
+/** Pair a sieve function with a human-readable name (for reports/benchmarks). */
 typedef struct
 {
     SIEVE_FN function;
     const char name[32];
 } SIEVE_MODEL;
 
-// ========================================================================
-// * Testing and Benchmarking Sieve Algorithms
-// ========================================================================
+/** @name Sieve model tests/benchmarks */
+///@{
 int TEST_SIEVE_MODELS_INTEGRITY(int verbose);
 void BENCHMARK_SIEVE_MODELS(int save_results);
+///@}
 
-// ========================================================================
-// * Testing and Benchmarking Sieve-iZ-Range Algorithms
-// ========================================================================
+/** @name Range sieve tests/benchmarks */
+///@{
 int TEST_SiZ_stream(int verbose);
 int TEST_SiZ_count(int verbose);
+///@}
 
-// ========================================================================
-// * Testing and Benchmarking Random Prime Generation Algorithms
-// ========================================================================
+/** @name Prime generation tests/benchmarks */
+///@{
 int TEST_iZ_next_prime(int verbose);
 int TEST_vy_random_prime(int verbose);
 int TEST_vx_random_prime(int verbose);
 
 int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results);
+///@}
+
+/** @} */
 
 #endif // TESTS_H

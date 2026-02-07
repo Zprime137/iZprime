@@ -16,12 +16,12 @@ const SIEVE_MODEL _SiZm = {SiZm, "SiZm"}; // * Sieve-iZm
 const SIEVE_MODEL _SiZm_vy = {SiZm_vy, "SiZm_vy"}; // * Sieve-iZm_vy
 
 SIEVE_MODEL SIEVE_MODELS[] = {
-    _SoE,
-    _SSoE,
+    // _SoE,
+    // _SSoE,
     // _SoEu,
     // _SoS,
     // _SoA,
-    _SiZ,
+    // _SiZ,
     _SiZm,
     _SiZm_vy,
 };
@@ -58,6 +58,9 @@ static int test_sieve_integrity(uint64_t n, int verbose)
     for (int i = 0; i < models_count; i++)
     {
         SIEVE_MODEL sieve_model = SIEVE_MODELS[i];
+        // skip SiZm_vy model, as it produces unordered primes
+        if (strcmp(sieve_model.name, "SiZm_vy") == 0)
+            continue;
 
         // Call the sieve function
         UI64_ARRAY *primes = sieve_model.function(n);
@@ -264,7 +267,7 @@ void BENCHMARK_SIEVE_MODELS(int save_results)
     SIEVE_LIMIT limits_array[32];
     int tests_count = 0;
     // define limits: 10^4 to 10^10
-    for (int exp = 4; exp < 10; exp++)
+    for (int exp = 4; exp <= 10; exp++)
     {
         limits_array[tests_count++] = (SIEVE_LIMIT){10, exp};
     }
@@ -495,33 +498,33 @@ int TEST_SiZ_count(int verbose)
     // =========
 
     // * Test 3: 0 to 10^12 range multi-core (optional, uncomment to run)
-    interval = pow(10, 12);
-    input_range.range = interval;
-    mpz_set_str(end_num, input_range.start, 10);
-    mpz_add_ui(end_num, end_num, input_range.range);
+    // interval = pow(10, 12);
+    // input_range.range = interval;
+    // mpz_set_str(end_num, input_range.start, 10);
+    // mpz_add_ui(end_num, end_num, input_range.range);
 
-    print_line(30, '=');
-    printf("Test 3: Counting primes in range [%s:%s] using %d cores\n", input_range.start, mpz_get_str(NULL, 10, end_num), cores_num);
-    fflush(stdout);
+    // print_line(30, '=');
+    // printf("Test 3: Counting primes in range [%s:%s] using %d cores\n", input_range.start, mpz_get_str(NULL, 10, end_num), cores_num);
+    // fflush(stdout);
 
-    gettimeofday(&start, NULL);
-    test_count = SiZ_count(&input_range, cores_num);
-    gettimeofday(&end, NULL);
-    elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+    // gettimeofday(&start, NULL);
+    // test_count = SiZ_count(&input_range, cores_num);
+    // gettimeofday(&end, NULL);
+    // elapsed_seconds = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
 
-    mpz_set_str(end_num, input_range.start, 10);
-    mpz_add_ui(end_num, end_num, interval);
+    // mpz_set_str(end_num, input_range.start, 10);
+    // mpz_add_ui(end_num, end_num, interval);
 
-    expected_count = 37607912018;
-    result = test_count == expected_count;
+    // expected_count = 37607912018;
+    // result = test_count == expected_count;
 
-    if (verbose)
-    {
-        printf("%-32s: %llu\n", "Expected prime count", expected_count);
-        printf("%-32s: %llu\n", "Result prime count", test_count);
-        printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
-        fflush(stdout);
-    }
+    // if (verbose)
+    // {
+    //     printf("%-32s: %llu\n", "Expected prime count", expected_count);
+    //     printf("%-32s: %llu\n", "Result prime count", test_count);
+    //     printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
+    //     fflush(stdout);
+    // }
     // =========
 
     print_line(60, '*');

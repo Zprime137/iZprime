@@ -1,3 +1,11 @@
+/**
+ * @file iZ_apps.c
+ * @brief High-level application routines built on top of the iZ API.
+ *
+ * This module contains range-oriented entry points (stream/count) and
+ * probabilistic prime generation wrappers.
+ */
+
 #include <iZ_api.h>
 
 // =========================================================

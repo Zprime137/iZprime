@@ -1,3 +1,8 @@
+/**
+ * @file utils.c
+ * @brief Implementations for the shared utility layer.
+ */
+
 #include <utils.h>
 
 /**
@@ -197,9 +202,9 @@ int get_cpu_cores_count(void)
  * The function attempts multiple detection methods to ensure robustness
  * across different architectures and operating systems.
  *
- * @return int The L2 cache size in kilobytes, or 256 KB if unable to determine.
+ * @return int The L2 cache size in bits, or 256 KB if unable to determine.
  */
-int get_cpu_L2_cache_size_kb(void)
+int get_cpu_L2_cache_size_bits(void)
 {
     int size_kb = 0;
 
@@ -215,7 +220,7 @@ int get_cpu_L2_cache_size_kb(void)
             if (sscanf(buffer, "%dK", &size_kb) == 1)
             {
                 fclose(fp);
-                return size_kb;
+                return size_kb * 1024 * 8; // Convert KB to bits
             }
         }
         fclose(fp);
@@ -232,7 +237,7 @@ int get_cpu_L2_cache_size_kb(void)
     {
         if (size_bytes > 0)
         {
-            return (int)(size_bytes / 1024); // Convert bytes to KB
+            return (int)(size_bytes * 8); // Convert bytes to bits
         }
     }
 
@@ -241,13 +246,13 @@ int get_cpu_L2_cache_size_kb(void)
     {
         if (size_bytes > 0)
         {
-            return (int)(size_bytes / 1024); // Convert bytes to KB
+            return (int)(size_bytes * 8); // Convert bytes to bits
         }
     }
 #endif
 
     // Conservative fallback: 256 KB is common for L2 cache per core
-    return 256;
+    return 256 * 1024 * 8; // Convert 256 KB to bits
 }
 
 // * Test utility functions

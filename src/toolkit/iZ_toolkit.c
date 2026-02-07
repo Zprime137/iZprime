@@ -1,3 +1,8 @@
+/**
+ * @file iZ_toolkit.c
+ * @brief Implementation of iZ index space helpers and iZm/VX segment machinery.
+ */
+
 #include <iZ_api.h>
 
 static const int s_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
@@ -45,6 +50,72 @@ static int compute_k_vx(IZM *iZm)
         k++;
     }
     return k;
+}
+
+void process_iZ_bitmaps(UI64_ARRAY *primes, BITMAP *x5, BITMAP *x7, uint64_t x_limit)
+{
+    uint64_t root_limit = sqrt(6 * x_limit) + 1;
+
+    // Iterate through x values in range 0 < x < x_n
+    for (uint64_t x = 1; x < x_limit; x++)
+    {
+        // if x5[x], implying it's iZ- prime
+        if (bitmap_get_bit(x5, x))
+        {
+            uint64_t p = iZ(x, -1); // compute p = iZ(x, -1)
+            ui64_push(primes, p);   // add p to primes
+
+            // if p is root prime, mark its multiples in x5, x7
+            if (p < root_limit)
+            {
+                bitmap_clear_steps_simd(x5, p, p * x + x, x_limit);
+                bitmap_clear_steps_simd(x7, p, p * x - x, x_limit);
+            }
+        }
+
+        // Do the same if x7[x], inverting the xp signs
+        if (bitmap_get_bit(x7, x))
+        {
+            uint64_t p = iZ(x, 1);
+            ui64_push(primes, p);
+
+            if (p < root_limit)
+            {
+                bitmap_clear_steps_simd(x5, p, p * x - x, x_limit);
+                bitmap_clear_steps_simd(x7, p, p * x + x, x_limit);
+            }
+        }
+    }
+}
+
+void get_root_primes(UI64_ARRAY *primes, uint64_t limit)
+{
+    // Add 2, 3 to primes
+    ui64_push(primes, 2);
+    ui64_push(primes, 3);
+
+    // Calculate x_n, max x value in iZ space for given n
+    uint64_t x_n = limit / 6 + 1;
+
+    // Create bitmap X-Arrays x5, x7, each of size x_n + 1 bits
+    BITMAP *x5 = bitmap_init(x_n + 1, 1);
+    BITMAP *x7 = bitmap_init(x_n + 1, 1);
+
+    // Memory allocation failed, check logs
+    if (!x5 || !x7)
+    {
+        ui64_free(&primes);
+        return;
+    }
+
+    // Sieve logic: mark composites and collect primes up to limit
+    process_iZ_bitmaps(primes, x5, x7, x_n);
+
+    // Cleanup: free memory of x5, x7
+    bitmap_free(&x5);
+    bitmap_free(&x7);
+
+    return;
 }
 
 // =========================================================
@@ -180,7 +251,7 @@ uint64_t compute_vx_k(uint64_t n, int max_k)
 
 uint64_t compute_l2_vx(uint64_t n)
 {
-    uint64_t l2 = get_cpu_L2_cache_size_kb() * 1024 * 8; // in bits
+    uint64_t l2 = get_cpu_L2_cache_size_bits();
     uint64_t x_n = n / 6;
     uint64_t vx = 35; // minimum useful vx size
     int k = 4;        // pointing to prime 11 in s_primes
