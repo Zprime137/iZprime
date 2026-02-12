@@ -2,14 +2,14 @@
  * @file logger.h
  * @brief Header file for the logging system.
  *
- * @description:
+ * @details
  * This file contains function declarations and macros for a logging system
  * that provides various logging levels (DEBUG, INFO, WARNING, ERROR, FATAL).
  * The logging system supports thread-safe logging, log rotation, and
  * console output. It also includes convenience functions for logging
  * messages with extended information (file name, line number).
  *
- * @note:
+ * @note
  * This module is part of a larger project that includes various
  * components requiring logging functionality. It is designed to be
  * flexible and easy to use, allowing developers to log messages
@@ -36,7 +36,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Format checking attributes for better compile-time validation
+/** @defgroup iz_logger Logging
+ *  @brief Thread-safe logging and test-output helpers.
+ *  @{ */
+
+/**
+ * @def LOGGER_FORMAT_PRINTF(fmt_idx, arg_idx)
+ * @brief Compiler attribute wrapper for printf-style format checking.
+ */
 #if defined(__GNUC__) || defined(__clang__)
 #define LOGGER_FORMAT_PRINTF(fmt_idx, arg_idx) __attribute__((format(printf, fmt_idx, arg_idx)))
 #else
@@ -186,5 +193,7 @@ void log_error(const char *format, ...) LOGGER_FORMAT_PRINTF(1, 2);
  * @param format The format string for the log message.
  */
 void log_fatal(const char *format, ...) LOGGER_FORMAT_PRINTF(1, 2);
+
+/** @} */
 
 #endif // LOGGER_H

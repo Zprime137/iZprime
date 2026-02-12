@@ -583,6 +583,10 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
 
     if (save_results)
     {
+        struct stat st = {0};
+        if (stat(DIR_output, &st) == -1)
+            mkdir(DIR_output, 0700);
+
         // Get the current timestamp for file naming.
         time_t now = time(NULL);
         struct tm *t = localtime(&now);
@@ -627,6 +631,8 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
 
         fclose(file);
         printf("Results saved to %s\n\n", file_path);
+        printf("RESULTS_FILE: %s\n", file_path);
+        fflush(stdout);
     }
 
     // Free all results

@@ -1,25 +1,12 @@
 /**
  * @file prime_sieve.c
- * @brief Sieve-iZ family of algorithms for prime generation and counting.
+ * @brief Implementations of classical and SiZ-family sieve algorithms.
  *
- * This module implements several related algorithms based on the iZ
- * framework, which operates in the iZ index space of numbers of the form
- * 6x ± 1. By excluding multiples of 2 and 3 and working directly in this
- * reduced space, these algorithms achieve substantial constant-factor
- * improvements over classical sieves while preserving the usual
- * O(n log log n) time complexity.
+ * Classical routines (SoE/SSoE/SoEu/SoS/SoA) are provided as baseline
+ * implementations. SiZ-family routines (SiZ/SiZm/SiZm_vy) operate in iZ
+ * index space over numbers of the form 6x-1 and 6x+1.
  *
- * The following entry points are provided:
- * * Classic Sieve Algorithms:
- * - @b SoE: Optimized Sieve of Eratosthenes
- * - @b SSoE: Segmented Sieve of Eratosthenes
- * - @b Sieve_Euler: Sieve of Euler
- * - @b Sieve_Sundaram: Sieve of Sundaram
- * - @b Sieve_Atkin: Sieve of Atkin
- * * SiZ Algorithms:
- * - @b SiZ: Solid Sieve-iZ
- * - @b SiZm: Segmented Sieve-iZm
- * - @b SiZm_vy: Segmented Sieve-iZm with vy dimension sieving
+ * @ingroup iz_api
  */
 
 #include <iZ_api.h>
@@ -39,27 +26,34 @@ static uint64_t est_pi_n(int64_t n)
 // * Classic Sieve Algorithms
 // =========================================================
 
-static void process_eratosthenes_bitmap(UI64_ARRAY *primes, BITMAP *sieve_bitmap, uint64_t limit)
+/**
+ * @brief A helper function to process the bitmap for the Sieve of Eratosthenes and collect primes.
+ * @param primes Output prime array.
+ * @param sieve_bitmap Candidate bitmap.
+ * @param n Inclusive numeric upper bound represented in @p sieve_bitmap.
+ */
+static void process_N_bitmap(UI64_ARRAY *primes, BITMAP *sieve_bitmap, uint64_t n)
 {
-    ui64_push(primes, 2); // Add 2 to primes, we will skip even numbers in the loop
-    uint64_t n_sqrt = sqrt(limit);
+    ui64_push(primes, 2); // Add 2 to primes to focus on odd candidates
+    uint64_t n_sqrt = sqrt(n);
 
-    // Sieve logic: collect unmarked primes and mark their multiples if p <= sqrt(n),
-    // skipping even numbers
-    for (uint64_t i = 3; i <= limit; i += 2)
+    // Sieve logic:
+    // Iterate through odd numbers i starting from 3,
+    // check if i is marked as prime in the bitmap,
+    // if so, collect i as a prime and mark its odd multiples if i <= sqrt(n).
+    for (uint64_t i = 3; i <= n; i += 2)
     {
         if (bitmap_get_bit(sieve_bitmap, i))
         {
             ui64_push(primes, i);
             if (i <= n_sqrt)
-            {
-                bitmap_clear_steps_simd(sieve_bitmap, 2 * i, i * i, limit + 1);
-            }
+                bitmap_clear_steps_simd(sieve_bitmap, 2 * i, i * i, n + 1);
         }
     }
 }
 
 /**
+ * @ingroup iz_api
  * @brief Optimized Sieve of Eratosthenes algorithm to find all primes up to n.
  *
  * @description:
@@ -90,7 +84,7 @@ UI64_ARRAY *SoE(uint64_t n)
     }
 
     // Sieve logic
-    process_eratosthenes_bitmap(primes, sieve, n);
+    process_N_bitmap(primes, sieve, n);
 
     // cleanup and finalize
     bitmap_free(&sieve);        // free bitmap
@@ -100,6 +94,7 @@ UI64_ARRAY *SoE(uint64_t n)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Segmented Sieve of Eratosthenes algorithm to find all primes up to n.
  *
  * @description:
@@ -135,7 +130,7 @@ UI64_ARRAY *SSoE(uint64_t n)
     }
 
     // process first segment to collect root primes
-    process_eratosthenes_bitmap(primes, sieve, segment_size);
+    process_N_bitmap(primes, sieve, segment_size);
 
     // * Step 2: Segmented sieve
     uint64_t low = segment_size + 1;
@@ -187,6 +182,7 @@ UI64_ARRAY *SSoE(uint64_t n)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Sieve of Euler: Generates a list of prime numbers up to a given limit using the Euler Sieve algorithm.
  *
  * @description:
@@ -250,6 +246,7 @@ UI64_ARRAY *SoEu(uint64_t n)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Sieve of Sundaram: Generates a list of prime numbers up to a given limit using the Sieve of Sundaram algorithm.
  *
  * @description:
@@ -316,6 +313,7 @@ UI64_ARRAY *SoS(uint64_t n)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Sieve of Atkin: Generates a list of prime numbers up to a given limit using the Sieve of Atkin algorithm.
  *
  * @description:
@@ -424,6 +422,7 @@ UI64_ARRAY *SoA(uint64_t n)
 // =========================================================
 
 /**
+ * @ingroup iz_api
  * @brief Classic Sieve-iZ algorithm for prime generation up to n.
  *
  * The Sieve-iZ algorithm operates in the iZ index space of numbers of the
@@ -489,6 +488,7 @@ UI64_ARRAY *SiZ(uint64_t n)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Segmented Sieve-iZm algorithm for prime generation up to n.
  *
  * @description:
@@ -584,8 +584,8 @@ UI64_ARRAY *SiZm(uint64_t n)
                 break;
 
             // mark composites of p in current segment
-            bitmap_clear_steps_simd(x5, p, iZm_solve_for_xp(-1, p, vx, y), x_limit);
-            bitmap_clear_steps_simd(x7, p, iZm_solve_for_xp(1, p, vx, y), x_limit);
+            bitmap_clear_steps_simd(x5, p, iZm_solve_for_x0(-1, p, vx, y), x_limit);
+            bitmap_clear_steps_simd(x7, p, iZm_solve_for_x0(1, p, vx, y), x_limit);
         }
 
         // * c. Collect unmarked indices as primes in current segment
@@ -615,7 +615,15 @@ UI64_ARRAY *SiZm(uint64_t n)
     return primes;
 }
 
-// returns unordered list of primes up to n using the iZm/vy structure
+/**
+ * @ingroup iz_api
+ * @brief Segmented Sieve-iZm with vertical (vy) traversal order.
+ *
+ * This variant prioritizes throughput and returns primes in non-sorted order.
+ *
+ * @param n Inclusive upper bound for prime generation.
+ * @return Heap-allocated list of primes <= @p n, or NULL on failure.
+ */
 UI64_ARRAY *SiZm_vy(uint64_t n)
 {
     // Bounds check:
@@ -660,7 +668,7 @@ UI64_ARRAY *SiZm_vy(uint64_t n)
             for (int i = k; i < root_count; i++)
             {
                 uint64_t p = primes->array[i];
-                int64_t y_0 = iZm_solve_for_yp(-1, p, vx, x);
+                int64_t y_0 = iZm_solve_for_y0(-1, p, vx, x);
                 bitmap_clear_steps_simd(vy_bitmap, p, y_0, vy);
             }
 
@@ -686,7 +694,7 @@ UI64_ARRAY *SiZm_vy(uint64_t n)
             for (int i = k; i < root_count; i++)
             {
                 uint64_t p = primes->array[i];
-                int64_t y_0 = iZm_solve_for_yp(1, p, vx, x);
+                int64_t y_0 = iZm_solve_for_y0(1, p, vx, x);
                 bitmap_clear_steps_simd(vy_bitmap, p, y_0, vy);
             }
 

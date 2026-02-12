@@ -35,9 +35,7 @@
 #include <gmp.h>         // GMP library for arbitrary precision arithmetic
 #include <openssl/sha.h> // For SHA-256 hashing
 
-#include <logger.h>     // Logger module for logging timestamped messages.
-#include <int_arrays.h> // Integer arrays for holding list of numbers and their metadata.
-#include <bitmap.h>     // Bitmap data structure for efficient bit manipulation.
+#include <logger.h> // Logger module for logging timestamped messages.
 
 /** @defgroup iz_utils Utilities
  *  @brief Cross-cutting helpers used across modules.
@@ -66,7 +64,7 @@ int create_dir(const char *dir);
 int is_numeric_str(const char *str);
 
 // math utilities
-/** @brief Compute $\gcd(a,b)$. */
+/** @brief Compute the greatest common divisor of @p a and @p b. */
 uint64_t gcd(uint64_t a, uint64_t b);
 /**
  * @brief Compute the modular inverse of @p a modulo @p m.

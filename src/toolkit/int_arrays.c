@@ -24,6 +24,7 @@
  * @date October 2025
  * @version 1.0
  * @see int_arrays.h for API documentation
+ * @ingroup iz_arrays
  */
 
 #include <int_arrays.h>
@@ -31,38 +32,50 @@
 // ========================================================================
 // UI16_ARRAY IMPLEMENTATION
 // ========================================================================
+/// @cond IZ_ARRAY_TEMPLATE_MACROS
 #define TEMPLATE_TYPE uint16_t
 #define TEMPLATE_STRUCT UI16_ARRAY
 #define TEMPLATE_FUNC(name) ui16_##name
 #define TEMPLATE_NAME_STR "UI16_ARRAY"
+/// @endcond
 #include "templates/int_array_impl.inc"
+/// @cond IZ_ARRAY_TEMPLATE_MACROS
 #undef TEMPLATE_TYPE
 #undef TEMPLATE_STRUCT
 #undef TEMPLATE_FUNC
 #undef TEMPLATE_NAME_STR
+/// @endcond
 
 // ========================================================================
 // UI32_ARRAY IMPLEMENTATION
 // ========================================================================
+/// @cond IZ_ARRAY_TEMPLATE_MACROS
 #define TEMPLATE_TYPE uint32_t
 #define TEMPLATE_STRUCT UI32_ARRAY
 #define TEMPLATE_FUNC(name) ui32_##name
 #define TEMPLATE_NAME_STR "UI32_ARRAY"
+/// @endcond
 #include "templates/int_array_impl.inc"
+/// @cond IZ_ARRAY_TEMPLATE_MACROS
 #undef TEMPLATE_TYPE
 #undef TEMPLATE_STRUCT
 #undef TEMPLATE_FUNC
 #undef TEMPLATE_NAME_STR
+/// @endcond
 
 // ========================================================================
 // UI64_ARRAY IMPLEMENTATION
 // ========================================================================
+/// @cond IZ_ARRAY_TEMPLATE_MACROS
 #define TEMPLATE_TYPE uint64_t
 #define TEMPLATE_STRUCT UI64_ARRAY
 #define TEMPLATE_FUNC(name) ui64_##name
 #define TEMPLATE_NAME_STR "UI64_ARRAY"
+/// @endcond
 #include "templates/int_array_impl.inc"
+/// @cond IZ_ARRAY_TEMPLATE_MACROS
 #undef TEMPLATE_TYPE
 #undef TEMPLATE_STRUCT
 #undef TEMPLATE_FUNC
 #undef TEMPLATE_NAME_STR
+/// @endcond

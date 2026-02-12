@@ -92,12 +92,13 @@ Temporary Items
 .vscode
 .vscode/
 
-### Output and logs ###
-output/
-logs/
-
 # Build artifacts
 build/
+
+### Output and logs ###
+output/
+### Logs (any logs/ directory)
+logs/
 
 # Generated Doxygen output
 docs/api/

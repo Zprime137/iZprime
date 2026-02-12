@@ -1,181 +1,263 @@
 /**
  * @file iZ_toolkit.h
- * @brief Internal toolkit for iZ index space and iZm/VX segmented sieving.
+ * @brief Core iZ/iZm primitives used by SiZ-family algorithms.
  *
- * The toolkit layer provides the core data structures and primitives used by
- * the SiZ/SiZm algorithms:
- * - iZ index mapping for integers of the form $6x\pm1$.
- * - iZm base segment construction (VX primorial segment sizes).
- * - VX segment objects that encapsulate bitmaps, counters, and prime-gap output.
+ * This layer exposes index-space mapping helpers, VX sizing utilities,
+ * pre-sieved iZm base construction, per-segment sieve objects, and internal
+ * prime-search routines used by high-level APIs in iZ_api.h.
  */
 
 #ifndef IZ_TOOLKIT_H
 #define IZ_TOOLKIT_H
 
-#include <utils.h>
+#include <utils.h>      // Common utilities, types, and dependencies.
+#include <int_arrays.h> // Integer array containers.
+#include <bitmap.h>     // Packed bit-array utilities.
 
 /** @defgroup iz_toolkit Toolkit (iZ/iZm)
- *  @brief Core building blocks for iZ-space sieving.
- *  @{
- */
+ *  @brief Internal building blocks for SiZ and SiZm implementations.
+ *  @{ */
 
-// iZ utilities
+/** @name iZ Mapping Helpers */
+/** @{ */
 /**
- * @brief Map an iZ coordinate to its integer value: $iZ(x,i)=6x+i$.
- * @param x iZ coordinate (x >= 0).
- * @param i Either -1 or +1 in normal iZ usage.
- * @return The mapped integer value.
+ * @brief Map iZ coordinates to an integer: `6*x + i`.
+ * @param x iZ x-coordinate.
+ * @param i Matrix identifier, typically -1 or +1.
+ * @return Mapped integer value.
  */
 uint64_t iZ(uint64_t x, int i);
 
 /**
- * @brief GMP version of iZ(): compute $z=6x+i$.
+ * @brief GMP variant of iZ().
  * @param z Output value.
- * @param x Input x coordinate.
- * @param i Either -1 or +1 in normal iZ usage.
+ * @param x Input x-coordinate.
+ * @param i Matrix identifier, typically -1 or +1.
  */
 void iZ_mpz(mpz_t z, mpz_t x, int i);
 
-// sieve utilities
 /**
- * @brief Process iZ bitmaps and append surviving primes to @p primes.
- *
- * The two bitmaps represent the iZ- and iZ+ lines (6x-1 and 6x+1).
- *
- * @param primes Output array of primes.
- * @param x5 Bitmap for candidates on 6x-1.
- * @param x7 Bitmap for candidates on 6x+1.
- * @param x_limit Upper x bound (exclusive).
+ * @brief Traverse iZ bitmaps, emit surviving primes, and mark composites.
+ * @param primes Output prime array.
+ * @param x5 Bitmap for 6x-1 candidates.
+ * @param x7 Bitmap for 6x+1 candidates.
+ * @param x_limit Exclusive x upper bound.
  */
 void process_iZ_bitmaps(UI64_ARRAY *primes, BITMAP *x5, BITMAP *x7, uint64_t x_limit);
 
 /**
- * @brief Populate @p primes with primes up to @p limit.
- *
- * Used to obtain root primes for deterministic sieving.
+ * @brief Generate primes up to @p limit for deterministic sieving.
+ * @param primes Output array, appended in ascending order.
+ * @param limit Numeric upper bound.
  */
 void get_root_primes(UI64_ARRAY *primes, uint64_t limit);
+/** @} */
 
-// iZm standard VX_k sizes (product of first k primes > 3)
-/** VX segment size for k=2 (35). */
-#define VX2 (5 * 7ULL)
-/** VX segment size for k=3 (385). */
-#define VX3 (VX2 * 11ULL)
-/** VX segment size for k=4 (5005). */
-#define VX4 (VX3 * 13ULL)
-/** VX segment size for k=5 (85085). */
-#define VX5 (VX4 * 17ULL)
-/** VX segment size for k=6 (1616615). */
-#define VX6 (VX5 * 19ULL)
-/** VX segment size for k=7 (37260615). */
-#define VX7 (VX6 * 23ULL)
-/** VX segment size for k=8 (1080558835). */
-#define VX8 (VX7 * 29ULL)
+/** @name Standard VX Sizes (primorial products excluding 2,3) */
+/** @{ */
+#define VX2 (5 * 7ULL)    /**< 35 */
+#define VX3 (VX2 * 11ULL) /**< 385 */
+#define VX4 (VX3 * 13ULL) /**< 5005 */
+#define VX5 (VX4 * 17ULL) /**< 85085 */
+#define VX6 (VX5 * 19ULL) /**< 1616615 */
+#define VX7 (VX6 * 23ULL) /**< 37260615 */
+#define VX8 (VX7 * 29ULL) /**< 1080558835 */
+/** @} */
 
-/** Default Miller–Rabin primality test rounds (speed/accuracy tradeoff). */
+/** Default Miller-Rabin rounds used by toolkit search/sieve helpers. */
 #define MR_ROUNDS 25
 
-// =========================================================
-// * IZM structure and functions: Declarations
-// =========================================================
 /**
- * @brief iZm precomputed assets for VX-segment sieving.
- *
- * An `IZM` instance owns:
- * - `root_primes`: primes used to mark composites in each segment.
- * - `base_x5`/`base_x7`: pre-sieved templates for 6x-1 and 6x+1 lines.
- *
- * The object can be cloned for multi-process usage where each worker needs
- * independent bitmap state.
+ * @brief Precomputed iZm assets for repeated VX-segment sieving.
  */
 typedef struct
 {
-    int vx;                  ///< Size of the segment
-    int k_vx;                ///< Number of primes multiplied to form vx
-    BITMAP *base_x5;         ///< Base bitmap for iZm5/vx segment
-    BITMAP *base_x7;         ///< Base bitmap for iZm7/vx segment
-    UI64_ARRAY *root_primes; ///< Root primes < vx used for sieving
+    int vx;                  /**< Segment width in iZ x-units. */
+    int k_vx;                /**< Count of small primes dividing vx (excluding 2,3). */
+    BITMAP *base_x5;         /**< Pre-sieved base bitmap for 6x-1 line. */
+    BITMAP *base_x7;         /**< Pre-sieved base bitmap for 6x+1 line. */
+    UI64_ARRAY *root_primes; /**< Root primes used for deterministic marking. */
 } IZM;
 
-/** @name IZM lifecycle */
-///@{
+/** @name IZM Lifecycle */
+/** @{ */
+/**
+ * @brief Allocate and initialize an IZM object for a given VX.
+ * @param vx Segment width; must be odd, not divisible by 3, and >= 35.
+ * @return Initialized IZM object, or NULL on failure.
+ */
 IZM *iZm_init(size_t vx);
-IZM *iZm_clone(IZM *src);
-void iZm_free(IZM **iZm);
-///@}
-
-/** @name VX sizing helpers */
-///@{
-uint64_t compute_vx_k(uint64_t n, int max_k);
-uint64_t compute_l2_vx(uint64_t n);
-void compute_max_vx(mpz_t vx, int bit_size);
-///@}
 
 /**
- * @brief Construct a pre-sieved base segment for a VX value.
- * @param vx Segment size.
- * @param base_x5 Output base bitmap for 6x-1 candidates.
- * @param base_x7 Output base bitmap for 6x+1 candidates.
+ * @brief Deep-copy an IZM object for per-worker ownership.
+ * @param src Source IZM instance.
+ * @return Newly allocated clone, or NULL on failure.
+ */
+IZM *iZm_clone(IZM *src);
+
+/**
+ * @brief Release an IZM object and set the caller pointer to NULL.
+ * @param iZm Address of an IZM pointer.
+ */
+void iZm_free(IZM **iZm);
+/** @} */
+
+/** @name VX Selection Helpers */
+/** @{ */
+/**
+ * @brief Calculate vx up to VX_{ @p max_k } without exceeding n/6.
+ * @param n Target numeric limit for sieving.
+ * @param max_k Maximum number of multiplicative prime factors (>3).
+ * @return Selected VX size.
+ */
+uint64_t compute_vx_k(uint64_t n, int max_k);
+
+/**
+ * @brief Choose VX using an L2-cache-aware heuristic.
+ * @param n Target numeric limit.
+ * @return Selected VX size.
+ */
+uint64_t compute_l2_vx(uint64_t n);
+
+/**
+ * @brief Compute largest VX below 2^bit_size.
+ * @param vx Output mpz_t containing VX.
+ * @param bit_size Bit-size ceiling.
+ */
+void compute_max_vx(mpz_t vx, int bit_size);
+/** @} */
+
+/**
+ * @brief Build pre-sieved base bitmaps for a VX segment.
+ * @param vx Segment width.
+ * @param base_x5 Output bitmap for 6x-1 candidates.
+ * @param base_x7 Output bitmap for 6x+1 candidates.
  */
 void iZm_construct_vx_base(uint64_t vx, BITMAP *base_x5, BITMAP *base_x7);
 
-/** @name iZm modular solvers
- *  @brief Locate the first composite hit of a prime within a segment.
- */
-///@{
+/** @name Modular Hit Solvers */
+/** @{ */
 /**
- * @brief Solve for the first x-hit of prime @p p in a VX segment at y.
+ * @brief Solve first x-hit of prime @p p for line @p m_id in segment y.
+ * @param m_id Line id (-1 for x5, +1 for x7).
+ * @param p Prime used for marking.
+ * @param vx Segment width.
+ * @param y Segment index.
+ * @return First x index to clear for this prime/line.
  */
-uint64_t iZm_solve_for_xp(int m_id, uint64_t p, uint64_t vx, uint64_t y);
-uint64_t iZm_solve_for_xp_mpz(int m_id, uint64_t p, uint64_t vx, mpz_t y);
-/**
- * @brief Solve for the first y-hit of prime @p p in a VY segment at x.
- */
-int64_t iZm_solve_for_yp(int m_id, uint64_t p, uint64_t vx, uint64_t x);
-///@}
+uint64_t iZm_solve_for_x0(int m_id, uint64_t p, uint64_t vx, uint64_t y);
 
-// =========================================================
-// * VX_SEG structure and functions: Declarations
-// =========================================================
 /**
- * @brief Represents a single VX-sized sieving segment at a specific y coordinate.
- *
- * VX segments are the work units used by SiZm and range scanning.
+ * @brief GMP variant of iZm_solve_for_x0() for very large y.
+ * @param m_id Line id (-1 for x5, +1 for x7).
+ * @param p Prime used for marking.
+ * @param vx Segment width.
+ * @param y Segment index as mpz.
+ * @return First x index to clear for this prime/line.
+ */
+uint64_t iZm_solve_for_x0_mpz(int m_id, uint64_t p, uint64_t vx, mpz_t y);
+
+/**
+ * @brief Solve first y-hit for fixed x in vertical (vy) scanning.
+ * @param m_id Line id (-1 for x5, +1 for x7).
+ * @param p Prime used for marking.
+ * @param vx Segment width.
+ * @param x Fixed x-coordinate.
+ * @return y index on success, -1 when no modular solution exists.
+ */
+int64_t iZm_solve_for_y0(int m_id, uint64_t p, uint64_t vx, uint64_t x);
+/** @} */
+
+/**
+ * @brief Runtime state for one VX segment at a specific y.
  */
 typedef struct
 {
-    int vx;             ///< The horizontal vector size.
-    mpz_t y;            ///< mpz_t representation of y.
-    mpz_t yvx;          ///< mpz_t representation of y * vx.
-    mpz_t root_limit;   ///< mpz_t representation of sqrt(yvx + vx).
-    int is_large_limit; ///< Flag indicating if probabilistic tests are needed.
-    int mr_rounds;      ///< Number of Miller-Rabin rounds for primality testing.
-    int start_x;        ///< First x value to start the main loop, default 1.
-    int end_x;          ///< Upper bound for x in the main loop, default vx.
-    BITMAP *x5;         ///< Bitmap for iZm5 segment.
-    BITMAP *x7;         ///< Bitmap for iZm7 segment.
-    int p_count;        ///< Number of primes found.
-    UI16_ARRAY *p_gaps; ///< Pointer to the p_gaps array.
-    int bit_ops;        ///< Number of bitwise mark operations performed.
-    int p_test_ops;     ///< Number of primality test operations performed.
+    int vx;             /**< Segment width. */
+    mpz_t y;            /**< Segment index y. */
+    mpz_t yvx;          /**< Cached product y*vx. */
+    mpz_t root_limit;   /**< sqrt(iZ(yvx + vx, +1)). */
+    int is_large_limit; /**< Non-zero => requires probabilistic primality checks. */
+    int mr_rounds;      /**< Miller-Rabin rounds when probabilistic checks are used. */
+    int start_x;        /**< Inclusive start x for this segment. */
+    int end_x;          /**< Inclusive end x for this segment. */
+    BITMAP *x5;         /**< Candidate bitmap for 6x-1. */
+    BITMAP *x7;         /**< Candidate bitmap for 6x+1. */
+    int p_count;        /**< Count of primes found in this segment. */
+    UI16_ARRAY *p_gaps; /**< Optional prime-gap encoding for streamed output. */
+    int bit_ops;        /**< Approximate deterministic mark operations. */
+    int p_test_ops;     /**< Probabilistic primality tests executed. */
 } VX_SEG;
 
+/** @name VX Segment Lifecycle and Execution */
+/** @{ */
+/**
+ * @brief Initialize and deterministically sieve one VX segment.
+ * @param iZm Initialized toolkit context.
+ * @param start_x Inclusive x start index.
+ * @param end_x Inclusive x end index.
+ * @param y_str Segment index y as a decimal string.
+ * @param mr_rounds Miller-Rabin rounds (0 uses default).
+ * @return Initialized and partially processed segment, or NULL on failure.
+ */
 VX_SEG *vx_init(IZM *iZm, int start_x, int end_x, char *y_str, int mr_rounds);
+
+/**
+ * @brief Free a VX segment and all owned resources.
+ * @param vx_obj Address of a VX_SEG pointer.
+ */
 void vx_free(VX_SEG **vx_obj);
 
+/**
+ * @brief Extract prime-gap encoding from a fully sieved segment.
+ * @param vx_obj Segment object.
+ */
 void vx_collect_p_gaps(VX_SEG *vx_obj);
+
+/**
+ * @brief Complete segment processing (probabilistic stage and optional gaps).
+ * @param vx_obj Segment object.
+ * @param collect_p_gaps Non-zero to populate @ref VX_SEG::p_gaps.
+ */
 void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps);
+
+/**
+ * @brief Stream segment primes to a file.
+ * @param vx_obj Segment object.
+ * @param output Writable output stream.
+ */
 void vx_stream_file(VX_SEG *vx_obj, FILE *output);
+/** @} */
 
-// =========================================================
-int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size); // horizontal random prime search
-int vy_search_prime(mpz_t p, int m_id, mpz_t vx);             // vertical random prime search
+/** @name Random Prime Search Routines */
+/** @{ */
+/**
+ * @brief Horizontal iZm/VX random-prime search.
+ * @param p Output prime.
+ * @param m_id Requested line id (-1, +1, or random when other value).
+ * @param vx Segment width.
+ * @param bit_size Target bit size.
+ * @return 1 on success, otherwise 0.
+ */
+int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size);
 
-// =========================================================
-// * Test functions declarations
-// =========================================================
+/**
+ * @brief Vertical iZm/VY random-prime search.
+ * @param p Output prime.
+ * @param m_id Requested line id (-1, +1, or random when other value).
+ * @param vx Segment width.
+ * @return 1 on success, otherwise 0.
+ */
+int vy_search_prime(mpz_t p, int m_id, mpz_t vx);
+/** @} */
+
+/** @name Toolkit Tests */
+/** @{ */
+/** @brief Run IZM construction and solver tests. */
 int TEST_IZM(int verbose);
+/** @brief Run VX segment tests. */
 int TEST_VX_SEG(int verbose);
+/** @} */
 
 /** @} */
 

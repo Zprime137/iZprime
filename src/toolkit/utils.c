@@ -1,6 +1,7 @@
 /**
  * @file utils.c
  * @brief Implementations for the shared utility layer.
+ * @ingroup iz_utils
  */
 
 #include <utils.h>
@@ -25,6 +26,11 @@ int is_numeric_str(const char *str)
     return 1;
 }
 
+/**
+ * @brief Print a single line composed of repeated characters.
+ * @param length Number of characters to print.
+ * @param fill_char Character used to fill the line ('-' when zero).
+ */
 void print_line(int length, char fill_char)
 {
     // if empty fill_char, use '-'
@@ -36,7 +42,12 @@ void print_line(int length, char fill_char)
     printf("\n");
 }
 
-// print centered text within a line
+/**
+ * @brief Print text centered inside a filled line.
+ * @param text Text payload.
+ * @param line_length Total line width.
+ * @param fill_char Padding character.
+ */
 void print_centered_text(const char *text, int line_length, char fill_char)
 {
     int text_length = strlen(text);
@@ -255,7 +266,10 @@ int get_cpu_L2_cache_size_bits(void)
     return 256 * 1024 * 8; // Convert 256 KB to bits
 }
 
-// * Test utility functions
+/**
+ * @brief Print module-level banner for test output.
+ * @param module_name Display name of the tested module.
+ */
 void print_module_header(char *module_name)
 {
     print_line(60, '*');
@@ -263,7 +277,9 @@ void print_module_header(char *module_name)
     print_line(60, '*');
 }
 
-// print test table header
+/**
+ * @brief Print standard test-table column headers.
+ */
 void print_test_header(void)
 {
     print_line(92, '-');

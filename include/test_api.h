@@ -35,22 +35,30 @@ typedef struct
 
 /** @name Sieve model tests/benchmarks */
 ///@{
+/** @brief Run correctness checks across all registered sieve models. */
 int TEST_SIEVE_MODELS_INTEGRITY(int verbose);
+/** @brief Benchmark registered sieve models and optionally persist results. */
 void BENCHMARK_SIEVE_MODELS(int save_results);
 ///@}
 
 /** @name Range sieve tests/benchmarks */
 ///@{
+/** @brief Validate `SiZ_stream` behavior and output formatting. */
 int TEST_SiZ_stream(int verbose);
+/** @brief Validate `SiZ_count` correctness across worker counts. */
 int TEST_SiZ_count(int verbose);
 ///@}
 
 /** @name Prime generation tests/benchmarks */
 ///@{
+/** @brief Validate `iZ_next_prime` for forward/backward traversal cases. */
 int TEST_iZ_next_prime(int verbose);
+/** @brief Validate `vy_random_prime` for primality and bit-length constraints. */
 int TEST_vy_random_prime(int verbose);
+/** @brief Validate `vx_random_prime` for primality and bit-length constraints. */
 int TEST_vx_random_prime(int verbose);
 
+/** @brief Benchmark random-prime generation routines over repeated trials. */
 int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results);
 ///@}
 

@@ -18,7 +18,7 @@
  *
  *  The API is organized into:
  *  - Classic sieves: operate directly on the integer domain.
- *  - SiZ / SiZm: operate in iZ index space ($6x\pm1$), optionally segmented.
+ *  - SiZ / SiZm: operate in iZ index space (6x-1 and 6x+1), optionally segmented.
  *  - Range variants: count/stream primes over large intervals.
  *  - Prime generators: probabilistic searches using the iZm/VX machinery.
  *  @{
@@ -31,7 +31,7 @@
  *  @brief Baseline sieves up to a numeric limit.
  *
  * All classic sieve functions take a limit @p n and return an ascending list
- * of primes $\le n$.
+ * of primes <= @p n.
  */
 ///@{
 
@@ -39,7 +39,7 @@
  * @brief Optimized Sieve of Eratosthenes.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SoE(uint64_t n);
 
@@ -47,7 +47,7 @@ UI64_ARRAY *SoE(uint64_t n);
  * @brief Segmented Sieve of Eratosthenes.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SSoE(uint64_t n);
 
@@ -55,7 +55,7 @@ UI64_ARRAY *SSoE(uint64_t n);
  * @brief Euler (linear) sieve.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SoEu(uint64_t n);
 
@@ -63,7 +63,7 @@ UI64_ARRAY *SoEu(uint64_t n);
  * @brief Sieve of Sundaram.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SoS(uint64_t n);
 
@@ -71,14 +71,14 @@ UI64_ARRAY *SoS(uint64_t n);
  * @brief Sieve of Atkin.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SoA(uint64_t n);
 
 ///@}
 
 /** @name iZ-based Sieve Algorithms
- *  @brief Sieve family operating in the $6x\pm1$ index space.
+ *  @brief Sieve family operating in the 6x-1 / 6x+1 index space.
  */
 ///@{
 
@@ -86,7 +86,7 @@ UI64_ARRAY *SoA(uint64_t n);
  * @brief Solid Sieve-iZ (wheel 6, iZ index space).
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SiZ(uint64_t n);
 
@@ -94,7 +94,7 @@ UI64_ARRAY *SiZ(uint64_t n);
  * @brief Segmented Sieve-iZm (VX segmented, horizontal processing).
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SiZm(uint64_t n);
 
@@ -106,7 +106,7 @@ UI64_ARRAY *SiZm(uint64_t n);
  *
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre $10 < n \le 10^{12}$.
+ * @pre n is in (10, 10^12].
  */
 UI64_ARRAY *SiZm_vy(uint64_t n);
 

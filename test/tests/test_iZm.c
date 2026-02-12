@@ -103,7 +103,7 @@ int TEST_IZM(int verbose)
     {
         uint64_t p = test_primes[i];
 
-        uint64_t xp = iZm_solve_for_xp(m_id, p, vx, test_y);
+        uint64_t xp = iZm_solve_for_x0(m_id, p, vx, test_y);
         uint64_t z = iZ(xp + vx * test_y, m_id);
         // z should be composite (divisible by p)
         if (z % p != 0)
@@ -138,7 +138,7 @@ int TEST_IZM(int verbose)
     for (int i = 0; i < num_tests; i++)
     {
         uint64_t p = test_primes[i];
-        uint64_t xp = iZm_solve_for_xp_mpz(m_id, p, vx, mpz_y);
+        uint64_t xp = iZm_solve_for_x0_mpz(m_id, p, vx, mpz_y);
         mpz_set_ui(mpz_x, vx);
         mpz_add_ui(mpz_x, mpz_vxy, xp);
         iZ_mpz(mpz_z, mpz_x, m_id);
@@ -165,7 +165,7 @@ int TEST_IZM(int verbose)
         }
     }
 
-    // * Test 6: iZm_solve_for_yp
+    // * Test 6: iZm_solve_for_y0
     current_test_idx++;
     current_test_result = 1; // reset
     uint64_t test_x = 17;    // some arbitrary x where gcd(iZ(test_x, m_id), vx) == 1
@@ -173,7 +173,7 @@ int TEST_IZM(int verbose)
     for (int i = 0; i < num_tests; i++)
     {
         uint64_t p = test_primes[i];
-        uint64_t yp = iZm_solve_for_yp(m_id, p, vx, test_x);
+        uint64_t yp = iZm_solve_for_y0(m_id, p, vx, test_x);
         uint64_t z = iZ(test_x + vx * yp, m_id);
         if (z % p != 0)
         {
@@ -181,7 +181,7 @@ int TEST_IZM(int verbose)
             failed_tests++;
             if (verbose)
             {
-                log_test(0, current_test_idx, "iZm_solve_for_yp", "Composite targeting failed for p=%lld", p);
+                log_test(0, current_test_idx, "iZm_solve_for_y0", "Composite targeting failed for p=%lld", p);
             }
         }
     }
@@ -190,7 +190,7 @@ int TEST_IZM(int verbose)
         passed_tests++;
         if (verbose)
         {
-            log_test(1, current_test_idx, "iZm_solve_for_yp", "Composite targeting correct for all test primes");
+            log_test(1, current_test_idx, "iZm_solve_for_y0", "Composite targeting correct for all test primes");
         }
     }
 

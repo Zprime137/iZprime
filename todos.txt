@@ -1,6 +1,0 @@
-- finish examples/
-- complete Doxy style documentation
-- make Doxy userManual.pdf 
-
-
-- create Zprime book app

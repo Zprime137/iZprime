@@ -136,6 +136,30 @@ run-example: examples
 	@test -n "$(EX)" || (echo "Set EX=<example_name> (without path)" && exit 2)
 	./$(EXAMPLES_OBJ_DIR)/$(EX) $(ARGS)
 
+# ---------------------------------------------------------
+# Documentation (Doxygen + LaTeX PDF)
+# ---------------------------------------------------------
+DOXYFILE ?= Doxyfile
+DOCS_DIR = docs
+DOCS_LATEX_DIR = $(DOCS_DIR)/api/latex
+DOCS_PDF = $(DOCS_DIR)/userManual.pdf
+DOCS_LOG_DIR = $(DOCS_DIR)/logs
+DOCS_DOXY_LOG = $(DOCS_LOG_DIR)/doxygen.log
+DOCS_LATEX_LOG = $(DOCS_LOG_DIR)/latex.log
+
+userManual:
+	@mkdir -p $(DOCS_LOG_DIR)
+	@echo "Running Doxygen (log: $(DOCS_DOXY_LOG))..."
+	@doxygen $(DOXYFILE) > $(DOCS_DOXY_LOG) 2>&1
+	@echo "Building LaTeX manual (log: $(DOCS_LATEX_LOG))..."
+	@$(MAKE) -C $(DOCS_LATEX_DIR) clean > $(DOCS_LATEX_LOG) 2>&1
+	@$(MAKE) -C $(DOCS_LATEX_DIR) >> $(DOCS_LATEX_LOG) 2>&1
+	@cp $(DOCS_LATEX_DIR)/refman.pdf $(DOCS_PDF)
+	@echo "Generated $(DOCS_PDF)"
+
+# Backward-compatible alias. Prefer `make userManual`.
+docs: userManual
+
 # Create necessary directories
 directories:
 	@mkdir -p $(OBJ_SRC_DIR) $(OBJ_TEST_DIR) $(OUTPUT_DIR) $(LOG_DIR) # Create build/, build/src/, build/test/, output/, and logs/ directories
@@ -175,16 +199,35 @@ NEW_TEST_BUILD_OBJECTS = $(filter-out $(OBJ_SRC_DIR)/main.o, $(OBJECTS)) $(NEW_T
 # ---------------------------------------------------------
 # Usage examples:
 #   make test-all
-#   make test-unit VERBOSE=1
+#   make test-unit verbose
+#   make -- test-unit --verbose
 #   make test-integration TEST_OUTPUT=output/integration.txt
-#   make benchmark-p_sieve SAVE_RESULTS=1
-#   make benchmark-p_gen SAVE_RESULTS=1
-#   make test-all TEST_ARGS="--verbose --save-results"
+#   make benchmark-p_sieve save-results
+#   make benchmark-p_gen plot
+#   make -- benchmark-p_sieve --save-results --plot
 
 VERBOSE ?= 0
 SAVE_RESULTS ?= 0
+PLOT ?= 0
 TEST_OUTPUT ?=
 TEST_ARGS ?=
+PYTHON ?= python3
+PLOT_ENTRYPOINT = py_tools/plot_results.py
+
+CLI_FLAG_TARGETS = verbose save-results plot --verbose --save-results --plot
+
+ifneq (,$(filter verbose --verbose,$(MAKECMDGOALS)))
+VERBOSE := 1
+endif
+
+ifneq (,$(filter save-results --save-results,$(MAKECMDGOALS)))
+SAVE_RESULTS := 1
+endif
+
+ifneq (,$(filter plot --plot,$(MAKECMDGOALS)))
+PLOT := 1
+SAVE_RESULTS := 1
+endif
 
 TEST_RUNNER = $(OBJ_DIR)/$(NEW_TEST_DIR)/test_runner
 TEST_ARGS_COMMON = $(if $(filter 1,$(VERBOSE)),--verbose,) \
@@ -196,49 +239,75 @@ define RUN_TEST
 	$(if $(strip $(TEST_OUTPUT)),./$(TEST_RUNNER) $(1) $(TEST_ARGS_COMMON) > $(TEST_OUTPUT) 2>&1,./$(TEST_RUNNER) $(1) $(TEST_ARGS_COMMON))
 endef
 
+define RUN_BENCHMARK
+	@echo "Running: $(TEST_RUNNER) $(1) $(TEST_ARGS_COMMON)"
+	@tmp_file=$$(mktemp); \
+	./$(TEST_RUNNER) $(1) $(TEST_ARGS_COMMON) > "$$tmp_file" 2>&1; \
+	status=$$?; \
+	cat "$$tmp_file"; \
+	if [ -n "$(strip $(TEST_OUTPUT))" ]; then \
+		cp "$$tmp_file" "$(TEST_OUTPUT)"; \
+	fi; \
+	if [ $$status -ne 0 ]; then \
+		rm -f "$$tmp_file"; \
+		exit $$status; \
+	fi; \
+	if [ "$(PLOT)" = "1" ]; then \
+		result_paths=$$(grep '^RESULTS_FILE:' "$$tmp_file" | sed 's/^RESULTS_FILE:[[:space:]]*//'); \
+		if [ -z "$$result_paths" ]; then \
+			echo "No results files detected in benchmark output; skipping plot generation."; \
+		else \
+			for result_path in $$result_paths; do \
+				echo "Plotting $$result_path"; \
+				$(PYTHON) $(PLOT_ENTRYPOINT) "$$result_path" --save --no-show || exit $$?; \
+			done; \
+		fi; \
+	fi; \
+	rm -f "$$tmp_file"
+endef
+
 # Compile new test files
 $(OBJ_DIR)/$(NEW_TEST_DIR)/%.o: $(NEW_TEST_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
-# Build and run new test framework
-test-all: directories $(NEW_TEST_BUILD_OBJECTS)
+# CLI-flag pseudo-targets (usable as: make test-all verbose)
+$(CLI_FLAG_TARGETS):
+	@:
+
+# Build test runner once and reuse for all test/benchmark targets
+$(TEST_RUNNER): directories $(NEW_TEST_BUILD_OBJECTS)
 	@mkdir -p $(OBJ_DIR)/$(NEW_TEST_DIR)
 	@echo "Building test runner..."
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_BUILD_OBJECTS) $(LDFLAGS) $(LDLIBS)
+
+# Build and run new test framework
+test-all: $(TEST_RUNNER)
 	@echo "Running tests..."
 	$(call RUN_TEST,--all)
 
-test-unit: directories $(NEW_TEST_BUILD_OBJECTS)
-	@mkdir -p $(OBJ_DIR)/$(NEW_TEST_DIR)
-	@echo "Building test runner..."
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_BUILD_OBJECTS) $(LDFLAGS) $(LDLIBS)
+test-unit: $(TEST_RUNNER)
 	@echo "Running unit tests..."
 	$(call RUN_TEST,--unit)
 
-test-integration: directories $(NEW_TEST_BUILD_OBJECTS)
-	@mkdir -p $(OBJ_DIR)/$(NEW_TEST_DIR)
-	@echo "Building test runner..."
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_BUILD_OBJECTS) $(LDFLAGS) $(LDLIBS)
+test-integration: $(TEST_RUNNER)
 	@echo "Running integration tests..."
 	$(call RUN_TEST,--integration)
 
 # Dedicated benchmark drivers
-benchmark-p_sieve: directories $(NEW_TEST_BUILD_OBJECTS)
-	@mkdir -p $(OBJ_DIR)/$(NEW_TEST_DIR)
-	@echo "Building test runner..."
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_BUILD_OBJECTS) $(LDFLAGS) $(LDLIBS)
+benchmark-p_sieve: $(TEST_RUNNER)
 	@echo "Running prime sieve model benchmarks..."
 	@echo "Warning: Benchmarks may take time and could have memory issues"
-	$(call RUN_TEST,--benchmark-p-sieve)
+	$(call RUN_BENCHMARK,--benchmark-p-sieve)
 
-benchmark-p_gen: directories $(NEW_TEST_BUILD_OBJECTS)
-	@mkdir -p $(OBJ_DIR)/$(NEW_TEST_DIR)
-	@echo "Building test runner..."
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_BUILD_OBJECTS) $(LDFLAGS) $(LDLIBS)
+benchmark-p_gen: $(TEST_RUNNER)
 	@echo "Running random prime generation benchmarks..."
 	@echo "Warning: Benchmarks may take time and could have memory issues"
-	$(call RUN_TEST,--benchmark-p-gen)
+	$(call RUN_BENCHMARK,--benchmark-p-gen)
+
+# Hyphen aliases
+benchmark-p-sieve: benchmark-p_sieve
+benchmark-p-gen: benchmark-p_gen
 
 # Legacy test support (backward compatibility)
 test: directories $(TEST_OBJECTS) $(TEST_BUILD_OBJECTS)
@@ -265,7 +334,7 @@ release: $(TARGET)
 # Help message
 help:
 	@echo "=========================================="
-	@echo "  iZ Project Build System"
+	@echo "  iZprime Project Build System"
 	@echo "=========================================="
 	@echo "Main targets:"
 	@echo "  all             - Build the main program and run it"
@@ -275,14 +344,19 @@ help:
 	@echo "Test targets:"
 	@echo "  test-all        - Run all tests (recommended)"
 	@echo "  test-unit       - Run only unit tests"
-	@echo "  test-integration- Run only integration tests"  
+	@echo "  test-integration- Run only integration tests"
 	@echo "  benchmark-p_sieve - Run prime sieve model benchmarks"
+	@echo "  benchmark-p-sieve - Alias for benchmark-p_sieve"
 	@echo "  benchmark-p_gen   - Run random prime generation benchmarks"
+	@echo "  benchmark-p-gen   - Alias for benchmark-p_gen"
 	@echo "  test            - Run legacy tests (deprecated)"
 	@echo ""
-	@echo "Test options (variables):"
-	@echo "  VERBOSE=1       - Enable verbose test output"
-	@echo "  SAVE_RESULTS=1  - Save benchmark results (if supported)"
+	@echo "Test/benchmark options:"
+	@echo "  verbose / --verbose         - Enable verbose test output"
+	@echo "  save-results / --save-results - Save benchmark result files"
+	@echo "  plot / --plot               - Save results and generate plot(s)"
+	@echo "  Note: use GNU make '--' before dashed goals:"
+	@echo "        make -- test-all --verbose"
 	@echo "  TEST_OUTPUT=<path> - Redirect test stdout/stderr to file"
 	@echo "  TEST_ARGS=...   - Extra args passed to test_runner"
 	@echo ""
@@ -294,20 +368,23 @@ help:
 	@echo "  help            - Show this help message"
 	@echo "  examples        - Build example programs (build/examples/*)"
 	@echo "  run-example     - Run an example (EX=..., ARGS=...)"
+	@echo "  userManual      - Generate docs/userManual.pdf from Doxygen + LaTeX"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make              # Build and run main program"
 	@echo "  make test-all     # Run all tests"
-	@echo "  make test-all VERBOSE=1"
+	@echo "  make test-unit verbose"
+	@echo "  make -- test-unit --verbose"
+	@echo "  make benchmark-p_sieve save-results"
+	@echo "  make benchmark-p_gen plot"
 	@echo "  make test-integration TEST_OUTPUT=output/integration.txt"
 	@echo "  make examples"
 	@echo "  make run-example EX=sieve_primes ARGS=\"SiZm 10000000 10\""
-	@echo "  make test-unit    # Run just unit tests"
 	@echo "  make clean        # Clean build artifacts"
 	@echo "=========================================="
 
 # Phony targets
-.PHONY: all run test test-all test-unit test-integration benchmark-p_sieve benchmark-p_gen clean debug release help directories examples run-example
+.PHONY: all run test test-all test-unit test-integration benchmark-p_sieve benchmark-p_gen benchmark-p-sieve benchmark-p-gen clean debug release help directories examples run-example userManual docs $(CLI_FLAG_TARGETS)
 
 # Delete incomplete files if a command fails
 .DELETE_ON_ERROR:

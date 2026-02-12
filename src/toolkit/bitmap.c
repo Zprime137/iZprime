@@ -25,6 +25,7 @@
  * @version 1.0
  * @see bitmap.h for API documentation
  * @see test/test_bitmap.c for test suite
+ * @ingroup iz_bitmap
  */
 
 #include <bitmap.h>

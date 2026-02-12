@@ -3,6 +3,7 @@
  * @brief Logging module.
  *
  * This module provides functions for logging messages at different levels.
+ * @ingroup iz_logger
  */
 #ifdef ENABLE_LOGGING
 

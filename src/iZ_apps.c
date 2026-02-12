@@ -4,6 +4,7 @@
  *
  * This module contains range-oriented entry points (stream/count) and
  * probabilistic prime generation wrappers.
+ * @ingroup iz_api
  */
 
 #include <iZ_api.h>
@@ -13,6 +14,7 @@
 // =========================================================
 
 /**
+ * @ingroup iz_api
  * @brief Count or stream primes in an arbitrary numeric range using Sieve-iZm.
  *
  * This function counts primes in the interval [Zs, Ze], where Zs is provided
@@ -175,6 +177,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Multi-process prime counting over a numeric range using Sieve-iZm.
  *
  * This function parallelizes prime counting over the interval [Zs, Ze]
@@ -531,6 +534,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
 // =========================================================
 
 /**
+ * @ingroup iz_api
  * @brief Generates a random prime candidate using the vy_search_prime routine.
  *
  * @description: This function generates a random prime of a given bit size using the vy_search_prime routine.
@@ -677,6 +681,7 @@ int vy_random_prime(mpz_t p, int bit_size, int cores_num)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Generates a random prime candidate using the vx_search_prime routine.
  *
  * @description: This function generates a random prime of a given bit size using the vx_search_prime routine.
@@ -806,6 +811,7 @@ int vx_random_prime(mpz_t p, int bit_size, int cores_num)
 }
 
 /**
+ * @ingroup iz_api
  * @brief Find the next prime number after a given base.
  *
  * @description: This function searches for the next/previous prime number after a given base using the iZ framework.

@@ -1,92 +1,10 @@
-
 /**
  * @file bitmap.h
- * @brief Bitmap module for efficient bit array manipulation and prime sieve applications.
+ * @brief Bitmap container and bit operations used by sieve implementations.
  *
- * @author iZprime.com
- * @date October 2025
- * @version 1.0
- *
- * ## Overview
- * This module provides a robust implementation of bit arrays (bitmaps) optimized for
- * prime sieve algorithms and other applications requiring efficient bit-level operations.
- * Each bitmap is represented by a BITMAP structure containing the bit array, its size,
- * and an optional SHA-256 hash for data integrity verification.
- *
- * ## Key Features
- * - Memory-efficient storage: 8 elements per byte
- * - Fast bitwise operations for individual and bulk bit manipulation
- * - Built-in SHA-256 hashing for data integrity
- * - File I/O support with automatic hash validation
- * - Thread-safe operations (when used with proper synchronization)
- * - Comprehensive bounds checking and error handling
- *
- * ## Memory Layout
- * Bits are stored in little-endian format within each byte:
- * - Bit 0 (LSB) is stored in bit position 0 of byte 0
- * - Bit 7 is stored in bit position 7 of byte 0
- * - Bit 8 is stored in bit position 0 of byte 1, etc.
- *
- * ## Usage Example
- * @code
- * // Create a bitmap with 1000 bits
- * BITMAP *bitmap = bitmap_init(1000);
- * if (bitmap == NULL) {
- *     // Handle allocation failure
- * }
- *
- * // Set some bits
- * bitmap_set_bit(bitmap, 42);
- * bitmap_set_bit(bitmap, 100);
- *
- * // Check a bit
- * int bit_value = bitmap_get_bit(bitmap, 42);  // Returns 1
- *
- * // Compute and validate hash
- * bitmap_compute_hash(bitmap);
- *
- * // Save to file
- * FILE *f = fopen("bitmap.bin", "wb");
- * bitmap_fwrite(bitmap, f);
- * fclose(f);
- *
- * // Clean up
- * bitmap_free(&bitmap);  // Sets bitmap to NULL
- * @endcode
- *
- * ## Function Categories
- *
- * ### Memory Management
- * - bitmap_init()        - Allocates and initializes a new bitmap
- * - bitmap_free()        - Deallocates bitmap and nullifies pointer
- * - bitmap_clone()       - Creates a deep copy of a bitmap
- *
- * ### Individual Bit Operations
- * - bitmap_set_bit()     - Sets a single bit to 1
- * - bitmap_clear_bit()   - Clears a single bit to 0
- * - bitmap_get_bit()     - Reads the value of a single bit
- * - bitmap_flip_bit()    - Toggles a single bit (0→1 or 1→0)
- *
- * ### Bulk Operations
- * - bitmap_set_all()     - Sets all bits to 1
- * - bitmap_clear_all()   - Clears all bits to 0
- * - bitmap_clear_steps() - Clears bits at regular intervals (for sieve algorithms)
- * - bitmap_clear_steps_simd() - SIMD-optimized version of clear_steps
- *
- * ### Data Integrity
- * - bitmap_compute_hash()   - Computes SHA-256 hash of bitmap data
- * - bitmap_validate_hash()  - Validates stored hash against current data
- *
- * ### File I/O
- * - bitmap_fwrite()      - Writes bitmap to file with automatic hash computation
- * - bitmap_fread()       - Reads bitmap from file with hash validation
- *
- * ### Testing
- * - TEST_BITMAP()        - Comprehensive test suite for all functions (see test/test_bitmap.c)
- *
- * @note All functions perform NULL pointer checking and bounds validation.
- * @note File I/O operations check for complete reads/writes.
- * @note The implementation is in src/modules/bitmap.c
+ * The bitmap API is intentionally minimal and fast: a packed bit-array plus
+ * helpers for per-bit operations, stepped clearing (for sieving), hashing, and
+ * binary serialization.
  */
 
 #ifndef BITMAP_H
@@ -94,78 +12,155 @@
 
 #include <utils.h>
 
+/** @defgroup iz_bitmap Bitmap Module
+ *  @brief Packed bit-array primitives for sieve and toolkit modules.
+ *  @{ */
+
 /**
- * @struct BITMAP
- * @brief Core bitmap structure for efficient bit array storage and manipulation.
+ * @brief Packed bit-array with optional SHA-256 checksum.
  *
- * This structure represents a dynamically-allocated bit array with integrated
- * data integrity checking via SHA-256 hashing. It is optimized for space efficiency,
- * storing 8 bits per byte.
- *
- * ## Structure Members
- * - **size**: Total number of bits in the bitmap (NOT bytes)
- * - **data**: Dynamically allocated byte array storing the bits
- * - **sha256**: SHA-256 hash for data integrity verification
- *
- * ## Memory Requirements
- * The data array requires ⌈size / 8⌉ bytes of memory.
- * Total structure size: sizeof(BITMAP) + ⌈size / 8⌉ bytes
- *
- * ## Bit Indexing
- * Bits are indexed from 0 to (size - 1). Within each byte, bits are stored
- * in little-endian format (bit 0 is the LSB).
- *
- * Example for size = 20:
- * - Byte 0: bits 0-7
- * - Byte 1: bits 8-15
- * - Byte 2: bits 16-19 (only lower 4 bits used)
- *
- * ## Hash Field
- * The sha256 field is:
- * - Initialized to all zeros by bitmap_init()
- * - Computed on-demand by bitmap_compute_hash()
- * - Automatically computed before file writes if all zeros
- * - Validated when reading from files
- *
- * @warning Do not directly modify the data or sha256 fields after hashing
- *          without recomputing the hash via bitmap_compute_hash().
- *
- * @note Always use bitmap_free() to deallocate; never use free() directly.
+ * `size` is measured in bits and `byte_size` is the backing storage in bytes.
+ * The checksum is maintained explicitly via bitmap_compute_hash() and verified
+ * via bitmap_validate_hash().
  */
 typedef struct
 {
-    size_t size;                                ///< Total number of bits (NOT bytes) in the bitmap
-    size_t byte_size;                           ///< Size of the data array in bytes (⌈size / 8⌉)
-    unsigned char *data;                        ///< Dynamically allocated byte array storing bits
-    unsigned char sha256[SHA256_DIGEST_LENGTH]; ///< SHA-256 hash for data integrity verification
+    size_t size;                                /**< Number of addressable bits. */
+    size_t byte_size;                           /**< Number of bytes in @ref data. */
+    unsigned char *data;                        /**< Packed bits (LSB-first per byte). */
+    unsigned char sha256[SHA256_DIGEST_LENGTH]; /**< Cached SHA-256 checksum. */
 } BITMAP;
 
-// * MEMORY MANAGEMENT FUNCTIONS
+/** @name Lifecycle */
+/** @{ */
+/**
+ * @brief Allocate a bitmap with @p size bits.
+ * @param size Number of bits to allocate (must be > 0).
+ * @param set_bits Non-zero initializes all bits to 1, otherwise to 0.
+ * @return Newly allocated bitmap, or NULL on allocation failure.
+ */
 BITMAP *bitmap_init(size_t size, int set_bits);
+
+/**
+ * @brief Free a bitmap and set the caller pointer to NULL.
+ * @param bitmap Address of a BITMAP pointer.
+ */
 void bitmap_free(BITMAP **bitmap);
+
+/**
+ * @brief Deep-copy a bitmap, including data and checksum.
+ * @param src Source bitmap.
+ * @return Cloned bitmap, or NULL on failure.
+ */
 BITMAP *bitmap_clone(BITMAP *src);
+/** @} */
 
-// * BIT MANIPULATION FUNCTIONS
+/** @name Single-bit Operations */
+/** @{ */
+/**
+ * @brief Read bit value at @p idx.
+ * @param bitmap Bitmap to inspect.
+ * @param idx Zero-based bit index.
+ * @return 1 if set, otherwise 0.
+ */
 int bitmap_get_bit(BITMAP *bitmap, size_t idx);
+
+/**
+ * @brief Set bit at @p idx to 1.
+ * @param bitmap Bitmap to modify.
+ * @param idx Zero-based bit index.
+ */
 void bitmap_set_bit(BITMAP *bitmap, size_t idx);
+
+/**
+ * @brief Toggle bit at @p idx.
+ * @param bitmap Bitmap to modify.
+ * @param idx Zero-based bit index.
+ */
 void bitmap_flip_bit(BITMAP *bitmap, size_t idx);
+
+/**
+ * @brief Clear bit at @p idx (set to 0).
+ * @param bitmap Bitmap to modify.
+ * @param idx Zero-based bit index.
+ */
 void bitmap_clear_bit(BITMAP *bitmap, size_t idx);
+/** @} */
 
-// * BULK OPERATIONS
+/** @name Bulk Operations */
+/** @{ */
+/**
+ * @brief Set all bits to 1.
+ * @param bitmap Bitmap to modify.
+ */
 void bitmap_set_all(BITMAP *bitmap);
-void bitmap_clear_all(BITMAP *bitmap);
-void bitmap_clear_steps(BITMAP *bitmap, uint64_t step, uint64_t start_idx, uint64_t limit);
-void bitmap_clear_steps_simd(BITMAP *bitmap, uint64_t step, uint64_t start_idx, uint64_t limit);
 
-// * DATA INTEGRITY (HASHING) FUNCTIONS
+/**
+ * @brief Clear all bits to 0.
+ * @param bitmap Bitmap to modify.
+ */
+void bitmap_clear_all(BITMAP *bitmap);
+
+/**
+ * @brief Clear every @p step-th bit from @p start_idx up to @p limit.
+ *
+ * This is the core primitive for marking composite progressions in sieve code.
+ *
+ * @param bitmap Bitmap to modify.
+ * @param step Index increment between cleared bits.
+ * @param start_idx First index to clear.
+ * @param limit Inclusive upper index bound.
+ */
+void bitmap_clear_steps(BITMAP *bitmap, uint64_t step, uint64_t start_idx, uint64_t limit);
+
+/**
+ * @brief SIMD-accelerated variant of bitmap_clear_steps().
+ * @param bitmap Bitmap to modify.
+ * @param step Index increment between cleared bits.
+ * @param start_idx First index to clear.
+ * @param limit Inclusive upper index bound.
+ */
+void bitmap_clear_steps_simd(BITMAP *bitmap, uint64_t step, uint64_t start_idx, uint64_t limit);
+/** @} */
+
+/** @name Integrity and I/O */
+/** @{ */
+/**
+ * @brief Compute SHA-256 over bitmap data and store it in @ref BITMAP::sha256.
+ * @param bitmap Bitmap to hash.
+ */
 void bitmap_compute_hash(BITMAP *bitmap);
+
+/**
+ * @brief Verify @ref BITMAP::sha256 against current bitmap data.
+ * @param bitmap Bitmap to verify.
+ * @return 1 if checksum matches, otherwise 0.
+ */
 int bitmap_validate_hash(BITMAP *bitmap);
 
-// * FILE I/O FUNCTIONS
+/**
+ * @brief Write bitmap payload and checksum to a binary stream.
+ * @param bitmap Bitmap to serialize.
+ * @param file Writable stream.
+ * @return 1 on success, otherwise 0.
+ */
 int bitmap_fwrite(BITMAP *bitmap, FILE *file);
-BITMAP *bitmap_fread(FILE *file);
 
-// * TESTING FUNCTIONS
+/**
+ * @brief Read bitmap payload and checksum from a binary stream.
+ * @param file Readable stream.
+ * @return Newly allocated bitmap, or NULL on parse/verification failure.
+ */
+BITMAP *bitmap_fread(FILE *file);
+/** @} */
+
+/**
+ * @brief Run bitmap module tests.
+ * @param verbose Non-zero enables detailed logging.
+ * @return 1 when all tests pass, otherwise 0.
+ */
 int TEST_BITMAP(int verbose);
+
+/** @} */
 
 #endif // BITMAP_H

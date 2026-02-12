@@ -11,17 +11,18 @@ const SIEVE_MODEL _SoA = {SoA, "SoA"};    // * Sieve of Atkin
 const SIEVE_MODEL _SiZ = {SiZ, "SiZ"};    // * Sieve-iZ
 const SIEVE_MODEL _SiZm = {SiZm, "SiZm"}; // * Sieve-iZm
 
-// A variant of SiZm, sieving the vy dimension for improved performance, however,
-// it returns unordered list of primes, so it will fail the integrity test
+// returns unordered list of primes, so it will fail the integrity test
 const SIEVE_MODEL _SiZm_vy = {SiZm_vy, "SiZm_vy"}; // * Sieve-iZm_vy
 
+// Array of sieve models to be tested and benchmarked,
+// uncomment the ones you want to include in the tests and benchmarks
 SIEVE_MODEL SIEVE_MODELS[] = {
-    // _SoE,
-    // _SSoE,
-    // _SoEu,
-    // _SoS,
-    // _SoA,
-    // _SiZ,
+    _SoE,
+    _SSoE,
+    _SoEu,
+    _SoS,
+    _SoA,
+    _SiZ,
     _SiZm,
     _SiZm_vy,
 };
@@ -45,8 +46,10 @@ int models_count = sizeof(SIEVE_MODELS) / sizeof(SIEVE_MODELS[0]);
  */
 static int test_sieve_integrity(uint64_t n, int verbose)
 {
-    // Store hashes for each model
-    unsigned char result_hashes[models_count][SHA256_DIGEST_LENGTH];
+    unsigned char baseline_hash[SHA256_DIGEST_LENGTH];
+    int baseline_set = 0;
+    int tested_models = 0;
+    int mismatch = 0;
 
     if (verbose)
     {
@@ -79,23 +82,23 @@ static int test_sieve_integrity(uint64_t n, int verbose)
             print_sha256_hash(primes->sha256);
         }
 
-        // Store the hash in the results array
-        memcpy(result_hashes[i], primes->sha256, 32);
+        // Use the first tested model as baseline, compare all subsequent hashes to it.
+        if (!baseline_set)
+        {
+            memcpy(baseline_hash, primes->sha256, SHA256_DIGEST_LENGTH);
+            baseline_set = 1;
+        }
+        else if (memcmp(baseline_hash, primes->sha256, SHA256_DIGEST_LENGTH) != 0)
+        {
+            mismatch++;
+        }
+
+        tested_models++;
 
         ui64_free(&primes); // Free the UI64_ARRAY after use
     }
 
-    // Compare all hashes to the first hash (SoE)
-    int mismatch = 0;
-    for (int i = 1; i < models_count; i++)
-    {
-        if (memcmp(result_hashes[0], result_hashes[i], 32) != 0)
-        {
-            mismatch++;
-        }
-    }
-
-    return (mismatch == 0) ? 1 : 0;
+    return (tested_models > 0 && mismatch == 0);
 }
 
 /**
@@ -119,7 +122,7 @@ int TEST_SIEVE_MODELS_INTEGRITY(int verbose)
     int result = 1;
     // Test the integrity of each sieve model for limits 10^3, 10^6, 10^9
     for (int e = 3; e < 10; e += 3)
-        result = test_sieve_integrity(pow(10, e), verbose);
+        result = result && test_sieve_integrity(pow(10, e), verbose);
 
     print_line(60, '*');
     if (result)
@@ -246,6 +249,8 @@ static void save_results_file(int all_results[][32], SIEVE_LIMIT limits_array[],
     // Close the file
     fclose(fp);
     printf("\nResults saved to %s\n", file_path);
+    printf("RESULTS_FILE: %s\n", file_path);
+    fflush(stdout);
 }
 
 /**

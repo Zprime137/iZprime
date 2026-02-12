@@ -1,12 +1,15 @@
 /**
  * @file iZ_toolkit.c
  * @brief Implementation of iZ index space helpers and iZm/VX segment machinery.
+ * @ingroup iz_toolkit
  */
 
 #include <iZ_api.h>
 
+/** Small odd primes used to estimate pre-sieved factors in `vx`. */
 static const int s_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
                                43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+/** Number of entries available in `s_primes`. */
 static int s_primes_count = sizeof(s_primes) / sizeof(int);
 
 /**
@@ -41,7 +44,11 @@ void iZ_mpz(mpz_t z, mpz_t x, int i)
         mpz_sub_ui(z, z, -i); // z = z - i
 }
 
-// compute k of vx
+/**
+ * @brief Count how many small primes (>3) divide vx.
+ * @param iZm Initialized toolkit context.
+ * @return Number of pre-sieved small primes encoded in vx.
+ */
 static int compute_k_vx(IZM *iZm)
 {
     int k = 0;
@@ -52,6 +59,14 @@ static int compute_k_vx(IZM *iZm)
     return k;
 }
 
+/**
+ * @ingroup iz_toolkit
+ * @brief Consume iZ candidate bitmaps, emit primes, and mark root composites.
+ * @param primes Destination array for discovered primes.
+ * @param x5 Bitmap for 6x-1 candidates.
+ * @param x7 Bitmap for 6x+1 candidates.
+ * @param x_limit Exclusive x upper bound.
+ */
 void process_iZ_bitmaps(UI64_ARRAY *primes, BITMAP *x5, BITMAP *x7, uint64_t x_limit)
 {
     uint64_t root_limit = sqrt(6 * x_limit) + 1;
@@ -88,6 +103,12 @@ void process_iZ_bitmaps(UI64_ARRAY *primes, BITMAP *x5, BITMAP *x7, uint64_t x_l
     }
 }
 
+/**
+ * @ingroup iz_toolkit
+ * @brief Generate root primes up to @p limit using iZ bitmap traversal.
+ * @param primes Destination array.
+ * @param limit Numeric upper bound.
+ */
 void get_root_primes(UI64_ARRAY *primes, uint64_t limit)
 {
     // Add 2, 3 to primes
@@ -123,9 +144,10 @@ void get_root_primes(UI64_ARRAY *primes, uint64_t limit)
 // =========================================================
 
 /**
+ * @ingroup iz_toolkit
  * @brief Initialize an iZm structure for a given vx size.
  *
- * @description:
+ * @details
  * This function initializes an iZm structure for a specified vx size.
  * It allocates memory for the structure, generates root primes for
  * deterministic sieving, initializes base bitmaps, and constructs
@@ -178,6 +200,12 @@ IZM *iZm_init(size_t vx)
     return iZm;
 }
 
+/**
+ * @ingroup iz_toolkit
+ * @brief Deep-copy an IZM object for independent worker usage.
+ * @param src Source IZM object.
+ * @return Cloned IZM object, or NULL on failure.
+ */
 IZM *iZm_clone(IZM *src)
 {
     assert(src && "Invalid source IZM structure for cloning.");
@@ -206,6 +234,7 @@ IZM *iZm_clone(IZM *src)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Free the memory allocated for an IZM structure.
  *
  * Parameters:
@@ -225,13 +254,16 @@ void iZm_free(IZM **iZm)
 }
 
 /**
- * @brief Calculate vx for a given range x_n by multiplying max_k small primes (> 3).
+ * @brief Calculate vx up to VX_{ @p max_k } without exceeding n/6.
  *
  * Parameters:
- * @param x_n the number of bits to be vectorized
+ * @param n the numeric limit for sieving
  * @param max_k the number of primes to be multiplied
  *
- * @return vx the product of the first max_k primes (> 3) not exceeding x_n
+ * @return vx the product of the first max_k primes (> 3) not exceeding n/6
+ */
+/**
+ * @ingroup iz_toolkit
  */
 uint64_t compute_vx_k(uint64_t n, int max_k)
 {
@@ -249,6 +281,12 @@ uint64_t compute_vx_k(uint64_t n, int max_k)
     return vx;
 }
 
+/**
+ * @ingroup iz_toolkit
+ * @brief Choose a cache-aware VX size based on detected L2 capacity.
+ * @param n Target numeric sieve bound.
+ * @return Selected VX.
+ */
 uint64_t compute_l2_vx(uint64_t n)
 {
     uint64_t l2 = get_cpu_L2_cache_size_bits();
@@ -267,6 +305,7 @@ uint64_t compute_l2_vx(uint64_t n)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Compute the maximum vx such that vx < 2^bit_size.
  *
  * Parameters:
@@ -293,6 +332,7 @@ void compute_max_vx(mpz_t vx, int bit_size)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Constructs a pre-sieved iZm base segment of size vx.
  *
  * @description:
@@ -339,6 +379,7 @@ void iZm_construct_vx_base(uint64_t vx, BITMAP *base_x5, BITMAP *base_x7)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Compute the first composite hit of p in the yth vx segment in iZm index space.
  *
  * @description:
@@ -348,14 +389,14 @@ void iZm_construct_vx_base(uint64_t vx, BITMAP *base_x5, BITMAP *base_x7)
  * and p to either x_p or p - x_p, then computes x and returns it.
  *
  * Parameters:
- * @param m_id  int indicating the matrix type (-1 for iZm5, 1 for iZm7).
+ * @param m_id       int matrix identifier (-1 for iZm5, 1 for iZm7).
  * @param p          Unsigned 64-bit integer parameter.
  * @param vx         size_t parameter representing the vx value.
  * @param y          Unsigned 64-bit integer parameter.
  *
  * @return The computed x value as a 64-bit unsigned integer.
  */
-uint64_t iZm_solve_for_xp(int m_id, uint64_t p, uint64_t vx, uint64_t y)
+uint64_t iZm_solve_for_x0(int m_id, uint64_t p, uint64_t vx, uint64_t y)
 {
     uint64_t xp = (p + 1) / 6;
     int ip = (p % 6 == 1) ? 1 : -1;
@@ -377,18 +418,19 @@ uint64_t iZm_solve_for_xp(int m_id, uint64_t p, uint64_t vx, uint64_t y)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Solve for x given m_id, p, vx, and y using GMP.
  * Same as above but using GMP. Suitable for arbitrary y values.
  *
  * Parameters:
- * @param m_id  int indicating the target matrix (-1 for iZm5, 1 for iZm7).
+ * @param m_id       int matrix identifier (-1 for iZm5, 1 for iZm7).
  * @param p          Unsigned 64-bit integer parameter.
  * @param vx         Size_t parameter representing the vx value.
  * @param y          mpz_t parameter representing the y value.
  *
  * @return The computed x value as a 64-bit unsigned integer.
  */
-uint64_t iZm_solve_for_xp_mpz(int m_id, uint64_t p, uint64_t vx, mpz_t y)
+uint64_t iZm_solve_for_x0_mpz(int m_id, uint64_t p, uint64_t vx, mpz_t y)
 {
     mpz_t tmp;
     mpz_init(tmp);
@@ -409,6 +451,7 @@ uint64_t iZm_solve_for_xp_mpz(int m_id, uint64_t p, uint64_t vx, mpz_t y)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Compute the first composite hit of p in the xth vy segment in iZm of width vx.
  *
  * @description:
@@ -421,14 +464,14 @@ uint64_t iZm_solve_for_xp_mpz(int m_id, uint64_t p, uint64_t vx, mpz_t y)
  * difference between x_p and x modulo p.
  *
  * Parameters:
- * @param m_id  Integer indicating the matrix type (-1 for iZm5, 1 for iZm7).
+ * @param m_id       int matrix identifier (-1 for iZm5, 1 for iZm7).
  * @param p          Unsigned 64-bit integer parameter.
  * @param vx         Size_t parameter representing the vx value.
  * @param x          Unsigned 64-bit integer parameter.
  *
  * @return The computed y value as a 64-bit unsigned integer.
  */
-int64_t iZm_solve_for_yp(int m_id, uint64_t p, uint64_t vx, uint64_t x)
+int64_t iZm_solve_for_y0(int m_id, uint64_t p, uint64_t vx, uint64_t x)
 {
     // No solution check, if vx and p are not coprime
     if (gcd(vx, p) != 1)
@@ -461,7 +504,13 @@ int64_t iZm_solve_for_yp(int m_id, uint64_t p, uint64_t vx, uint64_t x)
 // * VX_SEG structure:
 // ===================================================
 
-int vx_set_base_values(VX_SEG *vx_obj, char *y_str)
+/**
+ * @brief Initialize mpz-dependent base fields for a VX segment object.
+ * @param vx_obj Segment object to populate.
+ * @param y_str Decimal y-coordinate for the segment.
+ * @return 1 on success, 0 on parse/initialization failure.
+ */
+static int vx_set_base_values(VX_SEG *vx_obj, char *y_str)
 {
 
     // assert y_str is numeric
@@ -494,11 +543,11 @@ int vx_set_base_values(VX_SEG *vx_obj, char *y_str)
 }
 
 /**
- * @brief Perform deterministic sieving on the VX_SEG structure.
- *
- * @param vx_obj Pointer to the VX_SEG structure to be processed.
+ * @brief Deterministic phase: mark composites using root primes.
+ * @param iZm Toolkit context containing root-prime table and base bitmaps.
+ * @param vx_obj Segment object to update.
  */
-void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
+static void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
 {
     assert(iZm && "iZm is NULL in vx_det_sieve");
     assert(vx_obj && "vx_obj is NULL in vx_det_sieve");
@@ -511,7 +560,7 @@ void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
     int k = 2 + iZm->k_vx; // skip 2, 3 and pre-sieved k_vx primes
     UI64_ARRAY *root_primes = iZm->root_primes;
 
-    // if y < 2^64, use iZm_solve_for_xp version for efficiency
+    // if y < 2^64, use iZm_solve_for_x0 version for efficiency
     if (mpz_sizeinbase(vx_obj->y, 2) <= 64)
     {
         uint64_t y = mpz_get_ui(vx_obj->y);
@@ -526,21 +575,21 @@ void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
                 break;
 
             // Mark composites of p in x5 and x7
-            bitmap_clear_steps_simd(vx_obj->x5, p, iZm_solve_for_xp(-1, p, vx, y), end_x);
-            bitmap_clear_steps_simd(vx_obj->x7, p, iZm_solve_for_xp(1, p, vx, y), end_x);
+            bitmap_clear_steps_simd(vx_obj->x5, p, iZm_solve_for_x0(-1, p, vx, y), end_x);
+            bitmap_clear_steps_simd(vx_obj->x7, p, iZm_solve_for_x0(1, p, vx, y), end_x);
 
             vx_obj->bit_ops += (2 * end_x) / p; // approximate number of bit operations
         }
     }
     else
     {
-        // the same as above but using iZm_solve_for_xp_mpz version
+        // the same as above but using iZm_solve_for_x0_mpz version
         for (int i = k; i < root_primes->count; i++)
         {
             int p = root_primes->array[i];
 
-            bitmap_clear_steps_simd(vx_obj->x5, p, iZm_solve_for_xp_mpz(-1, p, vx, vx_obj->y), end_x);
-            bitmap_clear_steps_simd(vx_obj->x7, p, iZm_solve_for_xp_mpz(1, p, vx, vx_obj->y), end_x);
+            bitmap_clear_steps_simd(vx_obj->x5, p, iZm_solve_for_x0_mpz(-1, p, vx, vx_obj->y), end_x);
+            bitmap_clear_steps_simd(vx_obj->x7, p, iZm_solve_for_x0_mpz(1, p, vx, vx_obj->y), end_x);
 
             vx_obj->bit_ops += (2 * end_x) / p;
         }
@@ -562,11 +611,10 @@ void vx_det_sieve(IZM *iZm, VX_SEG *vx_obj)
 }
 
 /**
- * @brief Perform probabilistic sieving on the VX_SEG structure.
- *
- * @param vx_obj Pointer to the VX_SEG structure to be processed.
+ * @brief Perform probabilistic sieve cleanup for large numeric ranges.
+ * @param vx_obj Segment object containing deterministic survivors.
  */
-void vx_prob_sieve(VX_SEG *vx_obj)
+static void vx_prob_sieve(VX_SEG *vx_obj)
 {
     // If is_large_limit is false, no need for probabilistic testing
     if (!vx_obj->is_large_limit)
@@ -632,6 +680,7 @@ void vx_prob_sieve(VX_SEG *vx_obj)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief Initialize the members of the VX_SEG structure with the given parameters and defaults.
  *
  * @description:
@@ -659,7 +708,6 @@ VX_SEG *vx_init(IZM *iZm, int start_x, int end_x, char *y_str, int mr_rounds)
     }
 
     // Initialize struct members
-    // vx_obj->iZm = iZm;
     vx_obj->vx = iZm->vx;
 
     // Set base values
@@ -672,9 +720,8 @@ VX_SEG *vx_init(IZM *iZm, int start_x, int end_x, char *y_str, int mr_rounds)
 
     vx_obj->mr_rounds = (mr_rounds == 0) ? MR_ROUNDS : mr_rounds; // default 25 rounds
 
-    int vx = vx_obj->vx;
     vx_obj->start_x = MAX(start_x, 1);
-    vx_obj->end_x = MIN(end_x, vx);
+    vx_obj->end_x = MIN(end_x, vx_obj->vx);
     vx_obj->x5 = bitmap_clone(iZm->base_x5);
     vx_obj->x7 = bitmap_clone(iZm->base_x7);
     vx_obj->p_count = 0;
@@ -689,13 +736,9 @@ VX_SEG *vx_init(IZM *iZm, int start_x, int end_x, char *y_str, int mr_rounds)
 }
 
 /**
- * @brief Free the VX_SEG structure.
- *
- * @description:
- * This function frees all memory associated with the VX_SEG structure.
- *
- * Parameters:
- * @param vx_obj Pointer to the VX_SEG structure to be freed.
+ * @ingroup iz_toolkit
+ * @brief Free all memory owned by a VX segment object.
+ * @param vx_obj Address of the VX_SEG pointer to release.
  */
 void vx_free(VX_SEG **vx_obj)
 {
@@ -716,7 +759,15 @@ void vx_free(VX_SEG **vx_obj)
     *vx_obj = NULL;
 }
 
-// Important: should be used after sieving
+/**
+ * @ingroup iz_toolkit
+ * @brief Convert survivor bits into compact prime-gap encoding.
+ *
+ * This routine must run after deterministic/probabilistic sieving is complete.
+ * It populates @ref VX_SEG::p_gaps for downstream streaming and gap traversal.
+ *
+ * @param vx_obj Segment object with validated prime survivors.
+ */
 void vx_collect_p_gaps(VX_SEG *vx_obj)
 {
     assert(vx_obj && vx_obj->p_count > 0 && "Invalid vx_obj in vx_collect_p_gaps");
@@ -763,6 +814,7 @@ void vx_collect_p_gaps(VX_SEG *vx_obj)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief This function performs the sieve process on a given vx and y defined
  * in the VX_SEG structure, and stores the primes gaps in the vx_obj->p_gaps array.
  *
@@ -789,7 +841,12 @@ void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps)
         vx_collect_p_gaps(vx_obj);
 }
 
-// streams primes incrementally to the output file
+/**
+ * @ingroup iz_toolkit
+ * @brief Stream segment primes to an output file in traversal order.
+ * @param vx_obj Segment object.
+ * @param output Destination stream.
+ */
 void vx_stream_file(VX_SEG *vx_obj, FILE *output)
 {
     assert(vx_obj && "vx_obj is NULL in vx_stream_file");
@@ -869,6 +926,7 @@ void vx_stream_file(VX_SEG *vx_obj, FILE *output)
 // ==================================================
 
 /**
+ * @ingroup iz_toolkit
  * @brief horizontal search routine for generating a random prime.
  *
  * @description: This function searches for a prime number using the given parameters.
@@ -926,7 +984,7 @@ int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size)
         {
             uint64_t q = root_primes->array[i];
             // mark composites of q in the bitmap
-            bitmap_clear_steps(bitmap, q, iZm_solve_for_xp_mpz(m_id, q, vx, y), vx);
+            bitmap_clear_steps(bitmap, q, iZm_solve_for_x0_mpz(m_id, q, vx, y), vx);
         }
 
         int random_x = rand() % (vx / 2); // random x < vx/2
@@ -966,6 +1024,7 @@ int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size)
 }
 
 /**
+ * @ingroup iz_toolkit
  * @brief vertical search routine for generating a random prime.
  *
  * @description: This function searches for a prime number using the given parameters.
