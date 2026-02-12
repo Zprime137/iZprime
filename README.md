@@ -73,11 +73,11 @@ The library provides modern implementations of several classic sieve algorithms:
 
 ### SiZ family (iZ-space)
 
-The SiZ family is a fresh wheel-based optimization to the classic Sieve of Eratosthenes, it combines multiple wheel structures to optimize and reduce the primes search space. It includes:
+The SiZ family is a fresh wheel-based optimization to the classic Sieve of Eratosthenes. It includes:
 
 - `SiZ` : _Solid_ Sieve-iZ on `6x ± 1`
 - `SiZm` : _Segmented_ Sieve-iZm (horizontal sieving)
-- `SiZm_vy` : _Semi-segmented_ Sieve-iZm (vertical sieving, unordered output)
+- `SiZm_vy` : _Segmented_ Sieve-iZm-vy (vertical sieving, unordered output)
 
 ### Range operations
 
@@ -92,7 +92,7 @@ The SiZ family is a fresh wheel-based optimization to the classic Sieve of Erato
 
 ## 2. Core Design
 
-The iZ framework employs multiple wheel factorization structures to improve the constant factor of the $O(N \log \log N)$ cost model, and improve the space complexity to ensure cache utilization.
+The iZ framework employs multiple wheel factorization structures to improve the constant factor of the $O(N \ \log \ \log \ N)$ cost model, and improve the space complexity to ensure cache utilization.
 
 Please refer to `docs/pseudocode.pdf` for detailed algorithm design and pseudocode documentation.
 
