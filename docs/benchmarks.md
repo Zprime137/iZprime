@@ -66,13 +66,15 @@ Times are in microseconds (`us`) from `docs/test_results/psieve_10093442.txt`.
 
 ## 4. Prime Generation Benchmark Table
 
-Average times are in seconds from the corresponding `./test_results/p_gen_*.txt` files.
+Average times are in seconds for each bit size from the corresponding `./test_results/p_gen_*.txt` files.
 
-| Bit size | vy_random_prime | vx_random_prime | iZ_random_next_prime | gmp_random_next_prime | BN_generate_prime_ex |
-| -------: | --------------: | --------------: | -------------------: | --------------------: | -------------------: |
-|     1024 |        0.021182 |        0.008107 |             0.023231 |              0.009421 |             0.026731 |
-|     2048 |        0.063515 |        0.082872 |             0.150618 |              0.071797 |             0.422709 |
-|     4096 |        3.181408 |        1.220519 |             0.578747 |              1.666787 |             4.959384 |
+| Algorithm             |     1024 |     2048 |     4096 |
+| --------------------- | -------: | -------: | -------: |
+| vy_random_prime       | 0.021182 | 0.063515 | 3.181408 |
+| vx_random_prime       | 0.008107 | 0.082872 | 1.220519 |
+| iZ_random_next_prime  | 0.023231 | 0.150618 | 0.578747 |
+| gmp_random_next_prime | 0.009421 | 0.071797 | 1.666787 |
+| BN_generate_prime_ex  | 0.026731 | 0.422709 | 4.959384 |
 
 ## 5. Plot Artifacts
 
