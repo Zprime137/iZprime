@@ -21,10 +21,11 @@ The algorithm design and pseudocode are documented in `docs/pseudocode.pdf` and 
 
 ## Documentation Map
 
-- `docs/pseudocode.pdf`: algorithm design and pseudocode.
+- `docs/userManual.pdf`: generated API manual (`make userManual`).
+- `docs/pseudocode.pdf`: algorithm design and pseudocode documentation.
+- `docs/Makefile.md`: Makefile targets, variables, and usage instructions.
 - `docs/benchmarks.md`: benchmark commands, tables, and plots.
 - `docs/tests.md`: test targets, execution guidance, and pass snapshots.
-- `docs/userManual.pdf`: generated API manual (`make userManual`).
 
 ## Table of Contents
 
