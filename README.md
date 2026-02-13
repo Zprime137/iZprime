@@ -2,7 +2,7 @@
 
 `iZprime` is a performance-oriented C framework for prime sieving and prime generation.
 
-It is designed as a **starting point for research, experimentation, and building real prime-based applications**.  
+It is designed as a **starting point for research, experimentation, and building real prime‑driven applications**.  
 Instead of forcing you to assemble infrastructure from scratch, iZprime provides the essential components that advanced implementations inevitably require — already engineered, tested, and documented.
 
 At a glance, the library gives you:
@@ -14,6 +14,8 @@ At a glance, the library gives you:
 - benchmarking utilities to measure performance and scaling.
 
 All of this is accompanied by extensive documentation so new algorithms can be understood, modified, and extended without reverse‑engineering dense code.
+
+The project intentionally favors **clarity, modularity, and composability**. Advanced wheel and segmentation techniques are exposed through small, well‑defined components so new ideas can be implemented without navigating a maze of tightly coupled optimizations.
 
 The algorithm design and pseudocode are documented in `docs/pseudocode.pdf` and map directly to the implemented code paths, making it straightforward to connect theory, structure, and execution.
 
@@ -31,11 +33,11 @@ The algorithm design and pseudocode are documented in `docs/pseudocode.pdf` and 
   - [Table of Contents](#table-of-contents)
   - [1. What the Library Provides](#1-what-the-library-provides)
     - [Classical sieve algorithms](#classical-sieve-algorithms)
-    - [SiZ family (iZ-space)](#siz-family-iz-space)
-    - [Classic implementations](#classic-implementations)
-    - [Range operations](#range-operations)
-    - [Random prime generation](#random-prime-generation)
-    - [Next prime search](#next-prime-search)
+    - [SiZ family](#siz-family)
+      - [Deterministic sieving implementations](#deterministic-sieving-implementations)
+      - [Hybrid sieving implementations](#hybrid-sieving-implementations)
+      - [Random prime generation](#random-prime-generation)
+      - [Next prime search](#next-prime-search)
   - [2. Core Design](#2-core-design)
   - [3. Project Layout](#3-project-layout)
   - [4. Dependencies](#4-dependencies)
@@ -80,29 +82,38 @@ The library provides modern implementations of several classic sieve algorithms:
 - `SoS` : Sieve of Sundaram
 - `SoA` : Sieve of Atkin
 
-### SiZ family (iZ-space)
+### SiZ family
 
-The SiZ family employs multiple wheel factorization structures to improve the constant factor of the $O(N \ \log \ \log \ N)$ cost model, and improve the space complexity to ensure cache utilization. It includes:
+The SiZ family forms the core of the iZprime framework. It combines wheel factorization with structured traversal strategies to aggressively reduce the constant factors of the $O(N \log \log N)$ cost model while keeping memory usage small enough to stay cache‑efficient.
 
-### Classic implementations
+Instead of committing to a single approach, iZprime provides several compatible SiZ variants built on the same toolkit. This makes it straightforward to select — or experiment with — the strategy that best matches a target range, hardware profile, or application requirement.
+It includes:
 
-Algorithms that return all primes up to `n` in a `UI64_ARRAY`:
+#### Deterministic sieving implementations
+
+These algorithms return all primes up to `n` in a `UI64_ARRAY`:
 
 - `SiZ` : _Solid_ Sieve-iZ on `6x ± 1`
 - `SiZm` : _Segmented_ Sieve-iZm (horizontal sieving)
 - `SiZm_vy` : _Segmented_ Sieve-iZm-vy (vertical sieving, unordered output)
 
-### Range operations
+All deterministic variants share the same underlying mappings, bitmaps, and solver infrastructure, so improvements in one place typically benefit the others.
 
-- `SiZ_stream` : stream primes in `[start, start + range - 1]` to file and return count
+#### Hybrid sieving implementations
+
+These algorithms combine deterministic sieving with probabilistic primality testing, operating on an arbitrary range `[start, start + range - 1]`:
+
+- `SiZ_stream` : stream primes in range to file and return count
 - `SiZ_count` : count primes in range using multiple processes
 
-### Random prime generation
+#### Random prime generation
 
-- `vx_random_prime` : random prime search routine, employing horizontal strategy
-- `vy_random_prime` : random prime search routine, employing vertical strategy
+Random prime search routines that target a specific bit size and use the iZ/iZm toolkit to efficiently skip non-candidates:
 
-### Next prime search
+- `vx_random_prime` : random prime search routine, employing horizontal search strategy
+- `vy_random_prime` : random prime search routine, employing vertical search strategy
+
+#### Next prime search
 
 - `iZ_next_prime` : next/previous prime near an arbitrary base value
 
@@ -111,9 +122,9 @@ Algorithms that return all primes up to `n` in a `UI64_ARRAY`:
 The library is designed around the following core principles:
 
 - **Performance**: algorithms and data structures are optimized for speed and cache efficiency.
-- **Reusability**: the iZ/iZm toolkit, with clean API, abstracts common logic to facilitate new algorithm development without re-implementing segment management, wheel construction, or solver logic.
+- **Reusability**: the iZ/iZm toolkit abstracts common logic behind clean interfaces, allowing new algorithms to be developed without re‑implementing segment management, wheel construction, or solver mechanics.
 - **Validation and Benchmarking**: comprehensive tests validate implementations, and benchmarking utilities allow performance to be measured and compared.
-- **Documentation**: detailed pseudocode and API documentation ensure users can understand and extend the library without reverse-engineering code.
+- **Documentation**: detailed pseudocode and API documentation ensure users can understand, validate, and extend the library without reverse‑engineering code.
 
 ## 3. Project Layout
 
@@ -280,7 +291,7 @@ Key extension points:
   - `vx_stream_file`
   - `vx_free`
 
-If you extend SiZ-family algorithms, this is the correct layer to reuse instead of re-implementing segment logic.
+If you extend SiZ‑family algorithms, this is the layer you should reuse instead of re‑implementing segment logic.
 
 ## 9. Usage Examples
 
