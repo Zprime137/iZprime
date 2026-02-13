@@ -672,13 +672,13 @@ UI64_ARRAY *SiZm_vy(uint64_t n)
                 bitmap_clear_steps_simd(vy_bitmap, p, y_0, vy);
             }
 
-            // * c. collect primes from vy_bitmap
+            // * c. collect primes from vy_bitmap up to y = vy-1
             for (int y = 0; y < vy; y++)
             {
                 if (bitmap_get_bit(vy_bitmap, y))
                     ui64_push(primes, iZ(y * vx + x, -1));
             }
-            // handle partial last row
+            // handle partial last row where y = vy (check if p < n before pushing)
             if (bitmap_get_bit(vy_bitmap, vy))
             {
                 uint64_t p = iZ(vy * vx + x, -1);

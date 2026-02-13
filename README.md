@@ -1,14 +1,21 @@
 # iZprime
 
-`iZprime` is a performance-oriented C library for prime sieving and prime generation, for those who might be interested in prime sieving algorithms or algorithmic design in general.
+`iZprime` is a performance-oriented C framework for prime sieving and prime generation.
 
-At a glance, the library provides:
+It is designed as a **starting point for research, experimentation, and building real prime-based applications**.  
+Instead of forcing you to assemble infrastructure from scratch, iZprime provides the essential components that advanced implementations inevitably require — already engineered, tested, and documented.
 
-- a modular codebase that includes a comprehensive toolkit, designed for fast and scalable prime generation development,
-- classical sieve implementations, as well as the SiZ family (`SiZ`, `SiZm`, `SiZm_vy`) with comparison studies,
-- optimized large random prime generation strategies for cryptographic applications.
+At a glance, the library gives you:
 
-The algorithm design and pseudocode are documented in `docs/pseudocode.pdf` and correspond to the implemented code paths.
+- compact, production-ready data structures (bitmaps and dynamic integer arrays) with rich utility operations,
+- the reusable **iZ / iZm toolkit** (mappings, solvers, wheel construction, segment lifecycle),
+- multiple sieve strategies — classical methods plus the SiZ family (`SiZ`, `SiZm`, `SiZm_vy`) — so ideas can be compared and evolved,
+- integration tests to validate correctness,
+- benchmarking utilities to measure performance and scaling.
+
+All of this is accompanied by extensive documentation so new algorithms can be understood, modified, and extended without reverse‑engineering dense code.
+
+The algorithm design and pseudocode are documented in `docs/pseudocode.pdf` and map directly to the implemented code paths, making it straightforward to connect theory, structure, and execution.
 
 ## Documentation Map
 
