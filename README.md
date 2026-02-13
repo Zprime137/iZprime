@@ -32,8 +32,10 @@ The algorithm design and pseudocode are documented in `docs/pseudocode.pdf` and 
   - [1. What the Library Provides](#1-what-the-library-provides)
     - [Classical sieve algorithms](#classical-sieve-algorithms)
     - [SiZ family (iZ-space)](#siz-family-iz-space)
+    - [Classic implementations](#classic-implementations)
     - [Range operations](#range-operations)
-    - [Prime generation](#prime-generation)
+    - [Random prime generation](#random-prime-generation)
+    - [Next prime search](#next-prime-search)
   - [2. Core Design](#2-core-design)
   - [3. Project Layout](#3-project-layout)
   - [4. Dependencies](#4-dependencies)
@@ -80,7 +82,11 @@ The library provides modern implementations of several classic sieve algorithms:
 
 ### SiZ family (iZ-space)
 
-The SiZ family is a fresh wheel-based optimization to the classic Sieve of Eratosthenes. It includes:
+The SiZ family employs multiple wheel factorization structures to improve the constant factor of the $O(N \ \log \ \log \ N)$ cost model, and improve the space complexity to ensure cache utilization. It includes:
+
+### Classic implementations
+
+Algorithms that return all primes up to `n` in a `UI64_ARRAY`:
 
 - `SiZ` : _Solid_ Sieve-iZ on `6x ± 1`
 - `SiZm` : _Segmented_ Sieve-iZm (horizontal sieving)
@@ -91,17 +97,23 @@ The SiZ family is a fresh wheel-based optimization to the classic Sieve of Erato
 - `SiZ_stream` : stream primes in `[start, start + range - 1]` to file and return count
 - `SiZ_count` : count primes in range using multiple processes
 
-### Prime generation
+### Random prime generation
 
-- `vx_random_prime` : random prime search via horizontal strategy
-- `vy_random_prime` : random prime search via vertical strategy
+- `vx_random_prime` : random prime search routine, employing horizontal strategy
+- `vy_random_prime` : random prime search routine, employing vertical strategy
+
+### Next prime search
+
 - `iZ_next_prime` : next/previous prime near an arbitrary base value
 
 ## 2. Core Design
 
-The iZ framework employs multiple wheel factorization structures to improve the constant factor of the $O(N \ \log \ \log \ N)$ cost model, and improve the space complexity to ensure cache utilization.
+The library is designed around the following core principles:
 
-Please refer to `docs/pseudocode.pdf` for detailed algorithm design and pseudocode documentation.
+- **Performance**: algorithms and data structures are optimized for speed and cache efficiency.
+- **Reusability**: the iZ/iZm toolkit, with clean API, abstracts common logic to facilitate new algorithm development without re-implementing segment management, wheel construction, or solver logic.
+- **Validation and Benchmarking**: comprehensive tests validate implementations, and benchmarking utilities allow performance to be measured and compared.
+- **Documentation**: detailed pseudocode and API documentation ensure users can understand and extend the library without reverse-engineering code.
 
 ## 3. Project Layout
 
