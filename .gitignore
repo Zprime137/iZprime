@@ -40,3 +40,6 @@ py_tools/__pycache__/
 # Temporary files
 *.tmp
 *.swp
+
+# Generated manual artifact
+docs/userManual.pdf
