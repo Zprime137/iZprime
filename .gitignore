@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.history/
+
+# Local build config
+config.mk
+
+# Build artifacts
+build/
+dist/
+
+# Runtime outputs
+output/
+logs/
+
+# Generated docs
+docs/api/
+docs/logs/
+
+# Python
+.venv/
+py_tools/__pycache__/
+*.pyc
+
+# C/C++ objects and binaries
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.d
+
+# Temporary files
+*.tmp
+*.swp
