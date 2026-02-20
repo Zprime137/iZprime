@@ -41,5 +41,3 @@ py_tools/__pycache__/
 *.tmp
 *.swp
 
-# Generated manual artifact
-docs/userManual.pdf
