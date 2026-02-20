@@ -1,0 +1,368 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\contentsline {chapter}{\numberline {1}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zprime User Manual }{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}What this manual covers}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Related project docs}{1}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Benchmarks }{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}1. Run Benchmarks}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}2. Result Files Used In This Snapshot}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.3}3. Sieve Benchmark Table and Plot}{4}{section.2.3}%
+\contentsline {section}{\numberline {2.4}4. Prime Generation Benchmark Table}{4}{section.2.4}%
+\contentsline {section}{\numberline {2.5}5. Plot Artifacts}{4}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Prime generation plots}{4}{subsection.2.5.1}%
+\contentsline {section}{\numberline {2.6}6. Si\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}count Benchmark Table}{4}{section.2.6}%
+\contentsline {section}{\numberline {2.7}7. Plot From Terminal (Interactive Prompt)}{5}{section.2.7}%
+\contentsline {chapter}{\numberline {3}izprime CLI }{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Build}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Numeric input syntax}{7}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Commands}{7}{section.3.3}%
+\contentsline {section}{\numberline {3.4}{\ttfamily stream\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}primes}}{7}{section.3.4}%
+\contentsline {section}{\numberline {3.5}{\ttfamily count\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}primes}}{8}{section.3.5}%
+\contentsline {section}{\numberline {3.6}{\ttfamily next\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}prime}}{8}{section.3.6}%
+\contentsline {section}{\numberline {3.7}{\ttfamily is\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}prime}}{8}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Existing maintenance commands}{8}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Contributing to i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zprime }{9}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Scope}{9}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Development Setup}{9}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Code Style}{10}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Validation Requirements}{10}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Benchmarking Expectations}{10}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Pull Request Checklist}{10}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Algorithm Contributions}{11}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Review Standard}{11}{section.4.8}%
+\contentsline {chapter}{\numberline {5}Makefile documentation (i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zprime) }{13}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Quick start}{13}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Dependencies}{13}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Targets}{14}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Build /\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{} run}{14}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Tests}{14}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Benchmarks}{14}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Examples}{15}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Configuration variables}{15}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Local configuration file}{15}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Dependency discovery}{15}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Build toggles}{15}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Test/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}benchmark options}{16}{subsection.5.4.4}%
+\contentsline {section}{\numberline {5.5}Common recipes}{16}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Notes on outputs}{16}{section.5.6}%
+\contentsline {chapter}{\numberline {6}Releasing i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zprime }{17}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Versioning}{17}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Pre-\/release Gate}{17}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Changelog and Release Notes}{18}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Tag and Publish}{18}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Post-\/release}{18}{section.6.5}%
+\contentsline {chapter}{\numberline {7}Tests }{19}{chapter.7}%
+\contentsline {section}{\numberline {7.1}1. Test Targets}{19}{section.7.1}%
+\contentsline {section}{\numberline {7.2}2. What Each Target Runs}{19}{section.7.2}%
+\contentsline {section}{\numberline {7.3}3. Current Snapshot Results}{19}{section.7.3}%
+\contentsline {section}{\numberline {7.4}4. Show Results In Terminal}{20}{section.7.4}%
+\contentsline {section}{\numberline {7.5}5. Notes}{20}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Topic Index}{21}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Topics}{21}{section.8.1}%
+\contentsline {chapter}{\numberline {9}Data Structure Index}{23}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Data Structures}{23}{section.9.1}%
+\contentsline {chapter}{\numberline {10}File Index}{25}{chapter.10}%
+\contentsline {section}{\numberline {10.1}File List}{25}{section.10.1}%
+\contentsline {chapter}{\numberline {11}Topic Documentation}{27}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Bitmap Module }{27}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}Detailed Description}{28}{subsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.1.2}Function Documentation}{29}{subsection.11.1.2}%
+\contentsline {subsubsection}{\numberline {11.1.2.1}bitmap\_clear\_all()}{29}{subsubsection.11.1.2.1}%
+\contentsline {subsubsection}{\numberline {11.1.2.2}bitmap\_clear\_bit()}{29}{subsubsection.11.1.2.2}%
+\contentsline {subsubsection}{\numberline {11.1.2.3}bitmap\_clear\_steps()}{30}{subsubsection.11.1.2.3}%
+\contentsline {subsubsection}{\numberline {11.1.2.4}bitmap\_clear\_steps\_simd()}{30}{subsubsection.11.1.2.4}%
+\contentsline {subsubsection}{\numberline {11.1.2.5}bitmap\_clone()}{31}{subsubsection.11.1.2.5}%
+\contentsline {subsubsection}{\numberline {11.1.2.6}bitmap\_compute\_hash()}{32}{subsubsection.11.1.2.6}%
+\contentsline {subsubsection}{\numberline {11.1.2.7}bitmap\_flip\_bit()}{32}{subsubsection.11.1.2.7}%
+\contentsline {subsubsection}{\numberline {11.1.2.8}bitmap\_fread()}{33}{subsubsection.11.1.2.8}%
+\contentsline {subsubsection}{\numberline {11.1.2.9}bitmap\_free()}{34}{subsubsection.11.1.2.9}%
+\contentsline {subsubsection}{\numberline {11.1.2.10}bitmap\_fwrite()}{34}{subsubsection.11.1.2.10}%
+\contentsline {subsubsection}{\numberline {11.1.2.11}bitmap\_get\_bit()}{35}{subsubsection.11.1.2.11}%
+\contentsline {subsubsection}{\numberline {11.1.2.12}bitmap\_init()}{36}{subsubsection.11.1.2.12}%
+\contentsline {subsubsection}{\numberline {11.1.2.13}bitmap\_set\_all()}{37}{subsubsection.11.1.2.13}%
+\contentsline {subsubsection}{\numberline {11.1.2.14}bitmap\_set\_bit()}{37}{subsubsection.11.1.2.14}%
+\contentsline {subsubsection}{\numberline {11.1.2.15}bitmap\_validate\_hash()}{38}{subsubsection.11.1.2.15}%
+\contentsline {subsubsection}{\numberline {11.1.2.16}TEST\_BITMAP()}{39}{subsubsection.11.1.2.16}%
+\contentsline {section}{\numberline {11.2}Integer Arrays }{39}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}Detailed Description}{41}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}Function Documentation}{41}{subsection.11.2.2}%
+\contentsline {subsubsection}{\numberline {11.2.2.1}TEST\_GENERIC\_INT\_ARRAYS()}{41}{subsubsection.11.2.2.1}%
+\contentsline {section}{\numberline {11.3}iZ Public API }{42}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}Detailed Description}{43}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}Typedef Documentation}{43}{subsection.11.3.2}%
+\contentsline {subsubsection}{\numberline {11.3.2.1}INPUT\_SIEVE\_RANGE}{43}{subsubsection.11.3.2.1}%
+\contentsline {subsection}{\numberline {11.3.3}Function Documentation}{44}{subsection.11.3.3}%
+\contentsline {subsubsection}{\numberline {11.3.3.1}iZ\_next\_prime()}{44}{subsubsection.11.3.3.1}%
+\contentsline {subsubsection}{\numberline {11.3.3.2}SiZ()}{44}{subsubsection.11.3.3.2}%
+\contentsline {subsubsection}{\numberline {11.3.3.3}SiZ\_count()}{45}{subsubsection.11.3.3.3}%
+\contentsline {subsubsection}{\numberline {11.3.3.4}SiZ\_stream()}{47}{subsubsection.11.3.3.4}%
+\contentsline {subsubsection}{\numberline {11.3.3.5}SiZm()}{48}{subsubsection.11.3.3.5}%
+\contentsline {subsubsection}{\numberline {11.3.3.6}SiZm\_vy()}{49}{subsubsection.11.3.3.6}%
+\contentsline {subsubsection}{\numberline {11.3.3.7}SoA()}{50}{subsubsection.11.3.3.7}%
+\contentsline {subsubsection}{\numberline {11.3.3.8}SoE()}{50}{subsubsection.11.3.3.8}%
+\contentsline {subsubsection}{\numberline {11.3.3.9}SoEu()}{51}{subsubsection.11.3.3.9}%
+\contentsline {subsubsection}{\numberline {11.3.3.10}SoS()}{52}{subsubsection.11.3.3.10}%
+\contentsline {subsubsection}{\numberline {11.3.3.11}SSoE()}{53}{subsubsection.11.3.3.11}%
+\contentsline {subsubsection}{\numberline {11.3.3.12}vx\_random\_prime()}{54}{subsubsection.11.3.3.12}%
+\contentsline {subsubsection}{\numberline {11.3.3.13}vy\_random\_prime()}{54}{subsubsection.11.3.3.13}%
+\contentsline {section}{\numberline {11.4}Toolkit (i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zm) }{55}{section.11.4}%
+\contentsline {subsection}{\numberline {11.4.1}Detailed Description}{57}{subsection.11.4.1}%
+\contentsline {subsection}{\numberline {11.4.2}Macro Definition Documentation}{58}{subsection.11.4.2}%
+\contentsline {subsubsection}{\numberline {11.4.2.1}MR\_ROUNDS}{58}{subsubsection.11.4.2.1}%
+\contentsline {subsubsection}{\numberline {11.4.2.2}VX2}{58}{subsubsection.11.4.2.2}%
+\contentsline {subsubsection}{\numberline {11.4.2.3}VX3}{58}{subsubsection.11.4.2.3}%
+\contentsline {subsubsection}{\numberline {11.4.2.4}VX4}{58}{subsubsection.11.4.2.4}%
+\contentsline {subsubsection}{\numberline {11.4.2.5}VX5}{58}{subsubsection.11.4.2.5}%
+\contentsline {subsubsection}{\numberline {11.4.2.6}VX6}{59}{subsubsection.11.4.2.6}%
+\contentsline {subsubsection}{\numberline {11.4.2.7}VX7}{59}{subsubsection.11.4.2.7}%
+\contentsline {subsubsection}{\numberline {11.4.2.8}VX8}{59}{subsubsection.11.4.2.8}%
+\contentsline {subsection}{\numberline {11.4.3}Function Documentation}{59}{subsection.11.4.3}%
+\contentsline {subsubsection}{\numberline {11.4.3.1}check\_primality()}{59}{subsubsection.11.4.3.1}%
+\contentsline {subsubsection}{\numberline {11.4.3.2}compute\_l2\_vx()}{60}{subsubsection.11.4.3.2}%
+\contentsline {subsubsection}{\numberline {11.4.3.3}compute\_max\_vx()}{60}{subsubsection.11.4.3.3}%
+\contentsline {subsubsection}{\numberline {11.4.3.4}compute\_vx\_k()}{61}{subsubsection.11.4.3.4}%
+\contentsline {subsubsection}{\numberline {11.4.3.5}get\_root\_primes()}{61}{subsubsection.11.4.3.5}%
+\contentsline {subsubsection}{\numberline {11.4.3.6}iZ()}{62}{subsubsection.11.4.3.6}%
+\contentsline {subsubsection}{\numberline {11.4.3.7}iZ\_mpz()}{62}{subsubsection.11.4.3.7}%
+\contentsline {subsubsection}{\numberline {11.4.3.8}iZm\_clone()}{63}{subsubsection.11.4.3.8}%
+\contentsline {subsubsection}{\numberline {11.4.3.9}iZm\_construct\_vx\_base()}{64}{subsubsection.11.4.3.9}%
+\contentsline {subsubsection}{\numberline {11.4.3.10}iZm\_free()}{64}{subsubsection.11.4.3.10}%
+\contentsline {subsubsection}{\numberline {11.4.3.11}iZm\_init()}{65}{subsubsection.11.4.3.11}%
+\contentsline {subsubsection}{\numberline {11.4.3.12}iZm\_solve\_for\_x0()}{65}{subsubsection.11.4.3.12}%
+\contentsline {subsubsection}{\numberline {11.4.3.13}iZm\_solve\_for\_x0\_mpz()}{66}{subsubsection.11.4.3.13}%
+\contentsline {subsubsection}{\numberline {11.4.3.14}iZm\_solve\_for\_y0()}{68}{subsubsection.11.4.3.14}%
+\contentsline {subsubsection}{\numberline {11.4.3.15}process\_iZ\_bitmaps()}{69}{subsubsection.11.4.3.15}%
+\contentsline {subsubsection}{\numberline {11.4.3.16}range\_info\_free()}{69}{subsubsection.11.4.3.16}%
+\contentsline {subsubsection}{\numberline {11.4.3.17}range\_info\_init()}{70}{subsubsection.11.4.3.17}%
+\contentsline {subsubsection}{\numberline {11.4.3.18}vx\_collect\_p\_gaps()}{70}{subsubsection.11.4.3.18}%
+\contentsline {subsubsection}{\numberline {11.4.3.19}vx\_free()}{71}{subsubsection.11.4.3.19}%
+\contentsline {subsubsection}{\numberline {11.4.3.20}vx\_full\_sieve()}{71}{subsubsection.11.4.3.20}%
+\contentsline {subsubsection}{\numberline {11.4.3.21}vx\_init()}{72}{subsubsection.11.4.3.21}%
+\contentsline {subsubsection}{\numberline {11.4.3.22}vx\_search\_prime()}{73}{subsubsection.11.4.3.22}%
+\contentsline {subsubsection}{\numberline {11.4.3.23}vx\_stream()}{74}{subsubsection.11.4.3.23}%
+\contentsline {subsubsection}{\numberline {11.4.3.24}vy\_search\_prime()}{75}{subsubsection.11.4.3.24}%
+\contentsline {section}{\numberline {11.5}Logging }{76}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}Detailed Description}{77}{subsection.11.5.1}%
+\contentsline {subsection}{\numberline {11.5.2}Macro Definition Documentation}{77}{subsection.11.5.2}%
+\contentsline {subsubsection}{\numberline {11.5.2.1}LOG\_DIR}{77}{subsubsection.11.5.2.1}%
+\contentsline {subsubsection}{\numberline {11.5.2.2}LOG\_FILE}{77}{subsubsection.11.5.2.2}%
+\contentsline {subsubsection}{\numberline {11.5.2.3}LOG\_MAX\_SIZE}{77}{subsubsection.11.5.2.3}%
+\contentsline {subsubsection}{\numberline {11.5.2.4}LOGGER\_FORMAT\_PRINTF}{77}{subsubsection.11.5.2.4}%
+\contentsline {subsection}{\numberline {11.5.3}Enumeration Type Documentation}{77}{subsection.11.5.3}%
+\contentsline {subsubsection}{\numberline {11.5.3.1}LogLevel}{77}{subsubsection.11.5.3.1}%
+\contentsline {subsection}{\numberline {11.5.4}Function Documentation}{78}{subsection.11.5.4}%
+\contentsline {subsubsection}{\numberline {11.5.4.1}log\_console()}{78}{subsubsection.11.5.4.1}%
+\contentsline {subsubsection}{\numberline {11.5.4.2}log\_debug()}{78}{subsubsection.11.5.4.2}%
+\contentsline {subsubsection}{\numberline {11.5.4.3}log\_error()}{79}{subsubsection.11.5.4.3}%
+\contentsline {subsubsection}{\numberline {11.5.4.4}log\_fatal()}{79}{subsubsection.11.5.4.4}%
+\contentsline {subsubsection}{\numberline {11.5.4.5}log\_info()}{79}{subsubsection.11.5.4.5}%
+\contentsline {subsubsection}{\numberline {11.5.4.6}log\_init()}{80}{subsubsection.11.5.4.6}%
+\contentsline {subsubsection}{\numberline {11.5.4.7}log\_level\_to\_string()}{80}{subsubsection.11.5.4.7}%
+\contentsline {subsubsection}{\numberline {11.5.4.8}log\_message()}{80}{subsubsection.11.5.4.8}%
+\contentsline {subsubsection}{\numberline {11.5.4.9}log\_message\_extended()}{81}{subsubsection.11.5.4.9}%
+\contentsline {subsubsection}{\numberline {11.5.4.10}log\_set\_log\_level()}{82}{subsubsection.11.5.4.10}%
+\contentsline {subsubsection}{\numberline {11.5.4.11}log\_warn()}{82}{subsubsection.11.5.4.11}%
+\contentsline {section}{\numberline {11.6}Tests and Benchmarks }{82}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}Detailed Description}{83}{subsection.11.6.1}%
+\contentsline {subsection}{\numberline {11.6.2}Typedef Documentation}{83}{subsection.11.6.2}%
+\contentsline {subsubsection}{\numberline {11.6.2.1}SIEVE\_FN}{83}{subsubsection.11.6.2.1}%
+\contentsline {section}{\numberline {11.7}Utilities }{84}{section.11.7}%
+\contentsline {subsection}{\numberline {11.7.1}Detailed Description}{84}{subsection.11.7.1}%
+\contentsline {subsection}{\numberline {11.7.2}Macro Definition Documentation}{85}{subsection.11.7.2}%
+\contentsline {subsubsection}{\numberline {11.7.2.1}DIR\_output}{85}{subsubsection.11.7.2.1}%
+\contentsline {subsubsection}{\numberline {11.7.2.2}MAX}{85}{subsubsection.11.7.2.2}%
+\contentsline {subsubsection}{\numberline {11.7.2.3}MAX\_CORES}{85}{subsubsection.11.7.2.3}%
+\contentsline {subsubsection}{\numberline {11.7.2.4}MIN}{85}{subsubsection.11.7.2.4}%
+\contentsline {subsection}{\numberline {11.7.3}Function Documentation}{86}{subsection.11.7.3}%
+\contentsline {subsubsection}{\numberline {11.7.3.1}create\_dir()}{86}{subsubsection.11.7.3.1}%
+\contentsline {subsubsection}{\numberline {11.7.3.2}gcd()}{86}{subsubsection.11.7.3.2}%
+\contentsline {subsubsection}{\numberline {11.7.3.3}get\_cpu\_cores\_count()}{87}{subsubsection.11.7.3.3}%
+\contentsline {subsubsection}{\numberline {11.7.3.4}get\_cpu\_L2\_cache\_size\_bits()}{87}{subsubsection.11.7.3.4}%
+\contentsline {subsubsection}{\numberline {11.7.3.5}gmp\_seed\_randstate()}{88}{subsubsection.11.7.3.5}%
+\contentsline {subsubsection}{\numberline {11.7.3.6}is\_numeric\_str()}{88}{subsubsection.11.7.3.6}%
+\contentsline {subsubsection}{\numberline {11.7.3.7}modular\_inverse()}{89}{subsubsection.11.7.3.7}%
+\contentsline {subsubsection}{\numberline {11.7.3.8}parse\_inclusive\_range\_mpz()}{89}{subsubsection.11.7.3.8}%
+\contentsline {subsubsection}{\numberline {11.7.3.9}parse\_numeric\_expr\_mpz()}{90}{subsubsection.11.7.3.9}%
+\contentsline {subsubsection}{\numberline {11.7.3.10}parse\_numeric\_expr\_u64()}{90}{subsubsection.11.7.3.10}%
+\contentsline {section}{\numberline {11.8}Printer, implemented in toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}print\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c }{91}{section.11.8}%
+\contentsline {subsection}{\numberline {11.8.1}Detailed Description}{91}{subsection.11.8.1}%
+\contentsline {subsection}{\numberline {11.8.2}Function Documentation}{92}{subsection.11.8.2}%
+\contentsline {subsubsection}{\numberline {11.8.2.1}print\_centered\_text()}{92}{subsubsection.11.8.2.1}%
+\contentsline {subsubsection}{\numberline {11.8.2.2}print\_line()}{93}{subsubsection.11.8.2.2}%
+\contentsline {subsubsection}{\numberline {11.8.2.3}print\_sha256\_hash()}{93}{subsubsection.11.8.2.3}%
+\contentsline {subsubsection}{\numberline {11.8.2.4}print\_test\_fn\_header()}{93}{subsubsection.11.8.2.4}%
+\contentsline {subsubsection}{\numberline {11.8.2.5}print\_test\_module\_header()}{94}{subsubsection.11.8.2.5}%
+\contentsline {subsubsection}{\numberline {11.8.2.6}print\_test\_module\_result()}{94}{subsubsection.11.8.2.6}%
+\contentsline {subsubsection}{\numberline {11.8.2.7}print\_test\_summary()}{95}{subsubsection.11.8.2.7}%
+\contentsline {subsubsection}{\numberline {11.8.2.8}print\_test\_table\_header()}{96}{subsubsection.11.8.2.8}%
+\contentsline {section}{\numberline {11.9}Stopwatch }{96}{section.11.9}%
+\contentsline {subsection}{\numberline {11.9.1}Detailed Description}{97}{subsection.11.9.1}%
+\contentsline {subsection}{\numberline {11.9.2}Function Documentation}{97}{subsection.11.9.2}%
+\contentsline {subsubsection}{\numberline {11.9.2.1}sw\_elapsed\_now\_seconds()}{97}{subsubsection.11.9.2.1}%
+\contentsline {subsubsection}{\numberline {11.9.2.2}sw\_elapsed\_seconds()}{97}{subsubsection.11.9.2.2}%
+\contentsline {subsubsection}{\numberline {11.9.2.3}sw\_start()}{97}{subsubsection.11.9.2.3}%
+\contentsline {subsubsection}{\numberline {11.9.2.4}sw\_stop()}{98}{subsubsection.11.9.2.4}%
+\contentsline {chapter}{\numberline {12}Data Structure Documentation}{99}{chapter.12}%
+\contentsline {section}{\numberline {12.1}BITMAP Struct Reference}{99}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}Detailed Description}{99}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}Field Documentation}{99}{subsection.12.1.2}%
+\contentsline {subsubsection}{\numberline {12.1.2.1}byte\_size}{99}{subsubsection.12.1.2.1}%
+\contentsline {subsubsection}{\numberline {12.1.2.2}data}{100}{subsubsection.12.1.2.2}%
+\contentsline {subsubsection}{\numberline {12.1.2.3}sha256}{100}{subsubsection.12.1.2.3}%
+\contentsline {subsubsection}{\numberline {12.1.2.4}size}{100}{subsubsection.12.1.2.4}%
+\contentsline {section}{\numberline {12.2}INPUT\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}SIEVE\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}RANGE Struct Reference}{101}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}Detailed Description}{101}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}Field Documentation}{101}{subsection.12.2.2}%
+\contentsline {subsubsection}{\numberline {12.2.2.1}filepath}{101}{subsubsection.12.2.2.1}%
+\contentsline {subsubsection}{\numberline {12.2.2.2}mr\_rounds}{101}{subsubsection.12.2.2.2}%
+\contentsline {subsubsection}{\numberline {12.2.2.3}range}{102}{subsubsection.12.2.2.3}%
+\contentsline {subsubsection}{\numberline {12.2.2.4}start}{102}{subsubsection.12.2.2.4}%
+\contentsline {section}{\numberline {12.3}IZM Struct Reference}{102}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}Detailed Description}{102}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}Field Documentation}{103}{subsection.12.3.2}%
+\contentsline {subsubsection}{\numberline {12.3.2.1}base\_x5}{103}{subsubsection.12.3.2.1}%
+\contentsline {subsubsection}{\numberline {12.3.2.2}base\_x7}{103}{subsubsection.12.3.2.2}%
+\contentsline {subsubsection}{\numberline {12.3.2.3}k\_vx}{103}{subsubsection.12.3.2.3}%
+\contentsline {subsubsection}{\numberline {12.3.2.4}root\_primes}{103}{subsubsection.12.3.2.4}%
+\contentsline {subsubsection}{\numberline {12.3.2.5}vx}{103}{subsubsection.12.3.2.5}%
+\contentsline {section}{\numberline {12.4}IZM\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}RANGE\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}INFO Struct Reference}{104}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}Detailed Description}{104}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}Field Documentation}{104}{subsection.12.4.2}%
+\contentsline {subsubsection}{\numberline {12.4.2.1}vx}{104}{subsubsection.12.4.2.1}%
+\contentsline {subsubsection}{\numberline {12.4.2.2}Xe}{105}{subsubsection.12.4.2.2}%
+\contentsline {subsubsection}{\numberline {12.4.2.3}Xs}{105}{subsubsection.12.4.2.3}%
+\contentsline {subsubsection}{\numberline {12.4.2.4}y\_range}{105}{subsubsection.12.4.2.4}%
+\contentsline {subsubsection}{\numberline {12.4.2.5}Ye}{105}{subsubsection.12.4.2.5}%
+\contentsline {subsubsection}{\numberline {12.4.2.6}Ys}{105}{subsubsection.12.4.2.6}%
+\contentsline {subsubsection}{\numberline {12.4.2.7}Ze}{106}{subsubsection.12.4.2.7}%
+\contentsline {subsubsection}{\numberline {12.4.2.8}Zs}{106}{subsubsection.12.4.2.8}%
+\contentsline {section}{\numberline {12.5}SIEVE\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}LIMIT Struct Reference}{106}{section.12.5}%
+\contentsline {subsection}{\numberline {12.5.1}Detailed Description}{106}{subsection.12.5.1}%
+\contentsline {subsection}{\numberline {12.5.2}Field Documentation}{106}{subsection.12.5.2}%
+\contentsline {subsubsection}{\numberline {12.5.2.1}base}{106}{subsubsection.12.5.2.1}%
+\contentsline {subsubsection}{\numberline {12.5.2.2}exp}{107}{subsubsection.12.5.2.2}%
+\contentsline {section}{\numberline {12.6}SIEVE\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}MODEL Struct Reference}{107}{section.12.6}%
+\contentsline {subsection}{\numberline {12.6.1}Detailed Description}{107}{subsection.12.6.1}%
+\contentsline {subsection}{\numberline {12.6.2}Field Documentation}{107}{subsection.12.6.2}%
+\contentsline {subsubsection}{\numberline {12.6.2.1}function}{107}{subsubsection.12.6.2.1}%
+\contentsline {subsubsection}{\numberline {12.6.2.2}name}{107}{subsubsection.12.6.2.2}%
+\contentsline {section}{\numberline {12.7}STOPWATCH Struct Reference}{108}{section.12.7}%
+\contentsline {subsection}{\numberline {12.7.1}Detailed Description}{108}{subsection.12.7.1}%
+\contentsline {subsection}{\numberline {12.7.2}Field Documentation}{108}{subsection.12.7.2}%
+\contentsline {subsubsection}{\numberline {12.7.2.1}elapsed\_sec}{108}{subsubsection.12.7.2.1}%
+\contentsline {subsubsection}{\numberline {12.7.2.2}end\_time}{108}{subsubsection.12.7.2.2}%
+\contentsline {subsubsection}{\numberline {12.7.2.3}running}{108}{subsubsection.12.7.2.3}%
+\contentsline {subsubsection}{\numberline {12.7.2.4}start\_time}{109}{subsubsection.12.7.2.4}%
+\contentsline {section}{\numberline {12.8}UI16\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}ARRAY Struct Reference}{109}{section.12.8}%
+\contentsline {subsection}{\numberline {12.8.1}Detailed Description}{109}{subsection.12.8.1}%
+\contentsline {subsection}{\numberline {12.8.2}Field Documentation}{109}{subsection.12.8.2}%
+\contentsline {subsubsection}{\numberline {12.8.2.1}array}{109}{subsubsection.12.8.2.1}%
+\contentsline {subsubsection}{\numberline {12.8.2.2}capacity}{110}{subsubsection.12.8.2.2}%
+\contentsline {subsubsection}{\numberline {12.8.2.3}count}{110}{subsubsection.12.8.2.3}%
+\contentsline {subsubsection}{\numberline {12.8.2.4}ordered}{110}{subsubsection.12.8.2.4}%
+\contentsline {subsubsection}{\numberline {12.8.2.5}sha256}{110}{subsubsection.12.8.2.5}%
+\contentsline {section}{\numberline {12.9}UI32\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}ARRAY Struct Reference}{110}{section.12.9}%
+\contentsline {subsection}{\numberline {12.9.1}Detailed Description}{111}{subsection.12.9.1}%
+\contentsline {subsection}{\numberline {12.9.2}Field Documentation}{111}{subsection.12.9.2}%
+\contentsline {subsubsection}{\numberline {12.9.2.1}array}{111}{subsubsection.12.9.2.1}%
+\contentsline {subsubsection}{\numberline {12.9.2.2}capacity}{111}{subsubsection.12.9.2.2}%
+\contentsline {subsubsection}{\numberline {12.9.2.3}count}{111}{subsubsection.12.9.2.3}%
+\contentsline {subsubsection}{\numberline {12.9.2.4}ordered}{111}{subsubsection.12.9.2.4}%
+\contentsline {subsubsection}{\numberline {12.9.2.5}sha256}{111}{subsubsection.12.9.2.5}%
+\contentsline {section}{\numberline {12.10}UI64\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}ARRAY Struct Reference}{112}{section.12.10}%
+\contentsline {subsection}{\numberline {12.10.1}Detailed Description}{112}{subsection.12.10.1}%
+\contentsline {subsection}{\numberline {12.10.2}Field Documentation}{112}{subsection.12.10.2}%
+\contentsline {subsubsection}{\numberline {12.10.2.1}array}{112}{subsubsection.12.10.2.1}%
+\contentsline {subsubsection}{\numberline {12.10.2.2}capacity}{112}{subsubsection.12.10.2.2}%
+\contentsline {subsubsection}{\numberline {12.10.2.3}count}{112}{subsubsection.12.10.2.3}%
+\contentsline {subsubsection}{\numberline {12.10.2.4}ordered}{113}{subsubsection.12.10.2.4}%
+\contentsline {subsubsection}{\numberline {12.10.2.5}sha256}{113}{subsubsection.12.10.2.5}%
+\contentsline {section}{\numberline {12.11}VX\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}SEG Struct Reference}{113}{section.12.11}%
+\contentsline {subsection}{\numberline {12.11.1}Detailed Description}{113}{subsection.12.11.1}%
+\contentsline {subsection}{\numberline {12.11.2}Field Documentation}{114}{subsection.12.11.2}%
+\contentsline {subsubsection}{\numberline {12.11.2.1}bit\_ops}{114}{subsubsection.12.11.2.1}%
+\contentsline {subsubsection}{\numberline {12.11.2.2}end\_x}{114}{subsubsection.12.11.2.2}%
+\contentsline {subsubsection}{\numberline {12.11.2.3}is\_large\_limit}{114}{subsubsection.12.11.2.3}%
+\contentsline {subsubsection}{\numberline {12.11.2.4}mr\_rounds}{114}{subsubsection.12.11.2.4}%
+\contentsline {subsubsection}{\numberline {12.11.2.5}p\_count}{114}{subsubsection.12.11.2.5}%
+\contentsline {subsubsection}{\numberline {12.11.2.6}p\_gaps}{115}{subsubsection.12.11.2.6}%
+\contentsline {subsubsection}{\numberline {12.11.2.7}p\_test\_ops}{115}{subsubsection.12.11.2.7}%
+\contentsline {subsubsection}{\numberline {12.11.2.8}root\_limit}{115}{subsubsection.12.11.2.8}%
+\contentsline {subsubsection}{\numberline {12.11.2.9}start\_x}{115}{subsubsection.12.11.2.9}%
+\contentsline {subsubsection}{\numberline {12.11.2.10}vx}{115}{subsubsection.12.11.2.10}%
+\contentsline {subsubsection}{\numberline {12.11.2.11}x5}{116}{subsubsection.12.11.2.11}%
+\contentsline {subsubsection}{\numberline {12.11.2.12}x7}{116}{subsubsection.12.11.2.12}%
+\contentsline {subsubsection}{\numberline {12.11.2.13}y}{116}{subsubsection.12.11.2.13}%
+\contentsline {subsubsection}{\numberline {12.11.2.14}yvx}{116}{subsubsection.12.11.2.14}%
+\contentsline {chapter}{\numberline {13}File Documentation}{117}{chapter.13}%
+\contentsline {section}{\numberline {13.1}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}bitmap.h File Reference}{117}{section.13.1}%
+\contentsline {subsection}{\numberline {13.1.1}Detailed Description}{118}{subsection.13.1.1}%
+\contentsline {section}{\numberline {13.2}bitmap.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{118}{section.13.2}%
+\contentsline {section}{\numberline {13.3}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}int\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}arrays.h File Reference}{119}{section.13.3}%
+\contentsline {subsection}{\numberline {13.3.1}Detailed Description}{121}{subsection.13.3.1}%
+\contentsline {section}{\numberline {13.4}int\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}arrays.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{121}{section.13.4}%
+\contentsline {section}{\numberline {13.5}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}api.h File Reference}{122}{section.13.5}%
+\contentsline {subsection}{\numberline {13.5.1}Detailed Description}{124}{subsection.13.5.1}%
+\contentsline {section}{\numberline {13.6}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}api.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{124}{section.13.6}%
+\contentsline {section}{\numberline {13.7}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit.h File Reference}{124}{section.13.7}%
+\contentsline {subsection}{\numberline {13.7.1}Detailed Description}{126}{subsection.13.7.1}%
+\contentsline {section}{\numberline {13.8}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{127}{section.13.8}%
+\contentsline {section}{\numberline {13.9}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}logger.h File Reference}{128}{section.13.9}%
+\contentsline {subsection}{\numberline {13.9.1}Detailed Description}{129}{subsection.13.9.1}%
+\contentsline {section}{\numberline {13.10}logger.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{130}{section.13.10}%
+\contentsline {section}{\numberline {13.11}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}test\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}api.h File Reference}{131}{section.13.11}%
+\contentsline {subsection}{\numberline {13.11.1}Detailed Description}{131}{subsection.13.11.1}%
+\contentsline {section}{\numberline {13.12}test\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}api.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{132}{section.13.12}%
+\contentsline {section}{\numberline {13.13}include/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.h File Reference}{132}{section.13.13}%
+\contentsline {subsection}{\numberline {13.13.1}Detailed Description}{134}{subsection.13.13.1}%
+\contentsline {section}{\numberline {13.14}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{134}{section.13.14}%
+\contentsline {section}{\numberline {13.15}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}apps.c File Reference}{135}{section.13.15}%
+\contentsline {subsection}{\numberline {13.15.1}Detailed Description}{136}{subsection.13.15.1}%
+\contentsline {section}{\numberline {13.16}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}apps.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{136}{section.13.16}%
+\contentsline {section}{\numberline {13.17}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}playground.c File Reference}{146}{section.13.17}%
+\contentsline {subsection}{\numberline {13.17.1}Detailed Description}{146}{subsection.13.17.1}%
+\contentsline {section}{\numberline {13.18}playground.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{146}{section.13.18}%
+\contentsline {section}{\numberline {13.19}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}prime\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}sieve.c File Reference}{147}{section.13.19}%
+\contentsline {subsection}{\numberline {13.19.1}Detailed Description}{147}{subsection.13.19.1}%
+\contentsline {subsection}{\numberline {13.19.2}Macro Definition Documentation}{148}{subsection.13.19.2}%
+\contentsline {subsubsection}{\numberline {13.19.2.1}ASSERT\_LIMIT}{148}{subsubsection.13.19.2.1}%
+\contentsline {subsubsection}{\numberline {13.19.2.2}N\_LIMIT}{148}{subsubsection.13.19.2.2}%
+\contentsline {subsubsection}{\numberline {13.19.2.3}Pi}{148}{subsubsection.13.19.2.3}%
+\contentsline {subsection}{\numberline {13.19.3}Function Documentation}{148}{subsection.13.19.3}%
+\contentsline {subsubsection}{\numberline {13.19.3.1}process\_N\_bitmap()}{148}{subsubsection.13.19.3.1}%
+\contentsline {section}{\numberline {13.20}prime\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}sieve.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{149}{section.13.20}%
+\contentsline {section}{\numberline {13.21}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}bitmap.c File Reference}{155}{section.13.21}%
+\contentsline {subsection}{\numberline {13.21.1}Detailed Description}{156}{subsection.13.21.1}%
+\contentsline {subsubsection}{\numberline {13.21.1.1}Implementation Notes}{156}{subsubsection.13.21.1.1}%
+\contentsline {subsubsection}{\numberline {13.21.1.2}Performance Characteristics}{157}{subsubsection.13.21.1.2}%
+\contentsline {section}{\numberline {13.22}bitmap.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{157}{section.13.22}%
+\contentsline {section}{\numberline {13.23}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}int\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}arrays.c File Reference}{161}{section.13.23}%
+\contentsline {subsection}{\numberline {13.23.1}Detailed Description}{162}{subsection.13.23.1}%
+\contentsline {subsubsection}{\numberline {13.23.1.1}Implementation Notes}{162}{subsubsection.13.23.1.1}%
+\contentsline {subsubsection}{\numberline {13.23.1.2}Performance Characteristics}{162}{subsubsection.13.23.1.2}%
+\contentsline {section}{\numberline {13.24}int\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}arrays.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{163}{section.13.24}%
+\contentsline {section}{\numberline {13.25}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit.c File Reference}{163}{section.13.25}%
+\contentsline {subsection}{\numberline {13.25.1}Detailed Description}{165}{subsection.13.25.1}%
+\contentsline {subsection}{\numberline {13.25.2}Function Documentation}{165}{subsection.13.25.2}%
+\contentsline {subsubsection}{\numberline {13.25.2.1}compute\_k\_vx()}{165}{subsubsection.13.25.2.1}%
+\contentsline {subsubsection}{\numberline {13.25.2.2}vx\_det\_sieve()}{165}{subsubsection.13.25.2.2}%
+\contentsline {subsubsection}{\numberline {13.25.2.3}vx\_prob\_sieve()}{166}{subsubsection.13.25.2.3}%
+\contentsline {subsubsection}{\numberline {13.25.2.4}vx\_set\_base\_values()}{166}{subsubsection.13.25.2.4}%
+\contentsline {subsection}{\numberline {13.25.3}Variable Documentation}{167}{subsection.13.25.3}%
+\contentsline {subsubsection}{\numberline {13.25.3.1}s\_primes}{167}{subsubsection.13.25.3.1}%
+\contentsline {subsubsection}{\numberline {13.25.3.2}s\_primes\_count}{167}{subsubsection.13.25.3.2}%
+\contentsline {section}{\numberline {13.26}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Z\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{167}{section.13.26}%
+\contentsline {section}{\numberline {13.27}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}logger.c File Reference}{178}{section.13.27}%
+\contentsline {subsection}{\numberline {13.27.1}Detailed Description}{178}{subsection.13.27.1}%
+\contentsline {section}{\numberline {13.28}logger.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{178}{section.13.28}%
+\contentsline {section}{\numberline {13.29}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}print\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.c File Reference}{181}{section.13.29}%
+\contentsline {subsection}{\numberline {13.29.1}Detailed Description}{181}{subsection.13.29.1}%
+\contentsline {section}{\numberline {13.30}print\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{182}{section.13.30}%
+\contentsline {section}{\numberline {13.31}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}stopwatch.c File Reference}{183}{section.13.31}%
+\contentsline {subsection}{\numberline {13.31.1}Detailed Description}{183}{subsection.13.31.1}%
+\contentsline {section}{\numberline {13.32}stopwatch.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{184}{section.13.32}%
+\contentsline {section}{\numberline {13.33}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}utils.c File Reference}{184}{section.13.33}%
+\contentsline {subsection}{\numberline {13.33.1}Detailed Description}{185}{subsection.13.33.1}%
+\contentsline {section}{\numberline {13.34}utils.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{185}{section.13.34}%
+\contentsline {chapter}{\numberline {14}Examples}{193}{chapter.14}%
+\contentsline {section}{\numberline {14.1}/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Users/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}hazemmounir/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Workspace/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zproject/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}i\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Zprime/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}src/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}toolkit/\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}bitmap.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{193}{section.14.1}%
+\contentsline {chapter}{Index}{199}{section*.88}%

@@ -1,0 +1,79 @@
+\doxysection{IZ\+\_\+\+STOPWATCH Struct Reference}
+\hypertarget{struct_i_z___s_t_o_p_w_a_t_c_h}{}\label{struct_i_z___s_t_o_p_w_a_t_c_h}\index{IZ\_STOPWATCH@{IZ\_STOPWATCH}}
+
+
+Stopwatch state for elapsed wall-\/clock measurements.  
+
+
+
+
+{\ttfamily \+\#include $<$time\+\_\+it.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+struct timespec \doxymbox{\hyperlink{struct_i_z___s_t_o_p_w_a_t_c_h_abac5efe1d916a60ab8bf934333f5051b}{start\+\_\+time}}
+\item 
+struct timespec \doxymbox{\hyperlink{struct_i_z___s_t_o_p_w_a_t_c_h_af39d34f152b77e87f813a022de38830e}{end\+\_\+time}}
+\item 
+int \doxymbox{\hyperlink{struct_i_z___s_t_o_p_w_a_t_c_h_a641ba9a1978fdaffc588049a49969fba}{running}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stopwatch state for elapsed wall-\/clock measurements. 
+
+Definition at line \doxymbox{\hyperlink{time__it_8h_source_l00019}{19}} of file \doxymbox{\hyperlink{time__it_8h_source}{time\+\_\+it.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_i_z___s_t_o_p_w_a_t_c_h_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{struct_i_z___s_t_o_p_w_a_t_c_h_af39d34f152b77e87f813a022de38830e}\index{IZ\_STOPWATCH@{IZ\_STOPWATCH}!end\_time@{end\_time}}
+\index{end\_time@{end\_time}!IZ\_STOPWATCH@{IZ\_STOPWATCH}}
+\doxysubsubsection{\texorpdfstring{end\_time}{end\_time}}
+{\footnotesize\ttfamily \label{struct_i_z___s_t_o_p_w_a_t_c_h_af39d34f152b77e87f813a022de38830e} 
+struct timespec IZ\+\_\+\+STOPWATCH::\+end\+\_\+time}
+
+Captured stop timestamp. 
+
+Definition at line \doxymbox{\hyperlink{time__it_8h_source_l00022}{22}} of file \doxymbox{\hyperlink{time__it_8h_source}{time\+\_\+it.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{time__it_8c_source_l00048}{iz\+\_\+timer\+\_\+elapsed\+\_\+seconds()}}, \doxymbox{\hyperlink{time__it_8c_source_l00031}{iz\+\_\+timer\+\_\+start()}}, and \doxymbox{\hyperlink{time__it_8c_source_l00039}{iz\+\_\+timer\+\_\+stop()}}.
+
+\Hypertarget{struct_i_z___s_t_o_p_w_a_t_c_h_a641ba9a1978fdaffc588049a49969fba}\index{IZ\_STOPWATCH@{IZ\_STOPWATCH}!running@{running}}
+\index{running@{running}!IZ\_STOPWATCH@{IZ\_STOPWATCH}}
+\doxysubsubsection{\texorpdfstring{running}{running}}
+{\footnotesize\ttfamily \label{struct_i_z___s_t_o_p_w_a_t_c_h_a641ba9a1978fdaffc588049a49969fba} 
+int IZ\+\_\+\+STOPWATCH::\+running}
+
+Non-\/zero when timing is active. 
+
+Definition at line \doxymbox{\hyperlink{time__it_8h_source_l00023}{23}} of file \doxymbox{\hyperlink{time__it_8h_source}{time\+\_\+it.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{time__it_8c_source_l00048}{iz\+\_\+timer\+\_\+elapsed\+\_\+seconds()}}, \doxymbox{\hyperlink{time__it_8c_source_l00031}{iz\+\_\+timer\+\_\+start()}}, and \doxymbox{\hyperlink{time__it_8c_source_l00039}{iz\+\_\+timer\+\_\+stop()}}.
+
+\Hypertarget{struct_i_z___s_t_o_p_w_a_t_c_h_abac5efe1d916a60ab8bf934333f5051b}\index{IZ\_STOPWATCH@{IZ\_STOPWATCH}!start\_time@{start\_time}}
+\index{start\_time@{start\_time}!IZ\_STOPWATCH@{IZ\_STOPWATCH}}
+\doxysubsubsection{\texorpdfstring{start\_time}{start\_time}}
+{\footnotesize\ttfamily \label{struct_i_z___s_t_o_p_w_a_t_c_h_abac5efe1d916a60ab8bf934333f5051b} 
+struct timespec IZ\+\_\+\+STOPWATCH::\+start\+\_\+time}
+
+Captured start timestamp. 
+
+Definition at line \doxymbox{\hyperlink{time__it_8h_source_l00021}{21}} of file \doxymbox{\hyperlink{time__it_8h_source}{time\+\_\+it.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{time__it_8c_source_l00048}{iz\+\_\+timer\+\_\+elapsed\+\_\+seconds()}}, and \doxymbox{\hyperlink{time__it_8c_source_l00031}{iz\+\_\+timer\+\_\+start()}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+include/\+\doxymbox{\hyperlink{time__it_8h}{time\+\_\+it.\+h}}\end{DoxyCompactItemize}

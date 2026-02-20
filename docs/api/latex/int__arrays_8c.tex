@@ -1,0 +1,48 @@
+\doxysection{src/\+toolkit/\+int\+\_\+arrays.c File Reference}
+\hypertarget{int__arrays_8c}{}\label{int__arrays_8c}\index{src/toolkit/int\_arrays.c@{src/toolkit/int\_arrays.c}}
+
+
+Implementation of dynamic integer array module for 16-\/bit, 32-\/bit, and 64-\/bit unsigned integers.  
+
+
+{\ttfamily \+\#include $<$int\+\_\+arrays.\+h$>$}\newline
+{\ttfamily \+\#include "{}templates/\+int\+\_\+array\+\_\+impl.\+inc"{}}\newline
+
+
+\doxysubsection{Detailed Description}
+Implementation of dynamic integer array module for 16-\/bit, 32-\/bit, and 64-\/bit unsigned integers. 
+
+This file provides the complete implementation of \doxylink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}, \doxylink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}, and \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} functions including memory management, automatic capacity growth, data integrity verification via SHA-\/256 hashing, and binary file I/\+O with automatic hash validation.\hypertarget{int__arrays_8c_autotoc_md2}{}\doxysubsubsection{\texorpdfstring{Implementation Notes}{Implementation Notes}}\label{int__arrays_8c_autotoc_md2}
+
+\begin{DoxyItemize}
+\item All functions include NULL pointer checking
+\item Automatic capacity doubling (2x growth) ensures amortized O(1) append operations
+\item File I/\+O operations automatically compute and validate SHA-\/256 hashes
+\item Memory is managed with proper cleanup on errors
+\item SHA-\/256 hashing uses Open\+SSL library
+\end{DoxyItemize}\hypertarget{int__arrays_8c_autotoc_md3}{}\doxysubsubsection{\texorpdfstring{Performance Characteristics}{Performance Characteristics}}\label{int__arrays_8c_autotoc_md3}
+
+\begin{DoxyItemize}
+\item init():\+ O(1)
+\item push() (amortized):\+ O(1)
+\item push() (worst case):\+ O(n) during resize
+\item Hash operations:\+ O(n)
+\item File I/\+O:\+ O(n)
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+i\+Zprime.\+com 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+October 2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxySeeAlso}{See also}
+\doxylink{int__arrays_8h}{int\+\_\+arrays.\+h} for API documentation 
+\end{DoxySeeAlso}
+
+
+Definition in file \doxymbox{\hyperlink{int__arrays_8c_source}{int\+\_\+arrays.\+c}}.
+

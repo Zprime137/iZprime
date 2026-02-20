@@ -1,0 +1,111 @@
+\doxysection{IZM Struct Reference}
+\hypertarget{struct_i_z_m}{}\label{struct_i_z_m}\index{IZM@{IZM}}
+
+
+Precomputed i\+Zm assets for repeated VX-\/segment sieving.  
+
+
+
+
+{\ttfamily \+\#include $<$i\+Z\+\_\+toolkit.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}{vx}}
+\item 
+int \doxymbox{\hyperlink{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382}{k\+\_\+vx}}
+\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\+\_\+x5}}
+\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\+\_\+x7}}
+\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\+\_\+primes}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Precomputed i\+Zm assets for repeated VX-\/segment sieving. 
+
+Definition at line \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00084}{84}} of file \doxymbox{\hyperlink{i_z__toolkit_8h_source}{i\+Z\+\_\+toolkit.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_i_z_m_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}\index{IZM@{IZM}!base\_x5@{base\_x5}}
+\index{base\_x5@{base\_x5}!IZM@{IZM}}
+\doxysubsubsection{\texorpdfstring{base\_x5}{base\_x5}}
+{\footnotesize\ttfamily \label{struct_i_z_m_afbda5590cfc085366c41769a8054fcde} 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\texorpdfstring{$\ast$}{*} IZM::\+base\+\_\+x5}
+
+Pre-\/sieved base bitmap for 6x-\/1 line. 
+
+Definition at line \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00088}{88}} of file \doxymbox{\hyperlink{i_z__toolkit_8h_source}{i\+Z\+\_\+toolkit.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00819}{i\+Z\+\_\+next\+\_\+prime()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}.
+
+\Hypertarget{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}\index{IZM@{IZM}!base\_x7@{base\_x7}}
+\index{base\_x7@{base\_x7}!IZM@{IZM}}
+\doxysubsubsection{\texorpdfstring{base\_x7}{base\_x7}}
+{\footnotesize\ttfamily \label{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073} 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\texorpdfstring{$\ast$}{*} IZM::\+base\+\_\+x7}
+
+Pre-\/sieved base bitmap for 6x+1 line. 
+
+Definition at line \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00089}{89}} of file \doxymbox{\hyperlink{i_z__toolkit_8h_source}{i\+Z\+\_\+toolkit.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00819}{i\+Z\+\_\+next\+\_\+prime()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}.
+
+\Hypertarget{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382}\index{IZM@{IZM}!k\_vx@{k\_vx}}
+\index{k\_vx@{k\_vx}!IZM@{IZM}}
+\doxysubsubsection{\texorpdfstring{k\_vx}{k\_vx}}
+{\footnotesize\ttfamily \label{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382} 
+int IZM::\+k\+\_\+vx}
+
+Count of small primes dividing vx (excluding 2,3). 
+
+Definition at line \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00087}{87}} of file \doxymbox{\hyperlink{i_z__toolkit_8h_source}{i\+Z\+\_\+toolkit.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00566}{vx\+\_\+det\+\_\+sieve()}}.
+
+\Hypertarget{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}\index{IZM@{IZM}!root\_primes@{root\_primes}}
+\index{root\_primes@{root\_primes}!IZM@{IZM}}
+\doxysubsubsection{\texorpdfstring{root\_primes}{root\_primes}}
+{\footnotesize\ttfamily \label{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}}\texorpdfstring{$\ast$}{*} IZM::\+root\+\_\+primes}
+
+Root primes used for deterministic marking. 
+
+Definition at line \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00090}{90}} of file \doxymbox{\hyperlink{i_z__toolkit_8h_source}{i\+Z\+\_\+toolkit.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00566}{vx\+\_\+det\+\_\+sieve()}}.
+
+\Hypertarget{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}\index{IZM@{IZM}!vx@{vx}}
+\index{vx@{vx}!IZM@{IZM}}
+\doxysubsubsection{\texorpdfstring{vx}{vx}}
+{\footnotesize\ttfamily \label{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615} 
+int IZM::\+vx}
+
+Segment width in iZ x-\/units. 
+
+Definition at line \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00086}{86}} of file \doxymbox{\hyperlink{i_z__toolkit_8h_source}{i\+Z\+\_\+toolkit.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00052}{compute\+\_\+k\+\_\+vx()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+include/\+\doxymbox{\hyperlink{i_z__toolkit_8h}{i\+Z\+\_\+toolkit.\+h}}\end{DoxyCompactItemize}

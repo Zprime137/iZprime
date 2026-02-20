@@ -1,0 +1,688 @@
+\doxysection{iZ Public API }
+\hypertarget{group__iz__api}{}\label{group__iz__api}\index{iZ Public API@{iZ Public API}}
+
+
+\texorpdfstring{$<$}{<} i\+Z/\+i\+Zm toolkit structures and helpers.  
+
+
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \doxymbox{\hyperlink{i_z__apps_8c}{i\+Z\+\_\+apps.\+c}}
+\begin{DoxyCompactList}\small\item\em High-\/level application routines built on top of the i\+Z\+\_\+toolkit. \end{DoxyCompactList}\item 
+file \doxymbox{\hyperlink{prime__sieve_8c}{prime\+\_\+sieve.\+c}}
+\begin{DoxyCompactList}\small\item\em Implementations of classical and Si\+Z-\/family sieve algorithms. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}}
+\begin{DoxyCompactList}\small\item\em Input parameters for range sieving/\+counting. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{SiZ Range Variants}
+Count/\+stream primes over a numeric interval. \begin{DoxyCompactItemize}
+\item 
+typedef struct INPUT\+\_\+\+SIEVE\+\_\+\+RANGE \doxymbox{\hyperlink{group__iz__api_ga1c239b1ed1fb5e5d9d1a51f67f98738a}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}}
+\begin{DoxyCompactList}\small\item\em Input parameters for range sieving/\+counting. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}{Si\+Z\+\_\+stream}} (\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}range)
+\begin{DoxyCompactList}\small\item\em Stream primes in a range to {\ttfamily filepath} (and return the count). \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{Si\+Z\+\_\+count}} (\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}input\+\_\+range, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Count primes in a range using multiple worker processes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Classic Prime Sieve Algorithms}
+Baseline sieves up to a numeric limit.
+
+All classic sieve functions take a limit {\ttfamily n} and return an ascending list of primes \texorpdfstring{$<$}{<}= {\ttfamily n}. \begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga2df5338a07925f1aee4b301565a8b489}{SoE}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Optimized Sieve of Eratosthenes. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga51ffe428b73f193100ff6a1275c2c57f}{SSoE}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Segmented Sieve of Eratosthenes. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga41adac38b8d9dea30778f1286417c1ed}{So\+Eu}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Euler (linear) sieve. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_gab82ab3c7dbaa78d3da0338a405b84108}{SoS}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Sieve of Sundaram. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga415d41154325d73e264c51cebd4ab628}{SoA}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Sieve of Atkin. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{i\+Z-\/based Sieve Algorithms}
+Sieve family operating in the 6x-\/1 /\+ 6x+1 index space. \begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_gaeff7d8923d54b5d606c51301bc9bc0e7}{SiZ}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Solid Sieve-\/iZ (wheel 6, iZ index space). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}{Si\+Zm}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Segmented Sieve-\/i\+Zm (VX segmented, horizontal processing). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga1119ed76482796d548cee4f5a3ab8c06}{Si\+Zm\+\_\+vy}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Segmented Sieve-\/i\+Zm (vertical processing; faster, unordered output). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Prime Generators}
+Probabilistic prime searches using i\+Zm/\+\+VX machinery. \begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}{vy\+\_\+random\+\_\+prime}} (mpz\+\_\+t p, int bit\+\_\+size, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Search for a random prime using vertical (vy) sieving. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}{vx\+\_\+random\+\_\+prime}} (mpz\+\_\+t p, int bit\+\_\+size, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Search for a random prime using horizontal (vx) sieving. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}{i\+Z\+\_\+next\+\_\+prime}} (mpz\+\_\+t p, mpz\+\_\+t base, int forward)
+\begin{DoxyCompactList}\small\item\em Advance to the next (or previous) prime from a base value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\texorpdfstring{$<$}{<} i\+Z/\+i\+Zm toolkit structures and helpers. 
+
+\texorpdfstring{$<$}{<} Common utilities, types, and dependencies.
+
+High-\/level entry points for sieves and prime generation.
+
+The API is organized into:\+
+\begin{DoxyItemize}
+\item Classic sieves:\+ operate directly on the integer domain.
+\item SiZ /\+ Si\+Zm:\+ operate in iZ index space (6x-\/1 and 6x+1), optionally segmented.
+\item Range variants:\+ count/\+stream primes over large intervals.
+\item Prime generators:\+ probabilistic searches using the i\+Zm/\+\+VX machinery. 
+\end{DoxyItemize}
+
+\label{doc-typedef-members}
+\Hypertarget{group__iz__api_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{group__iz__api_ga1c239b1ed1fb5e5d9d1a51f67f98738a}\index{iZ Public API@{iZ Public API}!INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}}
+\index{INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{INPUT\_SIEVE\_RANGE}{INPUT\_SIEVE\_RANGE}}
+{\footnotesize\ttfamily \label{group__iz__api_ga1c239b1ed1fb5e5d9d1a51f67f98738a} 
+typedef struct INPUT\+\_\+\+SIEVE\+\_\+\+RANGE INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}
+
+
+
+Input parameters for range sieving/\+counting. 
+
+The interval is interpreted as:\+
+\begin{DoxyItemize}
+\item Start \$\+Z\+\_\+s\$ from the decimal string {\ttfamily start}.
+\item End \$\+Z\+\_\+e = Z\+\_\+s + range -\/ 1\$.
+\end{DoxyItemize}
+
+Forward declaration; concrete definition lives in \doxylink{i_z__api_8h}{i\+Z\+\_\+api.\+h}. 
+
+\label{doc-func-members}
+\Hypertarget{group__iz__api_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}\index{iZ Public API@{iZ Public API}!iZ\_next\_prime@{iZ\_next\_prime}}
+\index{iZ\_next\_prime@{iZ\_next\_prime}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{iZ\_next\_prime()}{iZ\_next\_prime()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a} 
+int i\+Z\+\_\+next\+\_\+prime (\begin{DoxyParamCaption}\item[{mpz\+\_\+t}]{p}{, }\item[{mpz\+\_\+t}]{base}{, }\item[{int}]{forward}{}\end{DoxyParamCaption})}
+
+
+
+Advance to the next (or previous) prime from a base value. 
+
+Find the next prime number after a given base.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Output prime (initialized by caller). \\
+\hline
+{\em base} & Starting value. \\
+\hline
+{\em forward} & Non-\/zero to search forward, 0 to search backward. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on failure.
+\end{DoxyReturn}
+Description:\+ This function searches for the next/\+previous prime number after a given base using the iZ framework.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The mpz\+\_\+t variable to store the found prime number. \\
+\hline
+{\em base} & The base number to start the search from. \\
+\hline
+{\em forward} & If true, search for the next prime; if false, search for the previous prime. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if a prime is found, 0 otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{i_z__apps_8c_source_l00819}{819}} of file \doxymbox{\hyperlink{i_z__apps_8c_source}{i\+Z\+\_\+apps.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00088}{IZM::\+base\+\_\+x5}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00089}{IZM::\+base\+\_\+x7}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00037}{i\+Z\+\_\+mpz()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00266}{i\+Zm\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__logger_gaf7baafafb28cb0a703025ac39d8470c6}{log\+\_\+debug()}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00079}{MR\+\_\+\+ROUNDS}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00072}{VX5}}, and \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00073}{VX6}}.
+
+\Hypertarget{group__iz__api_gaeff7d8923d54b5d606c51301bc9bc0e7}\index{iZ Public API@{iZ Public API}!SiZ@{SiZ}}
+\index{SiZ@{SiZ}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SiZ()}{SiZ()}}
+{\footnotesize\ttfamily \label{group__iz__api_gaeff7d8923d54b5d606c51301bc9bc0e7} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} SiZ (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Solid Sieve-\/iZ (wheel 6, iZ index space). 
+
+Classic Sieve-\/iZ algorithm for prime generation up to n.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+The Sieve-\/iZ algorithm operates in the iZ index space of numbers of the form 6x ± 1, excluding all multiples of 2 and 3. It maintains two bitmaps, x5 and x7, representing candidates of the form 6x − 1 (i\+Z−) and 6x + 1 (i\+Z+), respectively. For each index x whose bit remains set, the corresponding candidate is treated as prime and its composites are marked using the Xp identity in the iZ space.
+
+This provides a wheel factorization of modulo 6, reducing the number of candidates by approximately a factor of 3 compared to a classical sieve over all integers. After sieving, any remaining set bits correspond to primes of the form 6x ± 1, which are mapped back to their integer values and appended to the output array alongside the primes 2 and 3.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive) for prime generation. Must satisfy 10 \texorpdfstring{$<$}{<} n \texorpdfstring{$<$}{<}= pow(10, 12). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to a \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} containing all primes \texorpdfstring{$<$}{<}= n on success, or NULL if allocation fails. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00444}{444}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00070}{process\+\_\+i\+Z\+\_\+bitmaps()}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga8cb72793e3dfa3035ef63156423b6f08}{ui64\+\_\+pop()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00331}{compute\+\_\+max\+\_\+vx()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, and \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}.
+
+\Hypertarget{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}\index{iZ Public API@{iZ Public API}!SiZ\_count@{SiZ\_count}}
+\index{SiZ\_count@{SiZ\_count}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SiZ\_count()}{SiZ\_count()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c} 
+uint64\+\_\+t Si\+Z\+\_\+count (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}}]{input\+\_\+range}{, }\item[{int}]{cores\+\_\+num}{}\end{DoxyParamCaption})}
+
+
+
+Count primes in a range using multiple worker processes. 
+
+Multi-\/process prime counting over an arbitrary numeric range using iZ toolkit.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+range} & Range configuration (output disabled). \\
+\hline
+{\em cores\+\_\+num} & Requested worker process count. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Prime count in the interval, or 0 on error.
+\end{DoxyReturn}
+This function parallelizes prime counting over the interval \+[Zs, Ze]\+ (interpreted from {\ttfamily input\+\_\+range}) by partitioning the corresponding iZ index space into VX segments and distributing contiguous blocks of segments across multiple processes. Each child process returns a local prime count to the parent via a pipe.
+
+The parent process aggregates all child counts, applies boundary corrections for endpoints that do not align exactly with 6x ± 1, and returns the total number of primes in \+[Zs, Ze]\+. Any failure to create pipes, fork children, or initialize per-\/process resources causes the function to log an error and return 0.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+range} & Pointer to an \doxylink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE} structure describing the numeric interval and Miller–\+Rabin configuration. \\
+\hline
+{\em cores\+\_\+num} & Requested number of worker processes. The actual number used is clamped to the available CPU cores and the number of VX segments in the range. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The total number of primes found in \+[Zs, Ze]\+ on success, or 0 on any error or child-\/process failure. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{184}} of file \doxymbox{\hyperlink{i_z__apps_8c_source}{i\+Z\+\_\+apps.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00306}{compute\+\_\+l2\+\_\+vx()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{utils_8c_source_l00509}{get\+\_\+cpu\+\_\+cores\+\_\+count()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00037}{i\+Z\+\_\+mpz()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00266}{i\+Zm\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{utils_8h_source_l00048}{MIN}}, \doxymbox{\hyperlink{i_z__api_8h_source_l00128}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+mr\+\_\+rounds}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00196}{VX\+\_\+\+SEG::\+p\+\_\+count}}, \doxymbox{\hyperlink{i_z__api_8h_source_l00127}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+range}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00989}{range\+\_\+info\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00944}{range\+\_\+info\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, \doxymbox{\hyperlink{i_z__api_8h_source_l00126}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+start}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00759}{vx\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00847}{vx\+\_\+full\+\_\+sieve()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00260}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Xe}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00259}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Xs}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00263}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+y\+\_\+range}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00262}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Ye}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00261}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Ys}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00258}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Ze}}, and \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00257}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Zs}}.
+
+\Hypertarget{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}\index{iZ Public API@{iZ Public API}!SiZ\_stream@{SiZ\_stream}}
+\index{SiZ\_stream@{SiZ\_stream}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SiZ\_stream()}{SiZ\_stream()}}
+{\footnotesize\ttfamily \label{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1} 
+uint64\+\_\+t Si\+Z\+\_\+stream (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}}]{input\+\_\+range}{}\end{DoxyParamCaption})}
+
+
+
+Stream primes in a range to {\ttfamily filepath} (and return the count). 
+
+Stream primes in an arbitrary numeric range using iZ toolkit.
+
+
+\begin{DoxyParams}{Parameters}
+{\em range} & Range configuration (must include {\ttfamily filepath}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Prime count in the interval, or 0 on error.
+\end{DoxyReturn}
+This function counts and streams primes in the interval \+[Zs, Ze]\+ defined by the input range. It maps the numeric bounds into the iZ index space (6x ± 1), partitions that space into y segments of length vx, and streams primes in each segment using the iZ toolkit.
+
+When an output file path is provided in {\ttfamily input\+\_\+range-\/\texorpdfstring{$>$}{>}filepath}, the function additionally streams all primes in the requested interval to that file in ascending order, reconstructing them from per-\/segment prime gaps. Otherwise, it operates in counting mode only.
+
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+range} & Pointer to an \doxylink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE} structure describing the start value (as a decimal string), the range length, the optional output filepath, and Miller–\+Rabin configuration. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The total number of primes found in \+[Zs, Ze]\+ on success, or 0 on invalid input, allocation failure, or I/\+O error. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{35}} of file \doxymbox{\hyperlink{i_z__apps_8c_source}{i\+Z\+\_\+apps.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{i_z__api_8h_source_l00129}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+filepath}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00266}{i\+Zm\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{utils_8h_source_l00052}{MAX}}, \doxymbox{\hyperlink{utils_8h_source_l00048}{MIN}}, \doxymbox{\hyperlink{i_z__api_8h_source_l00128}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+mr\+\_\+rounds}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00196}{VX\+\_\+\+SEG::\+p\+\_\+count}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00989}{range\+\_\+info\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00944}{range\+\_\+info\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, \doxymbox{\hyperlink{i_z__api_8h_source_l00126}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+start}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00256}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+vx}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00073}{VX6}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00759}{vx\+\_\+free()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00866}{vx\+\_\+stream()}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00260}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Xe}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00259}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Xs}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00263}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+y\+\_\+range}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00262}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Ye}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00261}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Ys}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00258}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Ze}}, and \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00257}{IZM\+\_\+\+RANGE\+\_\+\+INFO::\+\+Zs}}.
+
+\Hypertarget{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}\index{iZ Public API@{iZ Public API}!SiZm@{SiZm}}
+\index{SiZm@{SiZm}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SiZm()}{SiZm()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga9ca94c578547d87c05b381034897f3a6} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} Si\+Zm (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Segmented Sieve-\/i\+Zm (VX segmented, horizontal processing). 
+
+Segmented Sieve-\/i\+Zm algorithm for prime generation up to n.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+Description:\+ The Sieve-\/i\+Zm algorithm is a segmented, cache-\/aware variant of the Sieve-\/iZ that operates in the iZ index space of numbers of the form 6x ± 1. It partitions the search interval into segments of length vx, where vx is a product of small primes, and constructs a pre-\/sieved base segment using those small primes once at initialization time.
+
+For each segment, Sieve-\/i\+Zm clones the base bitmaps and only marks composites of the remaining root primes that do not divide vx. This amortizes the cost of small-\/prime sieving across all segments and keeps the working set small and highly cache-\/resident. After marking, any remaining set bits correspond to primes of the form 6x ± 1 within that segment, which are then mapped back to their integer values and appended to the output array.
+
+Compared to the basic Sieve-\/iZ, Sieve-\/i\+Zm achieves the same O(n log log n) time complexity with effectively constant auxiliary memory (aside from the output) and significantly reduced constant factors, making it well-\/suited for enumerating primes up to large bounds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive) for prime generation. Must satisfy 10 \texorpdfstring{$<$}{<} n \texorpdfstring{$<$}{<}= pow(10, 12). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to a \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} containing all primes \texorpdfstring{$<$}{<}= n on success, or NULL on allocation or initialization failure. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{516}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00382}{bitmap\+\_\+clone()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00306}{compute\+\_\+l2\+\_\+vx()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00024}{i\+Z()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00363}{i\+Zm\+\_\+construct\+\_\+vx\+\_\+base()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00415}{i\+Zm\+\_\+solve\+\_\+for\+\_\+x0()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00070}{process\+\_\+i\+Z\+\_\+bitmaps()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00444}{Si\+Z()}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga8cb72793e3dfa3035ef63156423b6f08}{ui64\+\_\+pop()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{Si\+Z\+\_\+count()}}, \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{Si\+Z\+\_\+stream()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}.
+
+\Hypertarget{group__iz__api_ga1119ed76482796d548cee4f5a3ab8c06}\index{iZ Public API@{iZ Public API}!SiZm\_vy@{SiZm\_vy}}
+\index{SiZm\_vy@{SiZm\_vy}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SiZm\_vy()}{SiZm\_vy()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga1119ed76482796d548cee4f5a3ab8c06} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} Si\+Zm\+\_\+vy (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Segmented Sieve-\/i\+Zm (vertical processing; faster, unordered output). 
+
+Segmented Sieve-\/i\+Zm with vertical (vy) traversal order.
+
+This variant emphasizes throughput and may not preserve ascending order of returned primes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+This variant prioritizes throughput and returns primes in non-\/sorted order.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Inclusive upper bound for prime generation. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated list of primes \texorpdfstring{$<$}{<}= {\ttfamily n}, or NULL on failure. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{623}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00170}{bitmap\+\_\+set\+\_\+all()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{utils_8c_source_l00425}{gcd()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00112}{get\+\_\+root\+\_\+primes()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00024}{i\+Z()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00490}{i\+Zm\+\_\+solve\+\_\+for\+\_\+y0()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00044}{UI64\+\_\+\+ARRAY::\+ordered}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00444}{Si\+Z()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+\Hypertarget{group__iz__api_ga415d41154325d73e264c51cebd4ab628}\index{iZ Public API@{iZ Public API}!SoA@{SoA}}
+\index{SoA@{SoA}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SoA()}{SoA()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga415d41154325d73e264c51cebd4ab628} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} SoA (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Sieve of Atkin. 
+
+Sieve of Atkin:\+ Generates a list of prime numbers up to a given limit using the Sieve of Atkin algorithm.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+Description:\+ This function implements the Sieve of Atkin, a modern algorithm to find all prime numbers up to a specified integer {\ttfamily n}. It initializes a bitmap to mark potential primes and applies the Atkin conditions to identify primes. The function also marks odd multiples of squares of primes as non-\/prime, then collects the remaining unmarked numbers as primes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The upper limit (inclusive) up to which prime numbers are to be found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item UI64\+\_\+\+ARRAY\texorpdfstring{$\ast$}{*} A pointer to the \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} structure containing the list of primes up to n.
+\item NULL if memory allocation fails or if n is less than 10. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00328}{328}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00148}{bitmap\+\_\+flip\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+\Hypertarget{group__iz__api_ga2df5338a07925f1aee4b301565a8b489}\index{iZ Public API@{iZ Public API}!SoE@{SoE}}
+\index{SoE@{SoE}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SoE()}{SoE()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga2df5338a07925f1aee4b301565a8b489} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} SoE (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Optimized Sieve of Eratosthenes. 
+
+Optimized Sieve of Eratosthenes algorithm to find all primes up to n.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+Description:\+ This function applies common speedups to the Sieve of Eratosthenes algorithm. It works the same way as the classic sieve but skips checking or marking even numbers and starts with 3, incrementing by 2, it also starts the sieve from p\texorpdfstring{$\ast$}{*}p.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The upper limit to find primes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item A pointer to a \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} structure containing the list of prime numbers up to n,
+\item NULL if memory allocation fails or if n is less than 10. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00072}{72}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00038}{process\+\_\+\+N\+\_\+bitmap()}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+\Hypertarget{group__iz__api_ga41adac38b8d9dea30778f1286417c1ed}\index{iZ Public API@{iZ Public API}!SoEu@{SoEu}}
+\index{SoEu@{SoEu}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SoEu()}{SoEu()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga41adac38b8d9dea30778f1286417c1ed} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} So\+Eu (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Euler (linear) sieve. 
+
+Sieve of Euler:\+ Generates a list of prime numbers up to a given limit using the Euler Sieve algorithm.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+Description:\+ This function uses the Euler Sieve algorithm to find all prime numbers up to a specified limit {\ttfamily n}. It marks each composite only once, allowing for a more efficient sieve process. It initializes a bitmap to track prime numbers and iterates through the numbers, marking distinct multiples of each prime found. The function also handles memory allocation and resizing of the primes array as needed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The upper limit up to which prime numbers are to be found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item UI64\+\_\+\+ARRAY\texorpdfstring{$\ast$}{*} A pointer to the \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} structure containing the list of primes up to n.
+\item NULL if memory allocation fails or if n is less than 10. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00200}{200}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00159}{bitmap\+\_\+clear\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+\Hypertarget{group__iz__api_gab82ab3c7dbaa78d3da0338a405b84108}\index{iZ Public API@{iZ Public API}!SoS@{SoS}}
+\index{SoS@{SoS}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SoS()}{SoS()}}
+{\footnotesize\ttfamily \label{group__iz__api_gab82ab3c7dbaa78d3da0338a405b84108} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} SoS (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Sieve of Sundaram. 
+
+Sieve of Sundaram:\+ Generates a list of prime numbers up to a given limit using the Sieve of Sundaram algorithm.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+Description:\+ This function implements the Sieve of Sundaram algorithm to find all prime numbers up to a specified limit {\ttfamily n}. The Sieve of Sundaram works by eliminating numbers of the form {\ttfamily i + j + 2ij} from a list of integers from 1 to {\ttfamily k = (n-\/1)/\+2}. If an integer {\ttfamily x} in this range is not eliminated, then {\ttfamily 2x+1} is a prime number. The prime number 2 is handled as a special case, as the sieve only generates odd primes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The upper limit (inclusive) up to which prime numbers are to be found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item UI64\+\_\+\+ARRAY\texorpdfstring{$\ast$}{*} A pointer to the \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} structure containing the list of primes up to n.
+\item NULL if memory allocation fails or if n is less than 10. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00264}{264}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+\Hypertarget{group__iz__api_ga51ffe428b73f193100ff6a1275c2c57f}\index{iZ Public API@{iZ Public API}!SSoE@{SSoE}}
+\index{SSoE@{SSoE}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{SSoE()}{SSoE()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga51ffe428b73f193100ff6a1275c2c57f} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} SSoE (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Segmented Sieve of Eratosthenes. 
+
+Segmented Sieve of Eratosthenes algorithm to find all primes up to n.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Upper bound (inclusive). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Heap-\/allocated prime list, or NULL on allocation failure. 
+\end{DoxyReturn}
+\begin{DoxyPrecond}{Precondition}
+n is in (10, 10\texorpdfstring{$^\wedge$}{\string^}12]\+.
+\end{DoxyPrecond}
+Description:\+ This function implements the Segmented Sieve of Eratosthenes algorithm to find all prime numbers up to a given limit n. It divides the range into segments and uses a bitmap to mark prime numbers in each segment. The function returns a pointer to a \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} structure containing the list of prime numbers found. The function also handles memory allocation and resizing of the primes array as needed.
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The upper limit to find primes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item A pointer to the \doxylink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY} structure containing the list of primes up to n,
+\item NULL if memory allocation fails or if n is less than 1000. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{114}} of file \doxymbox{\hyperlink{prime__sieve_8c_source}{prime\+\_\+sieve.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{int__arrays_8h_source_l00043}{UI64\+\_\+\+ARRAY::\+array}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00023}{ASSERT\+\_\+\+LIMIT}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00170}{bitmap\+\_\+set\+\_\+all()}}, \doxymbox{\hyperlink{int__arrays_8h_source_l00042}{UI64\+\_\+\+ARRAY::\+count}}, \doxymbox{\hyperlink{utils_8h_source_l00052}{MAX}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00026}{Pi}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00038}{process\+\_\+\+N\+\_\+bitmap()}}, \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}}, \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\+\_\+init()}}, \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\+\_\+push()}}, and \doxymbox{\hyperlink{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}{ui64\+\_\+resize\+\_\+to\+\_\+fit()}}.
+
+\Hypertarget{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}\index{iZ Public API@{iZ Public API}!vx\_random\_prime@{vx\_random\_prime}}
+\index{vx\_random\_prime@{vx\_random\_prime}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{vx\_random\_prime()}{vx\_random\_prime()}}
+{\footnotesize\ttfamily \label{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690} 
+int vx\+\_\+random\+\_\+prime (\begin{DoxyParamCaption}\item[{mpz\+\_\+t}]{p}{, }\item[{int}]{bit\+\_\+size}{, }\item[{int}]{cores\+\_\+num}{}\end{DoxyParamCaption})}
+
+
+
+Search for a random prime using horizontal (vx) sieving. 
+
+Generates a random prime candidate using the vx\+\_\+search\+\_\+prime routine.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Output prime (initialized by caller). \\
+\hline
+{\em bit\+\_\+size} & Target size of {\ttfamily p} in bits. \\
+\hline
+{\em cores\+\_\+num} & Requested worker processes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on failure.
+\end{DoxyReturn}
+Description:\+ This function generates a random prime of a given bit size using the vx\+\_\+search\+\_\+prime routine. It initializes the random base and sets up the search parameters. The function also allows for parallel processing of the search using multiple child processes. The generated prime is stored in the provided mpz\+\_\+t p variable.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The mpz\+\_\+t variable to store the generated prime number. \\
+\hline
+{\em bit\+\_\+size} & The target bit size of the prime. \\
+\hline
+{\em cores\+\_\+num} & The number of cores to use for parallel processing. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if a prime is found, 0 otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{i_z__apps_8c_source_l00692}{692}} of file \doxymbox{\hyperlink{i_z__apps_8c_source}{i\+Z\+\_\+apps.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{utils_8h_source_l00052}{MAX}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00072}{VX5}}, \doxymbox{\hyperlink{i_z__toolkit_8h_source_l00073}{VX6}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}.
+
+\Hypertarget{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}\index{iZ Public API@{iZ Public API}!vy\_random\_prime@{vy\_random\_prime}}
+\index{vy\_random\_prime@{vy\_random\_prime}!iZ Public API@{iZ Public API}}
+\doxysubsubsection{\texorpdfstring{vy\_random\_prime()}{vy\_random\_prime()}}
+{\footnotesize\ttfamily \label{group__iz__api_gab866bfc1754c38a6382038f7abf7845c} 
+int vy\+\_\+random\+\_\+prime (\begin{DoxyParamCaption}\item[{mpz\+\_\+t}]{p}{, }\item[{int}]{bit\+\_\+size}{, }\item[{int}]{cores\+\_\+num}{}\end{DoxyParamCaption})}
+
+
+
+Search for a random prime using vertical (vy) sieving. 
+
+Generates a random prime candidate using the vy\+\_\+search\+\_\+prime routine.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & Output prime (initialized by caller). \\
+\hline
+{\em bit\+\_\+size} & Target size of {\ttfamily p} in bits. \\
+\hline
+{\em cores\+\_\+num} & Requested worker processes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on failure.
+\end{DoxyReturn}
+Description:\+ This function generates a random prime of a given bit size using the vy\+\_\+search\+\_\+prime routine. It initializes the random base and sets up the search parameters. The function also allows for parallel processing of the search using multiple child processes. The generated prime is stored in the provided mpz\+\_\+t p variable.
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The mpz\+\_\+t variable to store the generated prime number. \\
+\hline
+{\em bit\+\_\+size} & The target bit size of the prime. \\
+\hline
+{\em cores\+\_\+num} & The number of cores to use for parallel processing. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if a prime is found, 0 otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{i_z__apps_8c_source_l00545}{545}} of file \doxymbox{\hyperlink{i_z__apps_8c_source}{i\+Z\+\_\+apps.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00331}{compute\+\_\+max\+\_\+vx()}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{utils_8h_source_l00052}{MAX}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01114}{vy\+\_\+search\+\_\+prime()}}.
+

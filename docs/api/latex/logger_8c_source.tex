@@ -1,0 +1,231 @@
+\doxysection{logger.\+c}
+\hypertarget{logger_8c_source}{}\label{logger_8c_source}\index{src/toolkit/logger.c@{src/toolkit/logger.c}}
+\doxymbox{\hyperlink{logger_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00008}00008\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_LOGGING}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{logger_8h}{logger.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <time.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdarg.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <pthread.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <errno.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00020}00020\ \textcolor{comment}{//\ Initialize\ the\ mutex\ for\ thread-\/safe\ logging}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00021}00021\ \textcolor{keyword}{static}\ pthread\_mutex\_t\ log\_mutex\ =\ PTHREAD\_MUTEX\_INITIALIZER;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00022}00022\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ current\_log\_level\ =\ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ab9f002c6ffbfd511da8090213227454e}{LOG\_DEBUG}};\ \textcolor{comment}{//\ Default\ log\ level}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00030}00030\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{group__iz__logger_ga41857877494326c2bd54dff09bffee95}{log\_level\_to\_string}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00031}00031\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{switch}\ (level)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00033}00033\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ab9f002c6ffbfd511da8090213227454e}{LOG\_DEBUG}}:}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}DEBUG"{}};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LOG\_INFO}}:}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}INFO"{}};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a8f6fe15bfe15104da6d1b360194a5400}{LOG\_WARNING}}:}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}WARNING"{}};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LOG\_ERROR}}:}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ERROR"{}};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ac630750884d91cb9767ef2200bbb048b}{LOG\_FATAL}}:}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}FATAL"{}};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}UNKNOWN"{}};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00047}00047\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00055}00055\ \textcolor{keywordtype}{void}\ get\_current\_timestamp(\textcolor{keywordtype}{char}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00056}00056\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00057}00057\ \ \ \ \ time\_t\ now\ =\ time(NULL);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00058}00058\ \ \ \ \ \textcolor{keyword}{struct\ }tm\ *t\ =\ localtime(\&now);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00059}00059\ \ \ \ \ strftime(buffer,\ size,\ \textcolor{stringliteral}{"{}\%Y-\/\%m-\/\%d\ \%H:\%M:\%S"{}},\ t);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00060}00060\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00072}00072\ \textcolor{keywordtype}{void}\ log\_rotate(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *log\_file,\ \textcolor{keywordtype}{size\_t}\ max\_size)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00073}00073\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00074}00074\ \ \ \ \ \textcolor{keyword}{struct\ }stat\ st;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(log\_file,\ \&st)\ ==\ 0\ \&\&\ st.st\_size\ >=\ (off\_t)max\_size)\ \textcolor{comment}{//\ Cast\ max\_size\ to\ off\_t\ to\ match\ types}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00076}00076\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ old\_log\_file[256];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 5;\ i\ >\ 0;\ -\/-\/i)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00079}00079\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ snprintf(old\_log\_file,\ \textcolor{keyword}{sizeof}(old\_log\_file),\ \textcolor{stringliteral}{"{}\%s.\%d"{}},\ log\_file,\ i);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 5)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remove(old\_log\_file);\ \textcolor{comment}{//\ Remove\ the\ oldest\ log\ file}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ prev\_log\_file[256];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ snprintf(prev\_log\_file,\ \textcolor{keyword}{sizeof}(prev\_log\_file),\ \textcolor{stringliteral}{"{}\%s.\%d"{}},\ log\_file,\ i\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rename(old\_log\_file,\ prev\_log\_file);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00091}00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ new\_log\_file[256];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00094}00094\ \ \ \ \ \ \ \ \ snprintf(new\_log\_file,\ \textcolor{keyword}{sizeof}(new\_log\_file),\ \textcolor{stringliteral}{"{}\%s.1"{}},\ log\_file);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ rename(log\_file,\ new\_log\_file);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00097}00097\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00106}00106\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga1a8053031ff21d475948d75721ec30c0}{log\_init}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *log\_file)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00107}00107\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00108}00108\ \ \ \ \ \textcolor{keyword}{struct\ }stat\ st\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{if}\ (stat(\doxymbox{\hyperlink{group__iz__logger_gacd4d3023d24d5314b895981b17825666}{LOG\_DIR}},\ \&st)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00110}00110\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00111}00111\ \ \ \ \ \ \ \ \ mkdir(\doxymbox{\hyperlink{group__iz__logger_gacd4d3023d24d5314b895981b17825666}{LOG\_DIR}},\ 0700);\ \textcolor{comment}{//\ Create\ log\ directory\ if\ it\ doesn't\ exist}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00112}00112\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00114}00114\ \ \ \ \ log\_rotate(log\_file,\ \doxymbox{\hyperlink{group__iz__logger_gae890bbd431aa7d19fcbe247502ce3feb}{LOG\_MAX\_SIZE}});\ \textcolor{comment}{//\ Rotate\ logs\ if\ needed}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00115}00115\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00120}00120\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga8a87f4bbb465c4e00e07605d0b464b49}{log\_shutdown}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00121}00121\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00122}00122\ \ \ \ \ pthread\_mutex\_destroy(\&log\_mutex);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00123}00123\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00130}00130\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga952b8093aa13f8522e9b9d32e21ae9e4}{log\_set\_log\_level}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00131}00131\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00132}00132\ \ \ \ \ current\_log\_level\ =\ level;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00133}00133\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00145}00145\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ log\_message\_va(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00146}00146\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (level\ <\ current\_log\_level)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ Don't\ log\ messages\ below\ the\ current\ log\ level}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{char}\ message[1024];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00151}00151\ \ \ \ \ \textcolor{comment}{//\ Format\ string\ comes\ from\ a\ variadic\ function\ parameter\ -\/\ suppress\ warning}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00152}00152\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00153}00153\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wformat-\/nonliteral"{}}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00154}00154\ \ \ \ \ vsnprintf(message,\ \textcolor{keyword}{sizeof}(message),\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00155}00155\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00157}00157\ \ \ \ \ \textcolor{keywordtype}{char}\ timestamp[20];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00158}00158\ \ \ \ \ get\_current\_timestamp(timestamp,\ \textcolor{keyword}{sizeof}(timestamp));}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00160}00160\ \ \ \ \ pthread\_mutex\_lock(\&log\_mutex);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00162}00162\ \ \ \ \ FILE\ *file\ =\ fopen(\doxymbox{\hyperlink{group__iz__logger_ga69d4676733f5e850f451942b6d901382}{LOG\_FILE}},\ \textcolor{stringliteral}{"{}a"{}});}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00164}00164\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00165}00165\ \ \ \ \ \ \ \ \ perror(\textcolor{stringliteral}{"{}Failed\ to\ open\ log\ file"{}});}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00166}00166\ \ \ \ \ \ \ \ \ pthread\_mutex\_unlock(\&log\_mutex);\ \textcolor{comment}{//\ Ensure\ mutex\ is\ unlocked}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00167}00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00168}00168\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00170}00170\ \ \ \ \ fprintf(file,\ \textcolor{stringliteral}{"{}[\%s]\ [\%s]\ \%s\(\backslash\)n"{}},\ timestamp,\ \doxymbox{\hyperlink{group__iz__logger_ga41857877494326c2bd54dff09bffee95}{log\_level\_to\_string}}(level),\ message);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00171}00171\ \ \ \ \ fclose(file);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00173}00173\ \ \ \ \ pthread\_mutex\_unlock(\&log\_mutex);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00174}00174\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00185}00185\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga595db5141cf773f1c22dff6170950e85}{log\_message}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00186}00186\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00187}00187\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00188}00188\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00189}00189\ \ \ \ \ log\_message\_va(level,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00190}00190\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00191}00191\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00201}00201\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga2914b55ba7cdd33d6694ca1704763e8a}{log\_message\_extended}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file\_name,\ \textcolor{keywordtype}{int}\ line\_number,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00202}00202\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{if}\ (level\ <\ current\_log\_level)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ Don't\ log\ messages\ below\ the\ current\ log\ level}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00206}00206\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00207}00207\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00208}00208\ \ \ \ \ \textcolor{keywordtype}{char}\ message[1024];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00209}00209\ \ \ \ \ \textcolor{comment}{//\ Format\ string\ comes\ from\ a\ variadic\ function\ parameter\ -\/\ suppress\ warning}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00210}00210\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00211}00211\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wformat-\/nonliteral"{}}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00212}00212\ \ \ \ \ vsnprintf(message,\ \textcolor{keyword}{sizeof}(message),\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00213}00213\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00214}00214\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00216}00216\ \ \ \ \ \textcolor{keywordtype}{char}\ timestamp[20];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00217}00217\ \ \ \ \ get\_current\_timestamp(timestamp,\ \textcolor{keyword}{sizeof}(timestamp));}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00219}00219\ \ \ \ \ pthread\_mutex\_lock(\&log\_mutex);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00221}00221\ \ \ \ \ FILE\ *file\ =\ fopen(\doxymbox{\hyperlink{group__iz__logger_ga69d4676733f5e850f451942b6d901382}{LOG\_FILE}},\ \textcolor{stringliteral}{"{}a"{}});}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}\ (!file)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00223}00223\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ perror(\textcolor{stringliteral}{"{}Failed\ to\ open\ log\ file"{}});}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00225}00225\ \ \ \ \ \ \ \ \ pthread\_mutex\_unlock(\&log\_mutex);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00227}00227\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00229}00229\ \ \ \ \ fprintf(file,\ \textcolor{stringliteral}{"{}[\%s]\ [\%s]\ \%s\ (File:\ \%s,\ Line:\ \%d)\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ timestamp,\ \doxymbox{\hyperlink{group__iz__logger_ga41857877494326c2bd54dff09bffee95}{log\_level\_to\_string}}(level),\ message,\ file\_name,\ line\_number);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00231}00231\ \ \ \ \ fclose(file);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00233}00233\ \ \ \ \ pthread\_mutex\_unlock(\&log\_mutex);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00234}00234\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00243}00243\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_gacf9e3d9c44a7600be990f89c03294c5e}{log\_console}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00244}00244\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00245}00245\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00246}00246\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00247}00247\ \ \ \ \ \textcolor{keywordtype}{char}\ message[1024];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00248}00248\ \ \ \ \ \textcolor{comment}{//\ Format\ string\ comes\ from\ a\ variadic\ function\ parameter\ -\/\ suppress\ warning}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00249}00249\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00250}00250\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wformat-\/nonliteral"{}}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00251}00251\ \ \ \ \ vsnprintf(message,\ \textcolor{keyword}{sizeof}(message),\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00252}00252\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00253}00253\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00255}00255\ \ \ \ \ \textcolor{keywordtype}{char}\ timestamp[20];}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00256}00256\ \ \ \ \ get\_current\_timestamp(timestamp,\ \textcolor{keyword}{sizeof}(timestamp));}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00258}00258\ \ \ \ \ \textcolor{comment}{//\ Print\ the\ message\ with\ a\ timestamp\ to\ the\ console}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00259}00259\ \ \ \ \ printf(\textcolor{stringliteral}{"{}[\%s]\ \%s\(\backslash\)n"{}},\ timestamp,\ message);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00260}00260\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00267}00267\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_gaf7baafafb28cb0a703025ac39d8470c6}{log\_debug}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00268}00268\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00269}00269\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00270}00270\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00271}00271\ \ \ \ \ log\_message\_va(\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ab9f002c6ffbfd511da8090213227454e}{LOG\_DEBUG}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00272}00272\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00273}00273\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00280}00280\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga49528dc2f0c8d5628f13358382f8d5b4}{log\_info}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00281}00281\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00282}00282\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00283}00283\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00284}00284\ \ \ \ \ log\_message\_va(\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LOG\_INFO}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00285}00285\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00286}00286\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00293}00293\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga590f02c03b5ef1bc3331a6e50c5d2d3d}{log\_warn}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00294}00294\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00295}00295\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00296}00296\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00297}00297\ \ \ \ \ log\_message\_va(\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a8f6fe15bfe15104da6d1b360194a5400}{LOG\_WARNING}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00298}00298\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00299}00299\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00306}00306\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00307}00307\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00308}00308\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00309}00309\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00310}00310\ \ \ \ \ log\_message\_va(\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LOG\_ERROR}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00311}00311\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00312}00312\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00319}00319\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga063fe1b30374b3afc0b6078b1e2eb5ec}{log\_fatal}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00320}00320\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00321}00321\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00322}00322\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00323}00323\ \ \ \ \ log\_message\_va(\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ac630750884d91cb9767ef2200bbb048b}{LOG\_FATAL}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00324}00324\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00325}00325\ \}}
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{logger_8c_source_l00327}00327\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ENABLE\_LOGGING}}
+
+\end{DoxyCode}

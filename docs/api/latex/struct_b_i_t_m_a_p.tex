@@ -1,0 +1,112 @@
+\doxysection{BITMAP Struct Reference}
+\hypertarget{struct_b_i_t_m_a_p}{}\label{struct_b_i_t_m_a_p}\index{BITMAP@{BITMAP}}
+
+
+Packed bit-\/array with optional SHA-\/256 checksum.  
+
+
+
+
+{\ttfamily \+\#include $<$bitmap.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \doxymbox{\hyperlink{struct_b_i_t_m_a_p_aca2dd3fb24d74ee6b53ac400c83fe673}{size}}
+\item 
+size\+\_\+t \doxymbox{\hyperlink{struct_b_i_t_m_a_p_ac42dc12965e77a127f9bbea3c37c66ee}{byte\+\_\+size}}
+\item 
+unsigned char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_b_i_t_m_a_p_a9c6b97f6b598ed49af226c4a93581e94}{data}}
+\item 
+unsigned char \doxymbox{\hyperlink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{sha256}} \+[SHA256\+\_\+\+DIGEST\+\_\+\+LENGTH]\+
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Packed bit-\/array with optional SHA-\/256 checksum. 
+
+{\ttfamily \doxylink{struct_b_i_t_m_a_p_aca2dd3fb24d74ee6b53ac400c83fe673}{size}} is measured in bits and {\ttfamily \doxylink{struct_b_i_t_m_a_p_ac42dc12965e77a127f9bbea3c37c66ee}{byte\+\_\+size}} is the backing storage in bytes. The checksum is maintained explicitly via \doxylink{group__iz__bitmap_ga08742aa937df01c455675a8a4884904f}{bitmap\+\_\+compute\+\_\+hash()} and verified via \doxylink{group__iz__bitmap_gab9eee7af8183812a4b2917295466d9f2}{bitmap\+\_\+validate\+\_\+hash()}. \begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8h_source_l00026}{26}} of file \doxymbox{\hyperlink{bitmap_8h_source}{bitmap.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_b_i_t_m_a_p_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{struct_b_i_t_m_a_p_ac42dc12965e77a127f9bbea3c37c66ee}\index{BITMAP@{BITMAP}!byte\_size@{byte\_size}}
+\index{byte\_size@{byte\_size}!BITMAP@{BITMAP}}
+\doxysubsubsection{\texorpdfstring{byte\_size}{byte\_size}}
+{\footnotesize\ttfamily \label{struct_b_i_t_m_a_p_ac42dc12965e77a127f9bbea3c37c66ee} 
+size\+\_\+t BITMAP::\+byte\+\_\+size}
+
+Number of bytes in \doxylink{struct_b_i_t_m_a_p_a9c6b97f6b598ed49af226c4a93581e94}{data}. \begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8h_source_l00029}{29}} of file \doxymbox{\hyperlink{bitmap_8h_source}{bitmap.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00382}{bitmap\+\_\+clone()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00398}{bitmap\+\_\+compute\+\_\+hash()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00492}{bitmap\+\_\+fread()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00440}{bitmap\+\_\+fwrite()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00412}{bitmap\+\_\+validate\+\_\+hash()}}, and \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}.
+
+\Hypertarget{struct_b_i_t_m_a_p_a9c6b97f6b598ed49af226c4a93581e94}\index{BITMAP@{BITMAP}!data@{data}}
+\index{data@{data}!BITMAP@{BITMAP}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily \label{struct_b_i_t_m_a_p_a9c6b97f6b598ed49af226c4a93581e94} 
+unsigned char\texorpdfstring{$\ast$}{*} BITMAP::\+data}
+
+Packed bits (LSB-\/first per byte). \begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8h_source_l00030}{30}} of file \doxymbox{\hyperlink{bitmap_8h_source}{bitmap.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00180}{bitmap\+\_\+clear\+\_\+all()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00159}{bitmap\+\_\+clear\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00210}{bitmap\+\_\+clear\+\_\+steps()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00382}{bitmap\+\_\+clone()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00398}{bitmap\+\_\+compute\+\_\+hash()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00148}{bitmap\+\_\+flip\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00492}{bitmap\+\_\+fread()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00440}{bitmap\+\_\+fwrite()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00137}{bitmap\+\_\+get\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00170}{bitmap\+\_\+set\+\_\+all()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00125}{bitmap\+\_\+set\+\_\+bit()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00412}{bitmap\+\_\+validate\+\_\+hash()}}, and \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}.
+
+\Hypertarget{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}\index{BITMAP@{BITMAP}!sha256@{sha256}}
+\index{sha256@{sha256}!BITMAP@{BITMAP}}
+\doxysubsubsection{\texorpdfstring{sha256}{sha256}}
+{\footnotesize\ttfamily \label{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe} 
+unsigned char BITMAP::\+sha256\+[SHA256\+\_\+\+DIGEST\+\_\+\+LENGTH]\+}
+
+Cached SHA-\/256 checksum. \begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8h_source_l00031}{31}} of file \doxymbox{\hyperlink{bitmap_8h_source}{bitmap.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00382}{bitmap\+\_\+clone()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00398}{bitmap\+\_\+compute\+\_\+hash()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00492}{bitmap\+\_\+fread()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00440}{bitmap\+\_\+fwrite()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, and \doxymbox{\hyperlink{bitmap_8c_source_l00412}{bitmap\+\_\+validate\+\_\+hash()}}.
+
+\Hypertarget{struct_b_i_t_m_a_p_aca2dd3fb24d74ee6b53ac400c83fe673}\index{BITMAP@{BITMAP}!size@{size}}
+\index{size@{size}!BITMAP@{BITMAP}}
+\doxysubsubsection{\texorpdfstring{size}{size}}
+{\footnotesize\ttfamily \label{struct_b_i_t_m_a_p_aca2dd3fb24d74ee6b53ac400c83fe673} 
+size\+\_\+t BITMAP::\+size}
+
+Number of addressable bits. \begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8h_source_l00028}{28}} of file \doxymbox{\hyperlink{bitmap_8h_source}{bitmap.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00180}{bitmap\+\_\+clear\+\_\+all()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00210}{bitmap\+\_\+clear\+\_\+steps()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00382}{bitmap\+\_\+clone()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00440}{bitmap\+\_\+fwrite()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, and \doxymbox{\hyperlink{bitmap_8c_source_l00170}{bitmap\+\_\+set\+\_\+all()}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+include/\+\doxymbox{\hyperlink{bitmap_8h}{bitmap.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,449 @@
+\doxysection{Utilities }
+\hypertarget{group__iz__utils}{}\label{group__iz__utils}\index{Utilities@{Utilities}}
+
+
+Cross-\/cutting helpers used across modules.  
+
+
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \doxymbox{\hyperlink{utils_8c}{utils.\+c}}
+\begin{DoxyCompactList}\small\item\em Implementations for the shared utility layer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(a,  b)
+\begin{DoxyCompactList}\small\item\em Return the smaller of two expressions. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(a,  b)
+\begin{DoxyCompactList}\small\item\em Return the larger of two expressions. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_ga32ee2169045d9168fab5d9a3578fd10f}{DIR\+\_\+output}}~"{}./\+output"{}
+\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_ga009855593b59738d24dbfc236edb3b14}{MAX\+\_\+\+CORES}}~\doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\+\_\+cpu\+\_\+cores\+\_\+count}}()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__utils_gaf48194e5acec35fa8b04f1df7397dc7f}{create\+\_\+dir}} (const char \texorpdfstring{$\ast$}{*}dir)
+\begin{DoxyCompactList}\small\item\em Create a directory if it does not exist. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gace854eb07b55e4d4aab8d067cc5eaffc}{is\+\_\+numeric\+\_\+str}} (const char \texorpdfstring{$\ast$}{*}str)
+\begin{DoxyCompactList}\small\item\em Return non-\/zero if {\ttfamily str} contains only ASCII digits. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gab38733d1f6b78b2fe613d1f287c14295}{parse\+\_\+numeric\+\_\+expr\+\_\+mpz}} (mpz\+\_\+t out, const char \texorpdfstring{$\ast$}{*}expr)
+\begin{DoxyCompactList}\small\item\em Parse an integer expression into an mpz value. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_ga2654c69373a11daf95724bc72b2ec36c}{parse\+\_\+numeric\+\_\+expr\+\_\+u64}} (const char \texorpdfstring{$\ast$}{*}expr, uint64\+\_\+t \texorpdfstring{$\ast$}{*}out)
+\begin{DoxyCompactList}\small\item\em Parse an integer expression into uint64\+\_\+t. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gaae16a1deb2b6c0b2fa223ba34e1d5431}{parse\+\_\+inclusive\+\_\+range\+\_\+mpz}} (const char \texorpdfstring{$\ast$}{*}range\+\_\+expr, mpz\+\_\+t lower, mpz\+\_\+t upper)
+\begin{DoxyCompactList}\small\item\em Parse an inclusive range expression into lower/\+upper bounds. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__utils_ga05d1ac8d90873705cd22e1c83345fa71}{gcd}} (uint64\+\_\+t a, uint64\+\_\+t b)
+\begin{DoxyCompactList}\small\item\em Compute the greatest common divisor of {\ttfamily a} and {\ttfamily b}. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__utils_ga595ea61a3090228f6f23a32b046feaef}{modular\+\_\+inverse}} (uint64\+\_\+t a, uint64\+\_\+t m)
+\begin{DoxyCompactList}\small\item\em Compute the modular inverse of {\ttfamily a} modulo {\ttfamily m}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64}{gmp\+\_\+seed\+\_\+randstate}} (gmp\+\_\+randstate\+\_\+t state)
+\begin{DoxyCompactList}\small\item\em Seed a GMP random state. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\+\_\+cpu\+\_\+cores\+\_\+count}} (void)
+\begin{DoxyCompactList}\small\item\em Get the number of online CPU cores (\texorpdfstring{$>$}{>}= 1). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gac79290998392d17d4420f651f7ad31e9}{get\+\_\+cpu\+\_\+\+L2\+\_\+cache\+\_\+size\+\_\+bits}} (void)
+\begin{DoxyCompactList}\small\item\em Return the CPU L2 cache size in bits (best effort). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Cross-\/cutting helpers used across modules. 
+
+
+
+\label{doc-define-members}
+\Hypertarget{group__iz__utils_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{group__iz__utils_ga32ee2169045d9168fab5d9a3578fd10f}\index{Utilities@{Utilities}!DIR\_output@{DIR\_output}}
+\index{DIR\_output@{DIR\_output}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{DIR\_output}{DIR\_output}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga32ee2169045d9168fab5d9a3578fd10f} 
+\+\#define DIR\+\_\+output~"{}./\+output"{}}
+
+Default directory for output artifacts produced by examples/\+tests. 
+
+Definition at line \doxymbox{\hyperlink{utils_8h_source_l00056}{56}} of file \doxymbox{\hyperlink{utils_8h_source}{utils.\+h}}.
+
+\Hypertarget{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}\index{Utilities@{Utilities}!MAX@{MAX}}
+\index{MAX@{MAX}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{MAX}{MAX}}
+{\footnotesize\ttfamily \label{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f} 
+\+\#define MAX(\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{b}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(((a)\ >\ (b))\ ?\ (a)\ :\ (b))}
+
+\end{DoxyCode}
+
+
+Return the larger of two expressions. 
+
+
+
+Definition at line \doxymbox{\hyperlink{utils_8h_source_l00052}{52}} of file \doxymbox{\hyperlink{utils_8h_source}{utils.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{Si\+Z\+\_\+stream()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{SSo\+E()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}, \doxymbox{\hyperlink{i_z__apps_8c_source_l00692}{vx\+\_\+random\+\_\+prime()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}, and \doxymbox{\hyperlink{i_z__apps_8c_source_l00545}{vy\+\_\+random\+\_\+prime()}}.
+
+\Hypertarget{group__iz__utils_ga009855593b59738d24dbfc236edb3b14}\index{Utilities@{Utilities}!MAX\_CORES@{MAX\_CORES}}
+\index{MAX\_CORES@{MAX\_CORES}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{MAX\_CORES}{MAX\_CORES}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga009855593b59738d24dbfc236edb3b14} 
+\+\#define MAX\+\_\+\+CORES~\doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\+\_\+cpu\+\_\+cores\+\_\+count}}()}
+
+Convenience macro:\+ number of online CPU cores. 
+
+Definition at line \doxymbox{\hyperlink{utils_8h_source_l00058}{58}} of file \doxymbox{\hyperlink{utils_8h_source}{utils.\+h}}.
+
+\Hypertarget{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}\index{Utilities@{Utilities}!MIN@{MIN}}
+\index{MIN@{MIN}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{MIN}{MIN}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f} 
+\+\#define MIN(\begin{DoxyParamCaption}\item[{}]{a}{, }\item[{}]{b}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(((a)\ <\ (b))\ ?\ (a)\ :\ (b))}
+
+\end{DoxyCode}
+
+
+Return the smaller of two expressions. 
+
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8h_source_l00048}{48}} of file \doxymbox{\hyperlink{utils_8h_source}{utils.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00210}{bitmap\+\_\+clear\+\_\+steps()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00233}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00306}{compute\+\_\+l2\+\_\+vx()}}, \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{Si\+Z\+\_\+count()}}, \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{Si\+Z\+\_\+stream()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{group__iz__utils_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{group__iz__utils_gaf48194e5acec35fa8b04f1df7397dc7f}\index{Utilities@{Utilities}!create\_dir@{create\_dir}}
+\index{create\_dir@{create\_dir}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{create\_dir()}{create\_dir()}}
+{\footnotesize\ttfamily \label{group__iz__utils_gaf48194e5acec35fa8b04f1df7397dc7f} 
+int create\+\_\+dir (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{dir}{}\end{DoxyParamCaption})}
+
+
+
+Create a directory if it does not exist. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & Directory path. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success (including already exists), -\/1 on failure.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em dir} & The directory path. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 0 if the directory already exists or was successfully created, -\/1 otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00402}{402}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}.
+
+\Hypertarget{group__iz__utils_ga05d1ac8d90873705cd22e1c83345fa71}\index{Utilities@{Utilities}!gcd@{gcd}}
+\index{gcd@{gcd}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{gcd()}{gcd()}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga05d1ac8d90873705cd22e1c83345fa71} 
+uint64\+\_\+t gcd (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{a}{, }\item[{uint64\+\_\+t}]{b}{}\end{DoxyParamCaption})}
+
+
+
+Compute the greatest common divisor of {\ttfamily a} and {\ttfamily b}. 
+
+Compute the greatest common divisor of {\ttfamily a} and {\ttfamily b}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & The first integer. \\
+\hline
+{\em b} & The second integer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int The GCD of a and b. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00425}{425}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00490}{i\+Zm\+\_\+solve\+\_\+for\+\_\+y0()}}, and \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}.
+
+\Hypertarget{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}\index{Utilities@{Utilities}!get\_cpu\_cores\_count@{get\_cpu\_cores\_count}}
+\index{get\_cpu\_cores\_count@{get\_cpu\_cores\_count}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{get\_cpu\_cores\_count()}{get\_cpu\_cores\_count()}}
+{\footnotesize\ttfamily \label{group__iz__utils_gac28c1aea8b0f344393afc370d815473c} 
+int get\+\_\+cpu\+\_\+cores\+\_\+count (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Get the number of online CPU cores (\texorpdfstring{$>$}{>}= 1). 
+
+Get the number of online CPU cores (\texorpdfstring{$>$}{>}= 1).
+
+\begin{DoxyReturn}{Returns}
+int The number of CPU cores. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00509}{509}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{Si\+Z\+\_\+count()}}.
+
+\Hypertarget{group__iz__utils_gac79290998392d17d4420f651f7ad31e9}\index{Utilities@{Utilities}!get\_cpu\_L2\_cache\_size\_bits@{get\_cpu\_L2\_cache\_size\_bits}}
+\index{get\_cpu\_L2\_cache\_size\_bits@{get\_cpu\_L2\_cache\_size\_bits}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{get\_cpu\_L2\_cache\_size\_bits()}{get\_cpu\_L2\_cache\_size\_bits()}}
+{\footnotesize\ttfamily \label{group__iz__utils_gac79290998392d17d4420f651f7ad31e9} 
+int get\+\_\+cpu\+\_\+\+L2\+\_\+cache\+\_\+size\+\_\+bits (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Return the CPU L2 cache size in bits (best effort). 
+
+\begin{DoxyReturn}{Returns}
+Cache size in bits, or a conservative default.
+\end{DoxyReturn}
+Return the CPU L2 cache size in bits (best effort).
+
+Description:\+ This function retrieves the L2 cache size using platform-\/specific methods:\+
+\begin{DoxyItemize}
+\item Linux:\+ Reads from sysfs (/\+sys/\+devices/\+system/\+cpu/\+cpu0/\+cache/\+index2/\+size)
+\item mac\+OS/\+\+BSD:\+ Uses sysctl to query hw.\+l2cachesize
+\item Fallback:\+ Returns 256 Kbits as a conservative default
+\end{DoxyItemize}
+
+The function attempts multiple detection methods to ensure robustness across different architectures and operating systems.
+
+\begin{DoxyReturn}{Returns}
+int The L2 cache size in bits, or 256 Kbits if unable to determine. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00531}{531}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00306}{compute\+\_\+l2\+\_\+vx()}}.
+
+\Hypertarget{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64}\index{Utilities@{Utilities}!gmp\_seed\_randstate@{gmp\_seed\_randstate}}
+\index{gmp\_seed\_randstate@{gmp\_seed\_randstate}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{gmp\_seed\_randstate()}{gmp\_seed\_randstate()}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64} 
+void gmp\+\_\+seed\+\_\+randstate (\begin{DoxyParamCaption}\item[{gmp\+\_\+randstate\+\_\+t}]{state}{}\end{DoxyParamCaption})}
+
+
+
+Seed a GMP random state. 
+
+Attempts to seed from {\ttfamily /\+dev/\+urandom}, falling back to time-\/based seeding.
+
+Seed a GMP random state.
+
+Description:\+ This function seeds the GMP random state using /\+dev/\+urandom.
+
+
+\begin{DoxyParams}{Parameters}
+{\em state} & The GMP random state. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00486}{486}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01114}{vy\+\_\+search\+\_\+prime()}}.
+
+\Hypertarget{group__iz__utils_gace854eb07b55e4d4aab8d067cc5eaffc}\index{Utilities@{Utilities}!is\_numeric\_str@{is\_numeric\_str}}
+\index{is\_numeric\_str@{is\_numeric\_str}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{is\_numeric\_str()}{is\_numeric\_str()}}
+{\footnotesize\ttfamily \label{group__iz__utils_gace854eb07b55e4d4aab8d067cc5eaffc} 
+int is\+\_\+numeric\+\_\+str (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Return non-\/zero if {\ttfamily str} contains only ASCII digits. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Input string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if numeric, 0 otherwise.
+\end{DoxyReturn}
+Return non-\/zero if {\ttfamily str} contains only ASCII digits.
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Pointer to the string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 1 if the string is numeric, 0 otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00258}{258}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+\Hypertarget{group__iz__utils_ga595ea61a3090228f6f23a32b046feaef}\index{Utilities@{Utilities}!modular\_inverse@{modular\_inverse}}
+\index{modular\_inverse@{modular\_inverse}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{modular\_inverse()}{modular\_inverse()}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga595ea61a3090228f6f23a32b046feaef} 
+uint64\+\_\+t modular\+\_\+inverse (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{a}{, }\item[{uint64\+\_\+t}]{m}{}\end{DoxyParamCaption})}
+
+
+
+Compute the modular inverse of {\ttfamily a} modulo {\ttfamily m}. 
+
+\begin{DoxyReturn}{Returns}
+The inverse in \+[0, m-\/1]\+ if it exists; otherwise an implementation-\/defined value.
+\end{DoxyReturn}
+Compute the modular inverse of {\ttfamily a} modulo {\ttfamily m}.
+
+Description:\+ This function computes the modular inverse of a modulo m using the Extended Euclidean Algorithm. The function takes two integers a and m as input and returns the modular inverse of a modulo m. If a and m are not co-\/prime, the function returns -\/1 indicating no modular inverse exists. The function also handles the case where m is 1, returning 0 as the modular inverse.
+
+Parameters:\+ 
+\begin{DoxyParams}{Parameters}
+{\em a} & The integer for which the modular inverse is to be computed. \\
+\hline
+{\em m} & The modulus.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The modular inverse of a modulo m, or -\/1 if no inverse exists. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00453}{453}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00490}{i\+Zm\+\_\+solve\+\_\+for\+\_\+y0()}}.
+
+\Hypertarget{group__iz__utils_gaae16a1deb2b6c0b2fa223ba34e1d5431}\index{Utilities@{Utilities}!parse\_inclusive\_range\_mpz@{parse\_inclusive\_range\_mpz}}
+\index{parse\_inclusive\_range\_mpz@{parse\_inclusive\_range\_mpz}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{parse\_inclusive\_range\_mpz()}{parse\_inclusive\_range\_mpz()}}
+{\footnotesize\ttfamily \label{group__iz__utils_gaae16a1deb2b6c0b2fa223ba34e1d5431} 
+int parse\+\_\+inclusive\+\_\+range\+\_\+mpz (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{range\+\_\+expr}{, }\item[{mpz\+\_\+t}]{lower}{, }\item[{mpz\+\_\+t}]{upper}{}\end{DoxyParamCaption})}
+
+
+
+Parse an inclusive range expression into lower/\+upper bounds. 
+
+Accepted forms:\+
+\begin{DoxyItemize}
+\item {\ttfamily L,R}
+\item {\ttfamily \+[L, R]\+}
+\item {\ttfamily range\+[L, R]\+}
+\item {\ttfamily L..R}
+\item {\ttfamily L:\+R}
+\end{DoxyItemize}
+
+Each bound accepts the same numeric formats as \doxylink{group__iz__utils_gab38733d1f6b78b2fe613d1f287c14295}{parse\+\_\+numeric\+\_\+expr\+\_\+mpz}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em range\+\_\+expr} & Range expression string. \\
+\hline
+{\em lower} & Output lower bound. \\
+\hline
+{\em upper} & Output upper bound. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on parse failure. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00335}{335}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+\Hypertarget{group__iz__utils_gab38733d1f6b78b2fe613d1f287c14295}\index{Utilities@{Utilities}!parse\_numeric\_expr\_mpz@{parse\_numeric\_expr\_mpz}}
+\index{parse\_numeric\_expr\_mpz@{parse\_numeric\_expr\_mpz}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{parse\_numeric\_expr\_mpz()}{parse\_numeric\_expr\_mpz()}}
+{\footnotesize\ttfamily \label{group__iz__utils_gab38733d1f6b78b2fe613d1f287c14295} 
+int parse\+\_\+numeric\+\_\+expr\+\_\+mpz (\begin{DoxyParamCaption}\item[{mpz\+\_\+t}]{out}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{expr}{}\end{DoxyParamCaption})}
+
+
+
+Parse an integer expression into an mpz value. 
+
+Supported term formats:\+
+\begin{DoxyItemize}
+\item plain decimal integer ({\ttfamily 1000000}, {\ttfamily 1,000,000})
+\item power notation ({\ttfamily 10\texorpdfstring{$^\wedge$}{\string^}6})
+\item scientific shorthand ({\ttfamily 1e6}, {\ttfamily 10e100})
+\item additive expressions ({\ttfamily 10e100 + 10e9})
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em out} & Output mpz value. \\
+\hline
+{\em expr} & Input expression string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on parse failure. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00272}{272}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{utils_8c_source_l00314}{parse\+\_\+numeric\+\_\+expr\+\_\+u64()}}.
+
+\Hypertarget{group__iz__utils_ga2654c69373a11daf95724bc72b2ec36c}\index{Utilities@{Utilities}!parse\_numeric\_expr\_u64@{parse\_numeric\_expr\_u64}}
+\index{parse\_numeric\_expr\_u64@{parse\_numeric\_expr\_u64}!Utilities@{Utilities}}
+\doxysubsubsection{\texorpdfstring{parse\_numeric\_expr\_u64()}{parse\_numeric\_expr\_u64()}}
+{\footnotesize\ttfamily \label{group__iz__utils_ga2654c69373a11daf95724bc72b2ec36c} 
+int parse\+\_\+numeric\+\_\+expr\+\_\+u64 (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{expr}{, }\item[{uint64\+\_\+t \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Parse an integer expression into uint64\+\_\+t. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expr} & Input expression string. \\
+\hline
+{\em out} & Output value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, 0 on parse failure or overflow. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{utils_8c_source_l00314}{314}} of file \doxymbox{\hyperlink{utils_8c_source}{utils.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{utils_8c_source_l00272}{parse\+\_\+numeric\+\_\+expr\+\_\+mpz()}}.
+

@@ -1,0 +1,117 @@
+\doxysection{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE Struct Reference}
+\hypertarget{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{}\label{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}\index{INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}}
+
+
+Input parameters for range sieving/\+counting.  
+
+
+
+
+{\ttfamily \+\#include $<$i\+Z\+\_\+api.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}{start}}
+\begin{DoxyCompactList}\small\item\em Start of range as a base-\/10 numeric string. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aad5d9f7a094db43297ca9fff6cf4ddd9}{range}}
+\begin{DoxyCompactList}\small\item\em Interval size (number of integers to cover). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_af8c8f0e616bbab35348c0dac5d65b4a7}{mr\+\_\+rounds}}
+\begin{DoxyCompactList}\small\item\em Miller–\+Rabin rounds for large primality checks. \end{DoxyCompactList}\item 
+char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9}{filepath}}
+\begin{DoxyCompactList}\small\item\em Output path for streaming primes (NULL to disable output). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Input parameters for range sieving/\+counting. 
+
+The interval is interpreted as:\+
+\begin{DoxyItemize}
+\item Start \$\+Z\+\_\+s\$ from the decimal string {\ttfamily \doxylink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}{start}}.
+\item End \$\+Z\+\_\+e = Z\+\_\+s + range -\/ 1\$. 
+\end{DoxyItemize}
+
+Definition at line \doxymbox{\hyperlink{i_z__api_8h_source_l00124}{124}} of file \doxymbox{\hyperlink{i_z__api_8h_source}{i\+Z\+\_\+api.\+h}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_doc-variable-members}
+\doxysubsection{Field Documentation}
+\Hypertarget{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9}\index{INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}!filepath@{filepath}}
+\index{filepath@{filepath}!INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}}
+\doxysubsubsection{\texorpdfstring{filepath}{filepath}}
+{\footnotesize\ttfamily \label{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9} 
+char\texorpdfstring{$\ast$}{*} INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+filepath}
+
+
+
+Output path for streaming primes (NULL to disable output). 
+
+
+
+Definition at line \doxymbox{\hyperlink{i_z__api_8h_source_l00129}{129}} of file \doxymbox{\hyperlink{i_z__api_8h_source}{i\+Z\+\_\+api.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{Si\+Z\+\_\+stream()}}.
+
+\Hypertarget{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_af8c8f0e616bbab35348c0dac5d65b4a7}\index{INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}!mr\_rounds@{mr\_rounds}}
+\index{mr\_rounds@{mr\_rounds}!INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}}
+\doxysubsubsection{\texorpdfstring{mr\_rounds}{mr\_rounds}}
+{\footnotesize\ttfamily \label{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_af8c8f0e616bbab35348c0dac5d65b4a7} 
+int INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+mr\+\_\+rounds}
+
+
+
+Miller–\+Rabin rounds for large primality checks. 
+
+
+
+Definition at line \doxymbox{\hyperlink{i_z__api_8h_source_l00128}{128}} of file \doxymbox{\hyperlink{i_z__api_8h_source}{i\+Z\+\_\+api.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{Si\+Z\+\_\+count()}}, and \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{Si\+Z\+\_\+stream()}}.
+
+\Hypertarget{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aad5d9f7a094db43297ca9fff6cf4ddd9}\index{INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}!range@{range}}
+\index{range@{range}!INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}}
+\doxysubsubsection{\texorpdfstring{range}{range}}
+{\footnotesize\ttfamily \label{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aad5d9f7a094db43297ca9fff6cf4ddd9} 
+uint64\+\_\+t INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+range}
+
+
+
+Interval size (number of integers to cover). 
+
+
+
+Definition at line \doxymbox{\hyperlink{i_z__api_8h_source_l00127}{127}} of file \doxymbox{\hyperlink{i_z__api_8h_source}{i\+Z\+\_\+api.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00944}{range\+\_\+info\+\_\+init()}}, and \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{Si\+Z\+\_\+count()}}.
+
+\Hypertarget{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}\index{INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}!start@{start}}
+\index{start@{start}!INPUT\_SIEVE\_RANGE@{INPUT\_SIEVE\_RANGE}}
+\doxysubsubsection{\texorpdfstring{start}{start}}
+{\footnotesize\ttfamily \label{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5} 
+char\texorpdfstring{$\ast$}{*} INPUT\+\_\+\+SIEVE\+\_\+\+RANGE::\+start}
+
+
+
+Start of range as a base-\/10 numeric string. 
+
+
+
+Definition at line \doxymbox{\hyperlink{i_z__api_8h_source_l00126}{126}} of file \doxymbox{\hyperlink{i_z__api_8h_source}{i\+Z\+\_\+api.\+h}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00944}{range\+\_\+info\+\_\+init()}}, \doxymbox{\hyperlink{i_z__apps_8c_source_l00184}{Si\+Z\+\_\+count()}}, and \doxymbox{\hyperlink{i_z__apps_8c_source_l00035}{Si\+Z\+\_\+stream()}}.
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+include/\+\doxymbox{\hyperlink{i_z__api_8h}{i\+Z\+\_\+api.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,36 @@
+\doxysection{src/\+i\+Z\+\_\+apps.c File Reference}
+\hypertarget{i_z__apps_8c}{}\label{i_z__apps_8c}\index{src/iZ\_apps.c@{src/iZ\_apps.c}}
+
+
+High-\/level application routines built on top of the i\+Z\+\_\+toolkit.  
+
+
+{\ttfamily \+\#include $<$i\+Z\+\_\+api.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{Indent}\textbf{ SiZ Range Variants}\par
+{\em Count/\+stream primes over a numeric interval. }\begin{DoxyCompactItemize}
+\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}{Si\+Z\+\_\+stream}} (\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}range)
+\begin{DoxyCompactList}\small\item\em Stream primes in a range to {\ttfamily filepath} (and return the count). \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{Si\+Z\+\_\+count}} (\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}input\+\_\+range, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Count primes in a range using multiple worker processes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Prime Generators}\par
+{\em Probabilistic prime searches using i\+Zm/\+\+VX machinery. }\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}{vy\+\_\+random\+\_\+prime}} (mpz\+\_\+t p, int bit\+\_\+size, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Search for a random prime using vertical (vy) sieving. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}{vx\+\_\+random\+\_\+prime}} (mpz\+\_\+t p, int bit\+\_\+size, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Search for a random prime using horizontal (vx) sieving. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}{i\+Z\+\_\+next\+\_\+prime}} (mpz\+\_\+t p, mpz\+\_\+t base, int forward)
+\begin{DoxyCompactList}\small\item\em Advance to the next (or previous) prime from a base value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+High-\/level application routines built on top of the i\+Z\+\_\+toolkit. 
+
+This module contains range-\/oriented entry points (stream/\+count) and probabilistic prime generation wrappers. 
+
+Definition in file \doxymbox{\hyperlink{i_z__apps_8c_source}{i\+Z\+\_\+apps.\+c}}.
+

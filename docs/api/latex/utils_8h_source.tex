@@ -1,0 +1,112 @@
+\doxysection{utils.\+h}
+\hypertarget{utils_8h_source}{}\label{utils_8h_source}\index{include/utils.h@{include/utils.h}}
+\doxymbox{\hyperlink{utils_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00009}00009\ \textcolor{preprocessor}{\#ifndef\ IZ\_UTILS\_H}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00010}00010\ \textcolor{preprocessor}{\#define\ IZ\_UTILS\_H}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00012}00012\ \textcolor{comment}{//\ Standard\ library\ includes}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}\ \ \ \textcolor{comment}{//\ For\ malloc,\ free,\ etc.}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <stdint.h>}\ \ \ \textcolor{comment}{//\ For\ fixed-\/width\ integer\ types\ like\ uint64\_t}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <stddef.h>}\ \ \ \textcolor{comment}{//\ For\ size\_t}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <string.h>}\ \ \ \textcolor{comment}{//\ For\ string\ manipulation\ functions\ like\ snprintf}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <assert.h>}\ \ \ \textcolor{comment}{//\ For\ assertions}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <math.h>}\ \ \ \ \ \textcolor{comment}{//\ For\ math\ functions\ like\ sqrt}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00019}00019\ \textcolor{preprocessor}{\#include\ <stdio.h>}\ \ \ \ \textcolor{comment}{//\ For\ printf,\ FILE,\ fopen,\ fwrite,\ fread,\ etc.}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00020}00020\ \textcolor{preprocessor}{\#include\ <sys/stat.h>}\ \textcolor{comment}{//\ For\ creating\ directories\ (mkdir)}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00021}00021\ \textcolor{preprocessor}{\#include\ <fcntl.h>}\ \ \ \ \textcolor{comment}{//\ For\ open}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00022}00022\ \textcolor{preprocessor}{\#include\ <unistd.h>}\ \ \ \textcolor{comment}{//\ For\ close}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00023}00023\ \textcolor{preprocessor}{\#include\ <signal.h>}\ \ \ \textcolor{comment}{//\ For\ kill}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00024}00024\ \textcolor{preprocessor}{\#include\ <sys/wait.h>}\ \textcolor{comment}{//\ For\ waitpid}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00025}00025\ \textcolor{preprocessor}{\#include\ <stdarg.h>}\ \ \ \textcolor{comment}{//\ For\ variadic\ functions\ (va\_list,\ va\_start,\ va\_end)}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00026}00026\ \textcolor{preprocessor}{\#include\ <time.h>}\ \ \ \ \ \textcolor{comment}{//\ For\ struct\ timespec\ and\ time-\/based\ helpers}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00028}00028\ \textcolor{comment}{//\ Platform-\/specific\ includes\ for\ sysctl\ (macOS/BSD)}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00029}00029\ \textcolor{preprocessor}{\#if\ defined(\_\_APPLE\_\_)\ ||\ defined(\_\_FreeBSD\_\_)\ ||\ defined(\_\_OpenBSD\_\_)\ ||\ defined(\_\_NetBSD\_\_)}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00030}00030\ \textcolor{preprocessor}{\#include\ <sys/types.h>}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00031}00031\ \textcolor{preprocessor}{\#include\ <sys/sysctl.h>}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00032}00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00034}00034\ \textcolor{comment}{//\ Internal\ includes}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00035}00035\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{logger_8h}{logger.h}}>}\ \textcolor{comment}{//\ Logger\ module\ for\ logging\ timestamped\ messages.}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00037}00037\ \textcolor{comment}{//\ Third-\/party\ libraries}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00038}00038\ \textcolor{preprocessor}{\#include\ <gmp.h>}\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ GMP\ library\ for\ arbitrary\ precision\ arithmetic}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00039}00039\ \textcolor{preprocessor}{\#include\ <openssl/sha.h>}\ \textcolor{comment}{//\ For\ SHA-\/256\ hashing}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00046}00046\ \textcolor{preprocessor}{\#ifndef\ MIN}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00048}\doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{00048}}\ \textcolor{preprocessor}{\#define\ MIN(a,\ b)\ (((a)\ <\ (b))\ ?\ (a)\ :\ (b))}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00049}00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00050}00050\ \textcolor{preprocessor}{\#ifndef\ MAX}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00052}\doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{00052}}\ \textcolor{preprocessor}{\#define\ MAX(a,\ b)\ (((a)\ >\ (b))\ ?\ (a)\ :\ (b))}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00053}00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00056}\doxymbox{\hyperlink{group__iz__utils_ga32ee2169045d9168fab5d9a3578fd10f}{00056}}\ \textcolor{preprocessor}{\#define\ DIR\_output\ "{}./output"{}}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00058}\doxymbox{\hyperlink{group__iz__utils_ga009855593b59738d24dbfc236edb3b14}{00058}}\ \textcolor{preprocessor}{\#define\ MAX\_CORES\ get\_cpu\_cores\_count()}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00060}00060\ \textcolor{comment}{//\ file\ utilities}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00066}00066\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_gaf48194e5acec35fa8b04f1df7397dc7f}{create\_dir}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *dir);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00068}00068\ \textcolor{comment}{//\ string\ utilities}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00074}00074\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_gace854eb07b55e4d4aab8d067cc5eaffc}{is\_numeric\_str}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00089}00089\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_gab38733d1f6b78b2fe613d1f287c14295}{parse\_numeric\_expr\_mpz}}(mpz\_t\ out,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *expr);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00097}00097\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_ga2654c69373a11daf95724bc72b2ec36c}{parse\_numeric\_expr\_u64}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *expr,\ uint64\_t\ *out);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00116}00116\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_gaae16a1deb2b6c0b2fa223ba34e1d5431}{parse\_inclusive\_range\_mpz}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *range\_expr,\ mpz\_t\ lower,\ mpz\_t\ upper);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00118}00118\ \textcolor{comment}{//\ math\ utilities}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00120}00120\ uint64\_t\ \doxymbox{\hyperlink{group__iz__utils_ga05d1ac8d90873705cd22e1c83345fa71}{gcd}}(uint64\_t\ a,\ uint64\_t\ b);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00125}00125\ uint64\_t\ \doxymbox{\hyperlink{group__iz__utils_ga595ea61a3090228f6f23a32b046feaef}{modular\_inverse}}(uint64\_t\ a,\ uint64\_t\ m);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00127}00127\ \textcolor{comment}{//\ gmp\ utilities}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00133}00133\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64}{gmp\_seed\_randstate}}(gmp\_randstate\_t\ state);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00135}00135\ \textcolor{comment}{//\ system\ utilities}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00137}00137\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\_cpu\_cores\_count}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00142}00142\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__utils_gac79290998392d17d4420f651f7ad31e9}{get\_cpu\_L2\_cache\_size\_bits}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00155}00155\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga8505a25915c2d06845e24ad4b5182a21}{print\_sha256\_hash}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *hash);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00162}00162\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(\textcolor{keywordtype}{int}\ length,\ \textcolor{keywordtype}{char}\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00170}00170\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga2f2ab4de61685b555a3a182afb0b1e6b}{print\_centered\_text}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{int}\ line\_length,\ \textcolor{keywordtype}{char}\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00173}00173\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_gaee4bc5c6e9ef03fceea3269f680d105a}{print\_test\_table\_header}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00176}00176\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga72466c8280896724a1c9de6e0bc8fa29}{print\_test\_module\_header}}(\textcolor{keywordtype}{char}\ *module\_name);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00179}00179\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga42f2952626219f7a40085dfd6cb805c1}{print\_test\_fn\_header}}(\textcolor{keywordtype}{char}\ *fn\_name);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00188}00188\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_gaeff329da19376513f0ea3b7d190e58e0}{print\_test\_module\_result}}(\textcolor{keywordtype}{int}\ result,\ \textcolor{keywordtype}{int}\ test\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *unit\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00197}00197\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga67f5a331ba8b5d5b9de55a72e119a7c3}{print\_test\_summary}}(\textcolor{keywordtype}{char}\ *module\_name,\ \textcolor{keywordtype}{int}\ passed,\ \textcolor{keywordtype}{int}\ failed,\ \textcolor{keywordtype}{int}\ verbose);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00209}\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{00209}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00210}00210\ \{}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00211}\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a4cedb16e8f0dad025c3dab18fafb247e}{00211}}\ \ \ \ \ \textcolor{keyword}{struct\ }timespec\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a4cedb16e8f0dad025c3dab18fafb247e}{start\_time}};\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00212}\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ae9639bc9e9f66b2786a838fd43f96b42}{00212}}\ \ \ \ \ \textcolor{keyword}{struct\ }timespec\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ae9639bc9e9f66b2786a838fd43f96b42}{end\_time}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00213}\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a90ec5ab2cee83868690fb2f1e0a5c1b5}{00213}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a90ec5ab2cee83868690fb2f1e0a5c1b5}{running}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00214}\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ac81572977f9611d3b66dbb0055b23aff}{00214}}\ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ac81572977f9611d3b66dbb0055b23aff}{elapsed\_sec}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00215}00215\ \}\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}};}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00221}00221\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__stopwatch_gaee035fe5ef09ff4e688b6e434b51a581}{sw\_start}}(\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}\ *sw);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00227}00227\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__stopwatch_gad4a0ca0f1f376be85f517a7d3624088a}{sw\_stop}}(\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}\ *sw);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00238}00238\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group__iz__stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106}{sw\_elapsed\_seconds}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}\ *sw);}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00244}00244\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group__iz__stopwatch_ga45200a399e68acddf78aacf4c57c8052}{sw\_elapsed\_now\_seconds}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{utils_8h_source_l00248}00248\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ IZ\_UTILS\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,14 @@
+Benchmark: SiZ_count
+Cores: 8
+Range Size: 10^9
+Results:
+Start=10^10, Primes Count=43336106, Execution Time (s)=0.157103
+Start=10^20, Primes Count=21710426, Execution Time (s)=45.271972
+Start=10^30, Primes Count=14473890, Execution Time (s)=50.446129
+Start=10^40, Primes Count=10860250, Execution Time (s)=75.721432
+Start=10^50, Primes Count=8684378, Execution Time (s)=83.009872
+Start=10^60, Primes Count=7237481, Execution Time (s)=107.691231
+Start=10^70, Primes Count=6205976, Execution Time (s)=119.342140
+Start=10^80, Primes Count=5428021, Execution Time (s)=167.147788
+Start=10^90, Primes Count=4825182, Execution Time (s)=178.556225
+Start=10^100, Primes Count=4342289, Execution Time (s)=218.545428

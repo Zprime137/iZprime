@@ -1,0 +1,22 @@
+var group__iz__tests =
+[
+    [ "SIEVE_LIMIT", "struct_s_i_e_v_e___l_i_m_i_t.html", [
+      [ "base", "struct_s_i_e_v_e___l_i_m_i_t.html#a101f9d653d2c47d39731669b399d102d", null ],
+      [ "exp", "struct_s_i_e_v_e___l_i_m_i_t.html#a56c885d2f7d182daaa27f2a478a99629", null ]
+    ] ],
+    [ "SIEVE_MODEL", "struct_s_i_e_v_e___m_o_d_e_l.html", [
+      [ "function", "struct_s_i_e_v_e___m_o_d_e_l.html#abd91983323f37458bdffcec31020a445", null ],
+      [ "name", "struct_s_i_e_v_e___m_o_d_e_l.html#a0ba483a7a4523581ac2ed2c3efa43a10", null ]
+    ] ],
+    [ "SIEVE_FN", "group__iz__tests.html#ga8a197176cad14c93254c898bc5f87afe", null ],
+    [ "BENCHMARK_P_GEN_ALGORITHMS", "group__iz__tests.html#ga85daa1b49df95af3ab393f4c49d95046", null ],
+    [ "BENCHMARK_SIEVE_MODELS", "group__iz__tests.html#gacc58369a47accbe17a06fd0e193b6ec6", null ],
+    [ "BENCHMARK_SiZ_count", "group__iz__tests.html#gaeb3a61452e03f5dc1019297c446a334f", null ],
+    [ "TEST_iZ_next_prime", "group__iz__tests.html#gaa81e90b15b6cd6e1008a5945393a69a0", null ],
+    [ "TEST_SIEVE_MODELS_INTEGRITY", "group__iz__tests.html#gad254a21f64fa08c852febe403ef97894", null ],
+    [ "TEST_SiZ_count", "group__iz__tests.html#gadbca1adf041fe4e6d7d951971754d348", null ],
+    [ "TEST_SiZ_stream", "group__iz__tests.html#gacd30a26b8fed1771a659a224a0ba4730", null ],
+    [ "TEST_UTILS", "group__iz__tests.html#ga94c2efab20cf41377d440a5048ec5a36", null ],
+    [ "TEST_vx_random_prime", "group__iz__tests.html#gaccd7ce7a640a920553e65bb851ae66ec", null ],
+    [ "TEST_vy_random_prime", "group__iz__tests.html#gaebecb944ac1f8df51cff30a90c461184", null ]
+];

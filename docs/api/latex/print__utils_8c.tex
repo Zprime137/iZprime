@@ -1,0 +1,36 @@
+\doxysection{src/\+toolkit/\+print\+\_\+utils.c File Reference}
+\hypertarget{print__utils_8c}{}\label{print__utils_8c}\index{src/toolkit/print\_utils.c@{src/toolkit/print\_utils.c}}
+
+
+Print formatting helpers for tests, benchmarks, and CLI output.  
+
+
+{\ttfamily \+\#include $<$utils.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\+\_\+line}} (int length, char fill\+\_\+char)
+\begin{DoxyCompactList}\small\item\em Print a repeated-\/character horizontal line. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga2f2ab4de61685b555a3a182afb0b1e6b}{print\+\_\+centered\+\_\+text}} (const char \texorpdfstring{$\ast$}{*}text, int line\+\_\+length, char fill\+\_\+char)
+\begin{DoxyCompactList}\small\item\em Print text centered inside a padded line. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga8505a25915c2d06845e24ad4b5182a21}{print\+\_\+sha256\+\_\+hash}} (const unsigned char \texorpdfstring{$\ast$}{*}hash)
+\begin{DoxyCompactList}\small\item\em Print a SHA-\/256 digest as hex to stdout. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga72466c8280896724a1c9de6e0bc8fa29}{print\+\_\+test\+\_\+module\+\_\+header}} (char \texorpdfstring{$\ast$}{*}module\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Print a test-\/suite header banner for a module. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_gaee4bc5c6e9ef03fceea3269f680d105a}{print\+\_\+test\+\_\+table\+\_\+header}} (void)
+\begin{DoxyCompactList}\small\item\em Print the generic test runner header. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_gaeff329da19376513f0ea3b7d190e58e0}{print\+\_\+test\+\_\+module\+\_\+result}} (int result, int test\+\_\+id, const char \texorpdfstring{$\ast$}{*}unit\+\_\+name, const char \texorpdfstring{$\ast$}{*}format,...)
+\begin{DoxyCompactList}\small\item\em Print a single test-\/row result. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga67f5a331ba8b5d5b9de55a72e119a7c3}{print\+\_\+test\+\_\+summary}} (char \texorpdfstring{$\ast$}{*}module\+\_\+name, int passed, int failed, int verbose)
+\begin{DoxyCompactList}\small\item\em Print module-\/level test summary. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga42f2952626219f7a40085dfd6cb805c1}{print\+\_\+test\+\_\+fn\+\_\+header}} (char \texorpdfstring{$\ast$}{*}fn\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Print a formatted header for a test function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Print formatting helpers for tests, benchmarks, and CLI output. 
+
+
+
+Definition in file \doxymbox{\hyperlink{print__utils_8c_source}{print\+\_\+utils.\+c}}.
+

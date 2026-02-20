@@ -1,0 +1,919 @@
+\doxysection{i\+Z\+\_\+toolkit.\+c}
+\hypertarget{i_z__toolkit_8c_source}{}\label{i_z__toolkit_8c_source}\index{src/toolkit/iZ\_toolkit.c@{src/toolkit/iZ\_toolkit.c}}
+\doxymbox{\hyperlink{i_z__toolkit_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{i_z__api_8h}{iZ\_api.h}}>}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00010}\doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{00010}}\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[]\ =\ \{2,\ 3,\ 5,\ 7,\ 11,\ 13,\ 17,\ 19,\ 23,\ 29,\ 31,\ 37,\ 41,}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00011}00011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 43,\ 47,\ 53,\ 59,\ 61,\ 67,\ 71,\ 73,\ 79,\ 83,\ 89,\ 97\};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00013}\doxymbox{\hyperlink{i_z__toolkit_8c_aa724ea8ac82fc99775f39770db26538d}{00013}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{i_z__toolkit_8c_aa724ea8ac82fc99775f39770db26538d}{s\_primes\_count}}\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}})\ /\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00024}\doxymbox{\hyperlink{group__iz__toolkit_gaffec7a5b407ee6c59ccc1678e0ab89ba}{00024}}\ \textcolor{keyword}{inline}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__toolkit_gaffec7a5b407ee6c59ccc1678e0ab89ba}{iZ}}(uint64\_t\ x,\ \textcolor{keywordtype}{int}\ i)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{return}\ 6\ *\ x\ +\ i;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00037}\doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{00037}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(mpz\_t\ z,\ mpz\_t\ x,\ \textcolor{keywordtype}{int}\ i)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00038}00038\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00039}00039\ \ \ \ \ mpz\_mul\_ui(z,\ x,\ 6);\ \textcolor{comment}{//\ z\ =\ 6\ *\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00042}00042\ \ \ \ \ \ \ \ \ mpz\_add\_ui(z,\ z,\ i);\ \textcolor{comment}{//\ z\ =\ z\ +\ i}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ mpz\_sub\_ui(z,\ z,\ -\/i);\ \textcolor{comment}{//\ z\ =\ z\ -\/\ i}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00045}00045\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00052}\doxymbox{\hyperlink{i_z__toolkit_8c_adf61955b452b3d1401a90d803999f819}{00052}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{i_z__toolkit_8c_adf61955b452b3d1401a90d803999f819}{compute\_k\_vx}}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00053}00053\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00054}00054\ \ \ \ \ \textcolor{keywordtype}{int}\ k\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{while}\ (iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}{vx}}\ \%\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[k\ +\ 2]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00056}00056\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ k++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{return}\ k;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00060}00060\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00070}\doxymbox{\hyperlink{group__iz__toolkit_ga865e51a5e6f28945747e2ad6988c2e4e}{00070}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga865e51a5e6f28945747e2ad6988c2e4e}{process\_iZ\_bitmaps}}(\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *primes,\ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *x5,\ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *x7,\ uint64\_t\ x\_limit)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00071}00071\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00072}00072\ \ \ \ \ uint64\_t\ root\_limit\ =\ sqrt(6\ *\ x\_limit)\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00074}00074\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ x\ values\ in\ range\ 0\ <\ x\ <\ x\_n}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{for}\ (uint64\_t\ x\ =\ 1;\ x\ <\ x\_limit;\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00076}00076\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ x5[x],\ implying\ it's\ iZ-\/\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(x5,\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00079}00079\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ p\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gaffec7a5b407ee6c59ccc1678e0ab89ba}{iZ}}(x,\ -\/1);\ \textcolor{comment}{//\ compute\ p\ =\ iZ(x,\ -\/1)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\_push}}(primes,\ p);\ \ \ \textcolor{comment}{//\ add\ p\ to\ primes}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ p\ is\ root\ prime,\ mark\ its\ multiples\ in\ x5,\ x7}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ <\ root\_limit)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(x5,\ p,\ p\ *\ x\ +\ x,\ x\_limit);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(x7,\ p,\ p\ *\ x\ -\/\ x,\ x\_limit);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00089}00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Do\ the\ same\ if\ x7[x],\ inverting\ the\ xp\ signs}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(x7,\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00093}00093\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ p\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gaffec7a5b407ee6c59ccc1678e0ab89ba}{iZ}}(x,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\_push}}(primes,\ p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ <\ root\_limit)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(x5,\ p,\ p\ *\ x\ -\/\ x,\ x\_limit);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(x7,\ p,\ p\ *\ x\ +\ x,\ x\_limit);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00103}00103\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00104}00104\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00112}\doxymbox{\hyperlink{group__iz__toolkit_gadc4e21760e38081c6966fa9d9d23e940}{00112}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_gadc4e21760e38081c6966fa9d9d23e940}{get\_root\_primes}}(\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *primes,\ uint64\_t\ limit)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00113}00113\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00114}00114\ \ \ \ \ \textcolor{comment}{//\ Add\ 2,\ 3\ to\ primes}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00115}00115\ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\_push}}(primes,\ 2);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00116}00116\ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}{ui64\_push}}(primes,\ 3);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00118}00118\ \ \ \ \ \textcolor{comment}{//\ Calculate\ x\_n,\ max\ x\ value\ in\ iZ\ space\ for\ given\ n}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00119}00119\ \ \ \ \ uint64\_t\ x\_n\ =\ limit\ /\ 6\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00121}00121\ \ \ \ \ \textcolor{comment}{//\ Create\ bitmap\ X-\/Arrays\ x5,\ x7,\ each\ of\ size\ x\_n\ +\ 1\ bits}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00122}00122\ \ \ \ \ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *x5\ =\ \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\_init}}(x\_n\ +\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00123}00123\ \ \ \ \ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *x7\ =\ \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\_init}}(x\_n\ +\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00125}00125\ \ \ \ \ \textcolor{comment}{//\ Memory\ allocation\ failed,\ check\ logs}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00126}00126\ \ \ \ \ \textcolor{keywordflow}{if}\ (!x5\ ||\ !x7)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00127}00127\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00128}00128\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\_free}}(\&primes);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00130}00130\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00132}00132\ \ \ \ \ \textcolor{comment}{//\ Sieve\ logic:\ mark\ composites\ and\ collect\ primes\ up\ to\ limit}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00133}00133\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga865e51a5e6f28945747e2ad6988c2e4e}{process\_iZ\_bitmaps}}(primes,\ x5,\ x7,\ x\_n);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00135}00135\ \ \ \ \ \textcolor{comment}{//\ Cleanup:\ free\ memory\ of\ x5,\ x7}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00136}00136\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&x5);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00137}00137\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&x7);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00139}00139\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00140}00140\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00153}\doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{00153}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(mpz\_t\ n,\ \textcolor{keywordtype}{int}\ rounds)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00154}00154\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00155}00155\ \ \ \ \ \textcolor{comment}{//\ GMP's\ mpz\_probab\_prime\_p\ returns:}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00156}00156\ \ \ \ \ \textcolor{comment}{//\ 0\ if\ n\ is\ composite,}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00157}00157\ \ \ \ \ \textcolor{comment}{//\ 1\ if\ n\ is\ probably\ prime\ (without\ being\ certain),}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00158}00158\ \ \ \ \ \textcolor{comment}{//\ 2\ if\ n\ is\ definitely\ prime\ (only\ for\ small\ n).}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00159}00159\ \ \ \ \ \textcolor{keywordtype}{int}\ is\_prime\ =\ mpz\_probab\_prime\_p(n,\ rounds);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00160}00160\ \ \ \ \ \textcolor{comment}{//\ ToDo:\ implement\ Baillie–PSW\ primality\ test\ for\ a\ deterministic\ alternative\ to\ Miller-\/Rabin,\ which\ would\ return\ a\ boolean\ result\ instead\ of\ a\ probability.}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{return}\ is\_prime;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00163}00163\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00165}00165\ \textcolor{comment}{//\ =========================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00166}00166\ \textcolor{comment}{//\ *\ iZm\ structure:}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00167}00167\ \textcolor{comment}{//\ =========================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00184}\doxymbox{\hyperlink{group__iz__toolkit_gaeb29a4d0536bb0aa227e230539081d98}{00184}}\ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *\doxymbox{\hyperlink{group__iz__toolkit_gaeb29a4d0536bb0aa227e230539081d98}{iZm\_init}}(\textcolor{keywordtype}{size\_t}\ vx)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00185}00185\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00186}00186\ \ \ \ \ \textcolor{comment}{//\ validate\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00187}00187\ \ \ \ \ assert(vx\ >=\ 35\ \&\&\ \textcolor{stringliteral}{"{}vx\ must\ be\ at\ least\ 35."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00189}00189\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm\ =\ malloc(\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}));}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00190}00190\ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00191}00191\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Memory\ allocation\ failed\ for\ iZm."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00194}00194\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00196}00196\ \ \ \ \ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}{vx}}\ =\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00197}00197\ \ \ \ \ \textcolor{comment}{//\ get\ root\ primes\ for\ deterministic\ sieving}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00198}00198\ \ \ \ \ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}\ =\ \doxymbox{\hyperlink{group__iz__api_gaeff7d8923d54b5d606c51301bc9bc0e7}{SiZ}}(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00199}00199\ \ \ \ \ \textcolor{comment}{//\ iZm-\/>root\_primes\ =\ root\_limit\ <\ pow(10,\ 7)\ ?\ SiZ(root\_limit)\ :\ SiZm(root\_limit);}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00200}00200\ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00201}00201\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Root\ primes\ generation\ failed\ for\ iZm."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00203}00203\ \ \ \ \ \ \ \ \ free(iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00205}00205\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00207}00207\ \ \ \ \ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382}{k\_vx}}\ =\ \doxymbox{\hyperlink{i_z__toolkit_8c_adf61955b452b3d1401a90d803999f819}{compute\_k\_vx}}(iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00209}00209\ \ \ \ \ \textcolor{comment}{//\ initialize\ base\ bitmaps}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00210}00210\ \ \ \ \ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}}\ =\ \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\_init}}(vx\ +\ 10,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00211}00211\ \ \ \ \ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}}\ =\ \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\_init}}(vx\ +\ 10,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}}\ ||\ !iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00213}00213\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Bitmap\ initialization\ failed\ for\ iZm\ base\ segment."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\_free}}(\&iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00218}00218\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00220}00220\ \ \ \ \ \textcolor{comment}{//\ construct\ pre-\/sieved\ base\_x5,\ base\_x7\ bitmaps}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00221}00221\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gacf776a7cedd726d8362aaf344102365d}{iZm\_construct\_vx\_base}}(vx,\ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}},\ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{return}\ iZm;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00224}00224\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00232}\doxymbox{\hyperlink{group__iz__toolkit_gaa8c21336f708189a8d18f41085468c5c}{00232}}\ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *\doxymbox{\hyperlink{group__iz__toolkit_gaa8c21336f708189a8d18f41085468c5c}{iZm\_clone}}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *src)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00233}00233\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00234}00234\ \ \ \ \ assert(src\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ source\ IZM\ structure\ for\ cloning."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00236}00236\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *clone\ =\ malloc(\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}));}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00237}00237\ \ \ \ \ assert(clone\ \&\&\ \textcolor{stringliteral}{"{}Memory\ allocation\ failed\ for\ iZm\ clone."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00239}00239\ \ \ \ \ clone-\/>\doxymbox{\hyperlink{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}{vx}}\ =\ src-\/>\doxymbox{\hyperlink{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}{vx}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00240}00240\ \ \ \ \ clone-\/>\doxymbox{\hyperlink{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382}{k\_vx}}\ =\ src-\/>\doxymbox{\hyperlink{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382}{k\_vx}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00241}00241\ \ \ \ \ clone-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}\ =\ \doxymbox{\hyperlink{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}{ui64\_init}}(src-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a9579279ed0a82bc8e7e36365d8dc03df}{capacity}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00242}00242\ \ \ \ \ \textcolor{keywordflow}{if}\ (clone-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00243}00243\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00244}00244\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Memory\ allocation\ failed\ for\ root\ primes\ in\ iZm\ clone."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00245}00245\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&clone);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00247}00247\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00248}00248\ \ \ \ \ \textcolor{comment}{//\ copy\ root\ primes}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00249}00249\ \ \ \ \ memcpy(clone-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}},\ src-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}},\ src-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}}\ *\ \textcolor{keyword}{sizeof}(uint64\_t));}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00250}00250\ \ \ \ \ clone-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}}\ =\ src-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}}-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00252}00252\ \ \ \ \ \textcolor{comment}{//\ clone\ base\ bitmaps}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00253}00253\ \ \ \ \ clone-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}}\ =\ \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\_clone}}(src-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00254}00254\ \ \ \ \ clone-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}}\ =\ \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\_clone}}(src-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{return}\ clone;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00257}00257\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00266}\doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{00266}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ **iZm)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00267}00267\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{if}\ (iZm\ ==\ NULL\ ||\ *iZm\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00271}00271\ \ \ \ \ \textcolor{comment}{//\ Free\ root\ primes\ object\ allocated\ in\ iZm\_init}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00272}00272\ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\_free}}(\&(*iZm)-\/>root\_primes);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00273}00273\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&(*iZm)-\/>base\_x5);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00274}00274\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&(*iZm)-\/>base\_x7);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00275}00275\ \ \ \ \ free(*iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00276}00276\ \ \ \ \ *iZm\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00277}00277\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00286}\doxymbox{\hyperlink{group__iz__toolkit_ga6170b19f9022bf256850f1f2ee6dd786}{00286}}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__toolkit_ga6170b19f9022bf256850f1f2ee6dd786}{compute\_vx\_k}}(\textcolor{keywordtype}{int}\ k)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00287}00287\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00288}00288\ \ \ \ \ uint64\_t\ vx\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00289}00289\ \ \ \ \ k\ +=\ 2;\ \ \ \ \textcolor{comment}{//\ adjust\ k\ to\ account\ for\ skipping\ 2\ and\ 3}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00290}00290\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 2;\ \textcolor{comment}{//\ start\ from\ prime\ 5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ <\ k\ \&\&\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[i]\ *\ vx\ <\ UINT64\_MAX)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00293}00293\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ vx\ *=\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[i++];}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00295}00295\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{return}\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00298}00298\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00306}\doxymbox{\hyperlink{group__iz__toolkit_gac92eb547227979fc0774e0529efa6180}{00306}}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__toolkit_gac92eb547227979fc0774e0529efa6180}{compute\_l2\_vx}}(uint64\_t\ n)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00307}00307\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00308}00308\ \ \ \ \ uint64\_t\ l2\ =\ \doxymbox{\hyperlink{group__iz__utils_gac79290998392d17d4420f651f7ad31e9}{get\_cpu\_L2\_cache\_size\_bits}}();}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00309}00309\ \ \ \ \ uint64\_t\ x\_n\ =\ n\ /\ 6;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00310}00310\ \ \ \ \ uint64\_t\ vx\ =\ 35;\ \textcolor{comment}{//\ minimum\ useful\ vx\ size}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00311}00311\ \ \ \ \ \textcolor{keywordtype}{int}\ k\ =\ 4;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ pointing\ to\ prime\ 11\ in\ s\_primes}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00313}00313\ \ \ \ \ \textcolor{comment}{//\ while\ vx\ *\ k-\/th\ prime\ doesn't\ exceed\ x\_n\ and\ l2\ cache\ size}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00314}00314\ \ \ \ \ \textcolor{keywordflow}{while}\ (vx\ *\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[k]\ <\ \doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(l2,\ x\_n))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00315}00315\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00316}00316\ \ \ \ \ \ \ \ \ vx\ *=\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[k];}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ k++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00318}00318\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{return}\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00321}00321\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00331}\doxymbox{\hyperlink{group__iz__toolkit_ga23df437281a4315af3cff9b76fab9dd8}{00331}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga23df437281a4315af3cff9b76fab9dd8}{compute\_max\_vx}}(mpz\_t\ vx,\ \textcolor{keywordtype}{int}\ bit\_size)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00332}00332\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00333}00333\ \ \ \ \ \textcolor{comment}{//\ get\ some\ primes\ to\ compute\ the\ primorial\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00334}00334\ \ \ \ \ \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *primes\ =\ \doxymbox{\hyperlink{group__iz__api_gaeff7d8923d54b5d606c51301bc9bc0e7}{SiZ}}(10000);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00335}00335\ \ \ \ \ assert(primes\ \&\&\ \textcolor{stringliteral}{"{}Failed\ to\ generate\ primes"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00337}00337\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 2;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ skip\ 2,\ 3}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00338}00338\ \ \ \ \ mpz\_set\_ui(vx,\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]);\ \textcolor{comment}{//\ set\ vx\ =\ 5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00340}00340\ \ \ \ \ \textcolor{comment}{//\ while\ vx\ *\ primes-\/>array[i]\ <\ 2\string^bit\_size}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{while}\ (mpz\_sizeinbase(vx,\ 2)\ <\ (\textcolor{keywordtype}{size\_t})bit\_size)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00342}00342\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00343}00343\ \ \ \ \ \ \ \ \ i++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00344}00344\ \ \ \ \ \ \ \ \ mpz\_mul\_ui(vx,\ vx,\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00345}00345\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00347}00347\ \ \ \ \ mpz\_div\_ui(vx,\ vx,\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]);\ \textcolor{comment}{//\ divide\ by\ the\ last\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00348}00348\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00363}\doxymbox{\hyperlink{group__iz__toolkit_gacf776a7cedd726d8362aaf344102365d}{00363}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_gacf776a7cedd726d8362aaf344102365d}{iZm\_construct\_vx\_base}}(uint64\_t\ vx,\ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *base\_x5,\ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *base\_x7)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00364}00364\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00365}00365\ \ \ \ \ assert(base\_x5\ \&\&\ base\_x7\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ bitmaps\ passed\ to\ iZm\_construct\_vx\_base."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00367}00367\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2}{bitmap\_set\_all}}(base\_x5);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00368}00368\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2}{bitmap\_set\_all}}(base\_x7);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00369}00369\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(base\_x5,\ 0);\ \textcolor{comment}{//\ clear\ the\ 0th\ bit}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00370}00370\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(base\_x7,\ 0);\ \textcolor{comment}{//\ clear\ the\ 0th\ bit}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00372}00372\ \ \ \ \ \textcolor{comment}{//\ iterate\ through\ small\ primes\ that\ divide\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00373}00373\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 2;\ i\ <\ \doxymbox{\hyperlink{i_z__toolkit_8c_aa724ea8ac82fc99775f39770db26538d}{s\_primes\_count}};\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00374}00374\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00375}00375\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ p\ =\ \doxymbox{\hyperlink{i_z__toolkit_8c_ad55dff6a86df70d0e1e02c66a4344968}{s\_primes}}[i];}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\ \%\ p\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ip\ =\ (p\ \%\ 6\ ==\ 1)\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00380}00380\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xp\ =\ (p\ +\ 1)\ /\ 6;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clear\ composites\ in\ iZ-\/\ and\ iZ+}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ip\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00383}00383\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(base\_x5,\ xp);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clear\ the\ prime\ itself}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(base\_x5,\ p,\ p\ *\ xp\ +\ xp,\ vx);\ \textcolor{comment}{//\ mark\ composites\ in\ iZ-\/}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(base\_x7,\ p,\ p\ *\ xp\ -\/\ xp,\ vx);\ \textcolor{comment}{//\ mark\ composites\ in\ iZ+}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00387}00387\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(base\_x7,\ xp);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clear\ the\ prime\ itself}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(base\_x5,\ p,\ p\ *\ xp\ -\/\ xp,\ vx);\ \textcolor{comment}{//\ mark\ composites\ in\ iZ-\/}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(base\_x7,\ p,\ p\ *\ xp\ +\ xp,\ vx);\ \textcolor{comment}{//\ mark\ composites\ in\ iZ+}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00393}00393\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00394}00394\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00395}00395\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00415}\doxymbox{\hyperlink{group__iz__toolkit_ga596920e4772d76fe9dc61a541b282275}{00415}}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__toolkit_ga596920e4772d76fe9dc61a541b282275}{iZm\_solve\_for\_x0}}(\textcolor{keywordtype}{int}\ m\_id,\ uint64\_t\ p,\ uint64\_t\ vx,\ uint64\_t\ y)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00416}00416\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00417}00417\ \ \ \ \ uint64\_t\ xp\ =\ (p\ +\ 1)\ /\ 6;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00418}00418\ \ \ \ \ \textcolor{keywordtype}{int}\ ip\ =\ (p\ \%\ 6\ ==\ 1)\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00420}00420\ \ \ \ \ \textcolor{comment}{//\ Immediate\ solution\ check\ for\ y\ =\ 0}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00421}00421\ \ \ \ \ \textcolor{keywordflow}{if}\ (y\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00422}00422\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00423}00423\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ compute\ p\ *\ xp\ +\ m\_id\ *\ ip\ *\ xp}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ p\ *\ xp\ +\ m\_id\ *\ ip\ *\ xp;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00425}00425\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00427}00427\ \ \ \ \ \textcolor{comment}{//\ Normalize\ x\_p\ to\ x\_p\ if\ p\_id\ =\ m\_id,\ else\ to\ p\ -\/\ x\_p}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00428}00428\ \ \ \ \ xp\ =\ (m\_id\ ==\ ip)\ ?\ xp\ :\ p\ -\/\ xp;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00429}00429\ \ \ \ \ uint64\_t\ yvx\ =\ vx\ *\ y;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00430}00430\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00431}00431\ \ \ \ \ \textcolor{comment}{//\ Compute\ the\ first\ composite\ hit\ of\ p\ in\ the\ yth\ vx\ segment\ in\ iZm\ index\ space}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00432}00432\ \ \ \ \ uint64\_t\ x\ =\ p\ <\ vx\ ?\ p\ -\/\ (yvx\ -\/\ xp)\ \%\ p\ :\ (yvx\ -\/\ xp)\ \%\ p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00433}00433\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00434}00434\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00435}00435\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00449}\doxymbox{\hyperlink{group__iz__toolkit_ga3ee0fd9e3f27fd5d30fddfe7d1056c57}{00449}}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__toolkit_ga3ee0fd9e3f27fd5d30fddfe7d1056c57}{iZm\_solve\_for\_x0\_mpz}}(\textcolor{keywordtype}{int}\ m\_id,\ uint64\_t\ p,\ uint64\_t\ vx,\ mpz\_t\ y)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00450}00450\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00451}00451\ \ \ \ \ mpz\_t\ tmp;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00452}00452\ \ \ \ \ mpz\_init(tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00453}00453\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00454}00454\ \ \ \ \ \textcolor{comment}{//\ 1.\ Normalize\ x\_p\ to\ x\_p\ if\ p\_id\ =\ m\_id,\ else\ to\ p\ -\/\ x\_p}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00455}00455\ \ \ \ \ uint64\_t\ xp\ =\ (p\ +\ 1)\ /\ 6;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00456}00456\ \ \ \ \ \textcolor{keywordtype}{int}\ ip\ =\ (p\ \%\ 6\ ==\ 1)\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00457}00457\ \ \ \ \ xp\ =\ (m\_id\ ==\ ip)\ ?\ xp\ :\ p\ -\/\ xp;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00458}00458\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00459}00459\ \ \ \ \ mpz\_mul\_ui(tmp,\ y,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00460}00460\ \ \ \ \ mpz\_sub\_ui(tmp,\ tmp,\ xp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00461}00461\ \ \ \ \ mpz\_mod\_ui(tmp,\ tmp,\ p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00463}00463\ \ \ \ \ uint64\_t\ x\ =\ p\ <\ vx\ ?\ p\ -\/\ mpz\_get\_ui(tmp)\ :\ mpz\_get\_ui(tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00465}00465\ \ \ \ \ mpz\_clear(tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00466}00466\ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00467}00467\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00490}\doxymbox{\hyperlink{group__iz__toolkit_ga50cf18d6528c411820a9b081b13875ca}{00490}}\ int64\_t\ \doxymbox{\hyperlink{group__iz__toolkit_ga50cf18d6528c411820a9b081b13875ca}{iZm\_solve\_for\_y0}}(\textcolor{keywordtype}{int}\ m\_id,\ uint64\_t\ p,\ uint64\_t\ vx,\ uint64\_t\ x)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00491}00491\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00492}00492\ \ \ \ \ \textcolor{comment}{//\ No\ solution\ check,\ if\ vx\ and\ p\ are\ not\ coprime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00493}00493\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__utils_ga05d1ac8d90873705cd22e1c83345fa71}{gcd}}(vx,\ p)\ !=\ 1)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00494}00494\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00495}00495\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}There's\ no\ solution\ for\ the\ given\ parameters\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00496}00496\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;\ \textcolor{comment}{//\ No\ solution\ can\ be\ found}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00497}00497\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00499}00499\ \ \ \ \ uint64\_t\ xp\ =\ (p\ +\ 1)\ /\ 6;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00500}00500\ \ \ \ \ \textcolor{keywordtype}{int}\ ip\ =\ (p\ \%\ 6\ ==\ 1)\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00501}00501\ \ \ \ \ xp\ =\ (m\_id\ ==\ ip)\ ?\ xp\ :\ p\ -\/\ xp;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00503}00503\ \ \ \ \ \textcolor{comment}{//\ Immediate\ solution\ check}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ \%\ p\ ==\ xp)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00507}00507\ \ \ \ \ \textcolor{comment}{//\ Compute\ delta}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00508}00508\ \ \ \ \ uint64\_t\ x\_mod\_p\ =\ x\ \%\ p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00509}00509\ \ \ \ \ uint64\_t\ delta\ =\ (xp\ +\ p\ -\/\ x\_mod\_p)\ \%\ p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00510}00510\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00511}00511\ \ \ \ \ \textcolor{comment}{//\ Find\ modular\ inverse}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00512}00512\ \ \ \ \ uint64\_t\ vx\_inv\ =\ \doxymbox{\hyperlink{group__iz__utils_ga595ea61a3090228f6f23a32b046feaef}{modular\_inverse}}(vx\ \%\ p,\ p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00513}00513\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00514}00514\ \ \ \ \ \textcolor{comment}{//\ Compute\ and\ return\ y}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00515}00515\ \ \ \ \ uint64\_t\ y\ =\ (delta\ *\ vx\_inv)\ \%\ p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00516}00516\ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00517}00517\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00518}00518\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00519}00519\ \textcolor{comment}{//\ ===================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00520}00520\ \textcolor{comment}{//\ *\ VX\_SEG\ structure:}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00521}00521\ \textcolor{comment}{//\ ===================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00529}\doxymbox{\hyperlink{i_z__toolkit_8c_a1cb99e772f16a844ff9f04ffcd3e632f}{00529}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{i_z__toolkit_8c_a1cb99e772f16a844ff9f04ffcd3e632f}{vx\_set\_base\_values}}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj,\ \textcolor{keywordtype}{char}\ *y\_str)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00530}00530\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00532}00532\ \ \ \ \ \textcolor{comment}{//\ assert\ y\_str\ is\ numeric}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00533}00533\ \ \ \ \ mpz\_t\ y\_tmp;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00534}00534\ \ \ \ \ mpz\_init(y\_tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_set\_str(y\_tmp,\ y\_str,\ 10)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00536}00536\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00537}00537\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Invalid\ numeric\ string\ for\ y\ in\ vx\_set\_base\_values\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00538}00538\ \ \ \ \ \ \ \ \ mpz\_clear(y\_tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00540}00540\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00541}00541\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00542}00542\ \ \ \ \ mpz\_init\_set(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}},\ y\_tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00543}00543\ \ \ \ \ mpz\_clear(y\_tmp);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00545}00545\ \ \ \ \ \textcolor{comment}{//\ Compute\ yvx\ =\ y\ *\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00546}00546\ \ \ \ \ mpz\_init(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00547}00547\ \ \ \ \ mpz\_mul\_ui(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af73da08033e4261e7fd397f6f900edc1}{vx}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00549}00549\ \ \ \ \ \textcolor{comment}{//\ Compute\ root\_limit\ =\ sqrt(iZ(vx\ *\ (y+1),\ 1))}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00550}00550\ \ \ \ \ mpz\_init(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00551}00551\ \ \ \ \ mpz\_add\_ui(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af73da08033e4261e7fd397f6f900edc1}{vx}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00552}00552\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}},\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00553}00553\ \ \ \ \ mpz\_sqrt(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00554}00554\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00555}00555\ \ \ \ \ \textcolor{comment}{//\ Set\ is\_large\_limit\ to\ determine\ if\ probabilistic\ primality\ test\ is\ needed}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00556}00556\ \ \ \ \ \textcolor{comment}{//\ if\ root\_limit\ >\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00557}00557\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}}\ =\ mpz\_cmp\_ui(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}},\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af73da08033e4261e7fd397f6f900edc1}{vx}})\ >\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00558}00558\ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00559}00559\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00566}\doxymbox{\hyperlink{i_z__toolkit_8c_a0acf76d4f3ff2e6e4421b9115c694823}{00566}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{i_z__toolkit_8c_a0acf76d4f3ff2e6e4421b9115c694823}{vx\_det\_sieve}}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm,\ \doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00567}00567\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00568}00568\ \ \ \ \ assert(iZm\ \&\&\ \textcolor{stringliteral}{"{}iZm\ is\ NULL\ in\ vx\_det\_sieve"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00569}00569\ \ \ \ \ assert(vx\_obj\ \&\&\ \textcolor{stringliteral}{"{}vx\_obj\ is\ NULL\ in\ vx\_det\_sieve"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00571}00571\ \ \ \ \ \textcolor{keywordtype}{int}\ vx\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af73da08033e4261e7fd397f6f900edc1}{vx}};\ \textcolor{comment}{//\ segment\ size}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00573}00573\ \ \ \ \ \textcolor{comment}{//\ *\ Deterministic\ Sieve:\ Mark\ composites\ of\ primes\ <\ vx\ in\ x5,\ x7}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00574}00574\ \ \ \ \ \textcolor{keywordtype}{int}\ start\_x\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a8f766c26d7a5bc718a748ea0401cd3fc}{start\_x}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00575}00575\ \ \ \ \ \textcolor{keywordtype}{int}\ end\_x\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_ada8599db1f49096440074feaa3513fba}{end\_x}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00576}00576\ \ \ \ \ \textcolor{keywordtype}{int}\ k\ =\ 2\ +\ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_aa0cd5920cd875d959ee2c40b7c845382}{k\_vx}};\ \textcolor{comment}{//\ skip\ 2,\ 3\ and\ pre-\/sieved\ k\_vx\ primes}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00577}00577\ \ \ \ \ \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *root\_primes\ =\ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_a145d315e6751952fbf0d6b45af951e1b}{root\_primes}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00578}00578\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00579}00579\ \ \ \ \ \textcolor{comment}{//\ if\ y\ <\ 2\string^64,\ use\ iZm\_solve\_for\_x0\ version\ for\ efficiency}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00580}00580\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_sizeinbase(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}},\ 2)\ <=\ 64)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00581}00581\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00582}00582\ \ \ \ \ \ \ \ \ uint64\_t\ y\ =\ mpz\_get\_ui(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00583}00583\ \ \ \ \ \ \ \ \ uint64\_t\ root\_limit\ =\ mpz\_get\_ui(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af74e0169f2702d9fbc4f7e3d0993539f}{root\_limit}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00585}00585\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ root\ primes,\ skipping\ the\ first\ k\ pre-\/sieved\ primes}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00586}00586\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ k;\ i\ <\ root\_primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00587}00587\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ p\ =\ root\_primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i];}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ >\ root\_limit)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Mark\ composites\ of\ p\ in\ x5\ and\ x7}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ p,\ \doxymbox{\hyperlink{group__iz__toolkit_ga596920e4772d76fe9dc61a541b282275}{iZm\_solve\_for\_x0}}(-\/1,\ p,\ vx,\ y),\ end\_x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ p,\ \doxymbox{\hyperlink{group__iz__toolkit_ga596920e4772d76fe9dc61a541b282275}{iZm\_solve\_for\_x0}}(1,\ p,\ vx,\ y),\ end\_x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a537a59185c9aaf9e4dbc77a5c0814d42}{bit\_ops}}\ +=\ (2\ *\ end\_x)\ /\ p;\ \textcolor{comment}{//\ approximate\ number\ of\ bit\ operations}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00598}00598\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00599}00599\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00600}00600\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00601}00601\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00602}00602\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ same\ as\ above\ but\ using\ iZm\_solve\_for\_x0\_mpz\ version}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00603}00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ k;\ i\ <\ root\_primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00604}00604\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ p\ =\ root\_primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i];}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ p,\ \doxymbox{\hyperlink{group__iz__toolkit_ga3ee0fd9e3f27fd5d30fddfe7d1056c57}{iZm\_solve\_for\_x0\_mpz}}(-\/1,\ p,\ vx,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}}),\ end\_x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\_clear\_steps\_simd}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ p,\ \doxymbox{\hyperlink{group__iz__toolkit_ga3ee0fd9e3f27fd5d30fddfe7d1056c57}{iZm\_solve\_for\_x0\_mpz}}(1,\ p,\ vx,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}}),\ end\_x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00609}00609\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a537a59185c9aaf9e4dbc77a5c0814d42}{bit\_ops}}\ +=\ (2\ *\ end\_x)\ /\ p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00611}00611\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00612}00612\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00613}00613\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00614}00614\ \ \ \ \ \textcolor{comment}{//\ if\ no\ further\ probabilistic\ testing\ is\ needed,}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00615}00615\ \ \ \ \ \textcolor{comment}{//\ count\ unmarked\ bits\ in\ x5\ and\ x7\ as\ p\_count}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00616}00616\ \ \ \ \ \textcolor{keywordflow}{if}\ (!vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00617}00617\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00618}00618\ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00619}00619\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ start\_x;\ x\ <=\ end\_x;\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00620}00620\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00625}00625\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00626}00626\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00627}00627\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00633}\doxymbox{\hyperlink{i_z__toolkit_8c_ae75ea043adeb58f25e079d1b46984d63}{00633}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{i_z__toolkit_8c_ae75ea043adeb58f25e079d1b46984d63}{vx\_prob\_sieve}}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00634}00634\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00635}00635\ \ \ \ \ \textcolor{comment}{//\ If\ is\_large\_limit\ is\ false,\ no\ need\ for\ probabilistic\ testing}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00636}00636\ \ \ \ \ \textcolor{keywordflow}{if}\ (!vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00637}00637\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00638}00638\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga49528dc2f0c8d5628f13358382f8d5b4}{log\_info}}(\textcolor{stringliteral}{"{}vx\_obj-\/>is\_large\_limit\ is\ false,\ no\ need\ for\ probabilistic\ testing"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00639}00639\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00640}00640\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00642}00642\ \ \ \ \ \textcolor{comment}{//\ Initialize\ GMP\ reusable\ variables\ p,\ x\_p}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00643}00643\ \ \ \ \ mpz\_t\ p,\ x\_p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00644}00644\ \ \ \ \ mpz\_init(p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00645}00645\ \ \ \ \ mpz\_init(x\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00646}00646\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00647}00647\ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a37fa278f6fceded67c8a852299e90dd9}{mr\_rounds}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00648}00648\ \ \ \ \ \textcolor{keywordtype}{int}\ s\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a8f766c26d7a5bc718a748ea0401cd3fc}{start\_x}}\ <=\ 1\ ?\ 1\ :\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a8f766c26d7a5bc718a748ea0401cd3fc}{start\_x}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00649}00649\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00650}00650\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ x\ values\ in\ the\ range\ start\_x\ <=\ x\ <=\ end\_x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00651}00651\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ s;\ x\ <=\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_ada8599db1f49096440074feaa3513fba}{end\_x}};\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00652}00652\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00653}00653\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ iZ(vx\ *\ y\ +\ x,\ -\/1)\ is\ prime,\ if\ not,\ clear\ x\ in\ x5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00654}00654\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00655}00655\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00656}00656\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ x\_p\ =\ yvx\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00657}00657\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}},\ x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(p,\ x\_p,\ -\/1);\ \textcolor{comment}{//\ Compute\ p\ =\ iZ(x\_p,\ -\/1)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ is\_prime\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(p,\ r);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a3e464acdf8995998d7b8120d02d38347}{p\_test\_ops}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00661}00661\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00662}00662\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ is\_prime,\ increment\ count,\ else\ clear\ composite\ from\ x5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00663}00663\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_prime)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00664}00664\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00665}00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00666}00666\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00668}00668\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00669}00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ x);\ \textcolor{comment}{//\ Clear\ composite\ from\ x5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00670}00670\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00671}00671\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00673}00673\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ same\ for\ the\ 6x+1\ candidate}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00674}00674\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00675}00675\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}},\ x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(p,\ x\_p,\ 1);\ \textcolor{comment}{//\ Compute\ p\ =\ iZ(x\_p,\ 1)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00678}00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ is\_prime\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(p,\ r);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a3e464acdf8995998d7b8120d02d38347}{p\_test\_ops}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00680}00680\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_prime)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ x);\ \textcolor{comment}{//\ Clear\ composite\ from\ x7}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00689}00689\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00690}00690\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00691}00691\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00692}00692\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}}\ =\ 0;\ \textcolor{comment}{//\ all\ composites\ cleared}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00693}00693\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00694}00694\ \ \ \ \ \textcolor{comment}{//\ Cleanup}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00695}00695\ \ \ \ \ mpz\_clears(p,\ x\_p,\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00696}00696\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00713}\doxymbox{\hyperlink{group__iz__toolkit_ga234719b01a0e090a1f66ed7766fe6d0f}{00713}}\ \doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *\doxymbox{\hyperlink{group__iz__toolkit_ga234719b01a0e090a1f66ed7766fe6d0f}{vx\_init}}(\doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm,\ \textcolor{keywordtype}{int}\ start\_x,\ \textcolor{keywordtype}{int}\ end\_x,\ \textcolor{keywordtype}{char}\ *y\_str,\ \textcolor{keywordtype}{int}\ mr\_rounds)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00714}00714\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00715}00715\ \ \ \ \ \textcolor{comment}{//\ assert\ vx\ >\ 5\ and\ not\ a\ multiple\ of\ 2\ or\ 3}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00716}00716\ \ \ \ \ assert(iZm\ \&\&\ \textcolor{stringliteral}{"{}iZm\ is\ NULL\ in\ vx\_init"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00717}00717\ \ \ \ \ assert(y\_str\ \&\&\ \textcolor{stringliteral}{"{}y\_str\ is\ NULL\ in\ vx\_init"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00719}00719\ \ \ \ \ \doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj\ =\ malloc(\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}));}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00720}00720\ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00721}00721\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00722}00722\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Memory\ allocation\ failed\ in\ vx\_init\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00723}00723\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00724}00724\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00725}00725\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00726}00726\ \ \ \ \ \textcolor{comment}{//\ Initialize\ struct\ members}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00727}00727\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af73da08033e4261e7fd397f6f900edc1}{vx}}\ =\ iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_ac5d6cad1cb4e3d7b6c4ef7a999283615}{vx}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00729}00729\ \ \ \ \ \textcolor{comment}{//\ Set\ base\ values}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00730}00730\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{i_z__toolkit_8c_a1cb99e772f16a844ff9f04ffcd3e632f}{vx\_set\_base\_values}}(vx\_obj,\ y\_str))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00731}00731\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00732}00732\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ logs}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00733}00733\ \ \ \ \ \ \ \ \ free(vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00734}00734\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00735}00735\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00736}00736\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00737}00737\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a37fa278f6fceded67c8a852299e90dd9}{mr\_rounds}}\ =\ (mr\_rounds\ ==\ 0)\ ?\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}}\ :\ mr\_rounds;\ \textcolor{comment}{//\ default\ 25\ rounds}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00738}00738\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00739}00739\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a8f766c26d7a5bc718a748ea0401cd3fc}{start\_x}}\ =\ \doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(start\_x,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00740}00740\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_ada8599db1f49096440074feaa3513fba}{end\_x}}\ =\ \doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(end\_x,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_af73da08033e4261e7fd397f6f900edc1}{vx}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00741}00741\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}}\ =\ \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\_clone}}(iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00742}00742\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}}\ =\ \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\_clone}}(iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00743}00743\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00744}00744\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a25bbcd26bb0e69a6b9584594a714b8b5}{p\_gaps}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00745}00745\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a537a59185c9aaf9e4dbc77a5c0814d42}{bit\_ops}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00746}00746\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a3e464acdf8995998d7b8120d02d38347}{p\_test\_ops}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00747}00747\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00748}00748\ \ \ \ \ \textcolor{comment}{//\ perform\ deterministic\ sieving\ to\ prepare\ for\ probabilistic\ sieving\ or\ streaming}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00749}00749\ \ \ \ \ \doxymbox{\hyperlink{i_z__toolkit_8c_a0acf76d4f3ff2e6e4421b9115c694823}{vx\_det\_sieve}}(iZm,\ vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00750}00750\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00751}00751\ \ \ \ \ \textcolor{keywordflow}{return}\ vx\_obj;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00752}00752\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00753}00753\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00759}\doxymbox{\hyperlink{group__iz__toolkit_ga89a2804cb4fa979a32e4213ade786ec4}{00759}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga89a2804cb4fa979a32e4213ade786ec4}{vx\_free}}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ **vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00760}00760\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00761}00761\ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj\ ==\ NULL\ ||\ *vx\_obj\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00762}00762\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00764}00764\ \ \ \ \ \textcolor{comment}{//\ clear\ bitmaps}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00765}00765\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&(*vx\_obj)-\/>x5);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00766}00766\ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&(*vx\_obj)-\/>x7);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00767}00767\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00768}00768\ \ \ \ \ \textcolor{comment}{//\ clear\ p\_gaps\ array}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00769}00769\ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_ga6711fa1c3d7f6f57924486106423e18b}{ui16\_free}}(\&(*vx\_obj)-\/>p\_gaps);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00770}00770\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00771}00771\ \ \ \ \ \textcolor{comment}{//\ clear\ mpz\_t\ variables}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00772}00772\ \ \ \ \ mpz\_clears((*vx\_obj)-\/>y,\ (*vx\_obj)-\/>yvx,\ (*vx\_obj)-\/>root\_limit,\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00773}00773\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00774}00774\ \ \ \ \ free(*vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00775}00775\ \ \ \ \ *vx\_obj\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00776}00776\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00777}00777\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00787}\doxymbox{\hyperlink{group__iz__toolkit_ga824821f174cc26db2d310a68e8c2f19e}{00787}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga824821f174cc26db2d310a68e8c2f19e}{vx\_collect\_p\_gaps}}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00788}00788\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00789}00789\ \ \ \ \ assert(vx\_obj\ \&\&\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}\ >\ 0\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ vx\_obj\ in\ vx\_collect\_p\_gaps"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00790}00790\ \ \ \ \ assert(mpz\_cmp\_ui(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5696dc17af745d6e74c1ccbaee34f107}{y}},\ 0)\ >\ 0\ \&\&\ \textcolor{stringliteral}{"{}First\ segment\ requires\ special\ handling\ in\ vx\_collect\_p\_gaps"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00791}00791\ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00792}00792\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00793}00793\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga214f95ac7b685a7ff0c596afc70036b7}{vx\_full\_sieve}}(vx\_obj,\ 0);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00794}00794\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00796}00796\ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a25bbcd26bb0e69a6b9584594a714b8b5}{p\_gaps}}\ =\ \doxymbox{\hyperlink{group__iz__arrays_ga495a195fcf45ae02c9402bcb389e7343}{ui16\_init}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}\ +\ 2);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00797}00797\ \ \ \ \ assert(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a25bbcd26bb0e69a6b9584594a714b8b5}{p\_gaps}}\ \&\&\ \textcolor{stringliteral}{"{}Memory\ allocation\ failed\ for\ vx\_obj-\/>p\_gaps\ in\ vx\_collect\_p\_gaps"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00798}00798\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00799}00799\ \ \ \ \ \textcolor{comment}{//\ Initialize\ gap\ counter}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00800}00800\ \ \ \ \ \textcolor{keywordtype}{int}\ gap\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00801}00801\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00802}00802\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ x\ values\ in\ the\ range\ start\_x\ <=\ x\ <=\ end\_x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00803}00803\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a8f766c26d7a5bc718a748ea0401cd3fc}{start\_x}};\ x\ <=\ vx\_obj-\/>end\_x;\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00804}00804\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00805}00805\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increment\ gap\ by\ 4\ since:\ iZ(x,\ -\/1)\ -\/\ iZ(x-\/1,\ 1)\ =\ 4}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00806}00806\ \ \ \ \ \ \ \ \ gap\ +=\ 4;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00807}00807\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00808}00808\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ iZ(vx\ *\ y\ +\ x,\ -\/1)\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00809}00809\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00810}00810\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00811}00811\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Append\ gap\ to\ p\_gaps}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gaf19906d91639a464ff36cc425968bdae}{ui16\_push}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a25bbcd26bb0e69a6b9584594a714b8b5}{p\_gaps}},\ gap);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00813}00813\ \ \ \ \ \ \ \ \ \ \ \ \ gap\ =\ 0;\ \textcolor{comment}{//\ Reset\ gap}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00814}00814\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00815}00815\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00816}00816\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increment\ gap\ by\ 2}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00817}00817\ \ \ \ \ \ \ \ \ gap\ +=\ 2;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00818}00818\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00819}00819\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ iZ(vx\ *\ y\ +\ x,\ 1)\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00820}00820\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00821}00821\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00822}00822\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Append\ gap\ to\ p\_gaps}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00823}00823\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gaf19906d91639a464ff36cc425968bdae}{ui16\_push}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a25bbcd26bb0e69a6b9584594a714b8b5}{p\_gaps}},\ gap);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00824}00824\ \ \ \ \ \ \ \ \ \ \ \ \ gap\ =\ 0;\ \textcolor{comment}{//\ Reset\ gap}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00825}00825\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00826}00826\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00827}00827\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00828}00828\ \ \ \ \ \textcolor{comment}{//\ append\ final\ gap\ for\ backward\ calculations}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00829}00829\ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gaf19906d91639a464ff36cc425968bdae}{ui16\_push}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a25bbcd26bb0e69a6b9584594a714b8b5}{p\_gaps}},\ gap);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00830}00830\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00831}00831\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00847}\doxymbox{\hyperlink{group__iz__toolkit_ga214f95ac7b685a7ff0c596afc70036b7}{00847}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga214f95ac7b685a7ff0c596afc70036b7}{vx\_full\_sieve}}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj,\ \textcolor{keywordtype}{int}\ collect\_p\_gaps)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00848}00848\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00849}00849\ \ \ \ \ assert(vx\_obj\ \&\&\ \textcolor{stringliteral}{"{}vx\_obj\ is\ NULL\ in\ vx\_full\_sieve"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00850}00850\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00851}00851\ \ \ \ \ \textcolor{comment}{//\ If\ is\_large\_limit\ is\ true,\ perform\ probabilistic\ primality\ tests}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00852}00852\ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00853}00853\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{i_z__toolkit_8c_ae75ea043adeb58f25e079d1b46984d63}{vx\_prob\_sieve}}(vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00854}00854\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00855}00855\ \ \ \ \ \textcolor{comment}{//\ If\ collect\_p\_gaps\ is\ true,\ populate\ the\ p\_gaps\ array}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00856}00856\ \ \ \ \ \textcolor{keywordflow}{if}\ (collect\_p\_gaps)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00857}00857\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga824821f174cc26db2d310a68e8c2f19e}{vx\_collect\_p\_gaps}}(vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00858}00858\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00859}00859\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00866}\doxymbox{\hyperlink{group__iz__toolkit_ga591a1d1fae4f8a241c6b6ed7f495eae6}{00866}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_ga591a1d1fae4f8a241c6b6ed7f495eae6}{vx\_stream}}(\doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj,\ FILE\ *output)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00867}00867\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00868}00868\ \ \ \ \ assert(vx\_obj\ \&\&\ \textcolor{stringliteral}{"{}vx\_obj\ is\ NULL\ in\ vx\_stream"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00869}00869\ \ \ \ \ assert(output\ \&\&\ \textcolor{stringliteral}{"{}output\ stream\ is\ NULL\ in\ vx\_stream"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00870}00870\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00871}00871\ \ \ \ \ \textcolor{comment}{//\ Initialize\ GMP\ reusable\ variables\ p,\ x\_p}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00872}00872\ \ \ \ \ mpz\_t\ p,\ x\_p;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00873}00873\ \ \ \ \ mpz\_init(p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00874}00874\ \ \ \ \ mpz\_init(x\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00875}00875\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00876}00876\ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a37fa278f6fceded67c8a852299e90dd9}{mr\_rounds}};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00877}00877\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00878}00878\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ x\ values\ in\ the\ range\ start\_x\ <=\ x\ <=\ end\_x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00879}00879\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a8f766c26d7a5bc718a748ea0401cd3fc}{start\_x}};\ x\ <=\ vx\_obj-\/>end\_x;\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00880}00880\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00881}00881\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ iZ(vx\ *\ y\ +\ x,\ -\/1)\ is\ prime,\ if\ not,\ clear\ x\ in\ x5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00882}00882\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00883}00883\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ x\_p\ =\ yvx\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}},\ x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00886}00886\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(p,\ x\_p,\ -\/1);\ \textcolor{comment}{//\ Compute\ p\ =\ iZ(x\_p,\ -\/1)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00887}00887\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ is\_prime\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00888}00888\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00889}00889\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00890}00890\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00891}00891\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a3e464acdf8995998d7b8120d02d38347}{p\_test\_ops}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_prime\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(p,\ r);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00893}00893\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00894}00894\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00895}00895\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_prime)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00896}00896\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00897}00897\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00898}00898\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00899}00899\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}++;\ \textcolor{comment}{//\ otherwise\ already\ counted\ in\ det\_sieve}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00900}00900\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00901}00901\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gmp\_fprintf(output,\ \textcolor{stringliteral}{"{}\%Zd\ "{}},\ p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00902}00902\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00903}00903\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00904}00904\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00905}00905\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a40f181e2538f16411d5815bc71b8b757}{x5}},\ x);\ \textcolor{comment}{//\ Clear\ composite\ from\ x5}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00907}00907\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00908}00908\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00909}00909\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ test\ iZ(vx\ *\ y\ +\ x,\ 1)\ for\ primality}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00910}00910\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00911}00911\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00912}00912\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a7f75ee96453b5bb07d0efa9acead960b}{yvx}},\ x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00913}00913\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(p,\ x\_p,\ 1);\ \textcolor{comment}{//\ Compute\ p\ =\ iZ(x\_p,\ 1)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00914}00914\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ is\_prime\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00915}00915\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00916}00916\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00917}00917\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00918}00918\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a3e464acdf8995998d7b8120d02d38347}{p\_test\_ops}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00919}00919\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is\_prime\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(p,\ r);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00920}00920\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00921}00921\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00922}00922\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_prime)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00923}00923\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00924}00924\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a4216a3e0c60c73e96a17b3f5e46af885}{is\_large\_limit}})}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00925}00925\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}}++;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00928}00928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gmp\_fprintf(output,\ \textcolor{stringliteral}{"{}\%Zd\ "{}},\ p);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00929}00929\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00930}00930\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00931}00931\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00932}00932\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\_clear\_bit}}(vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a0f26a18865664cff47076ffd33b3b0ca}{x7}},\ x);\ \textcolor{comment}{//\ Clear\ composite\ from\ x7}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00933}00933\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00934}00934\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00935}00935\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00936}00936\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00937}00937\ \ \ \ \ mpz\_clears(p,\ x\_p,\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00938}00938\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00939}00939\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00940}00940\ \textcolor{comment}{//\ ==================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00941}00941\ \textcolor{comment}{//\ *\ IZM\_RANGE\_INFO\ structure:}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00942}00942\ \textcolor{comment}{//\ ==================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00943}00943\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00944}\doxymbox{\hyperlink{group__iz__toolkit_ga5ada19be750a6f9b0837805ef34a1de4}{00944}}\ \doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o}{IZM\_RANGE\_INFO}}\ \doxymbox{\hyperlink{group__iz__toolkit_ga5ada19be750a6f9b0837805ef34a1de4}{range\_info\_init}}(\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\_SIEVE\_RANGE}}\ *input\_range,\ \textcolor{keywordtype}{int}\ vx)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00945}00945\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00946}00946\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o}{IZM\_RANGE\_INFO}}\ info\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00947}00947\ \ \ \ \ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a1946eaa4ccabece4bd5bd2eb7d59881a}{vx}}\ =\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00948}00948\ \ \ \ \ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a3f8fe0b07e9ac77cf634438cfff9a31b}{y\_range}}\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00949}00949\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00950}00950\ \ \ \ \ mpz\_inits(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a79e2a9589301aef116ef5d6e0f729cbe}{Ys}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00951}00951\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00952}00952\ \ \ \ \ \textcolor{keywordflow}{if}\ (!input\_range\ ||\ !input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}{start}}\ ||\ vx\ <\ 35\ ||\ mpz\_set\_str(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}},\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}{start}},\ 10)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00953}00953\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00954}00954\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}range\_info\_init:\ invalid\ input."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00955}00955\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00956}00956\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00957}00957\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00958}00958\ \ \ \ \ \textcolor{keywordflow}{if}\ (input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aad5d9f7a094db43297ca9fff6cf4ddd9}{range}}\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00959}00959\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00960}00960\ \ \ \ \ \ \ \ \ mpz\_set(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00961}00961\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00962}00962\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00963}00963\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00964}00964\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ inclusive\ upper\ bound\ for\ range\ size\ semantics:\ [start,\ start\ +\ range\ -\/\ 1]}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00965}00965\ \ \ \ \ \ \ \ \ mpz\_add\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}},\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aad5d9f7a094db43297ca9fff6cf4ddd9}{range}}\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00966}00966\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00967}00967\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00968}00968\ \ \ \ \ mpz\_fdiv\_q\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}},\ 6);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00969}00969\ \ \ \ \ mpz\_fdiv\_q\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}},\ 6);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00970}00970\ \ \ \ \ mpz\_fdiv\_q\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a79e2a9589301aef116ef5d6e0f729cbe}{Ys}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00971}00971\ \ \ \ \ mpz\_fdiv\_q\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00972}00972\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00973}00973\ \ \ \ \ mpz\_t\ y\_delta;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00974}00974\ \ \ \ \ mpz\_init(y\_delta);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00975}00975\ \ \ \ \ mpz\_sub(y\_delta,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a79e2a9589301aef116ef5d6e0f729cbe}{Ys}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00976}00976\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00977}00977\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_sgn(y\_delta)\ <\ 0\ ||\ !mpz\_fits\_sint\_p(y\_delta))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00978}00978\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00979}00979\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}range\_info\_init:\ computed\ y-\/range\ is\ out\ of\ supported\ bounds."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00980}00980\ \ \ \ \ \ \ \ \ mpz\_clear(y\_delta);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00981}00981\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ info;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00982}00982\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00983}00983\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00984}00984\ \ \ \ \ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a3f8fe0b07e9ac77cf634438cfff9a31b}{y\_range}}\ =\ (int)mpz\_get\_si(y\_delta);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00985}00985\ \ \ \ \ mpz\_clear(y\_delta);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00986}00986\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00987}00987\ \ \ \ \ \textcolor{keywordflow}{return}\ info;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00988}00988\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00989}\doxymbox{\hyperlink{group__iz__toolkit_gab053af28699e3138640445b16a1311f7}{00989}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__toolkit_gab053af28699e3138640445b16a1311f7}{range\_info\_free}}(\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o}{IZM\_RANGE\_INFO}}\ *info)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00990}00990\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00991}00991\ \ \ \ \ \textcolor{keywordflow}{if}\ (info\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00992}00992\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00993}00993\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00994}00994\ \ \ \ \ mpz\_clears(info-\/>\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}},\ info-\/>\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}},\ info-\/>\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ info-\/>\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ info-\/>\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a79e2a9589301aef116ef5d6e0f729cbe}{Ys}},\ info-\/>\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00995}00995\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00996}00996\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00997}00997\ \textcolor{comment}{//\ ==================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00998}00998\ \textcolor{comment}{//\ *\ iZm\ Search\ primes\ routines:}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l00999}00999\ \textcolor{comment}{//\ ==================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01000}01000\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01017}\doxymbox{\hyperlink{group__iz__toolkit_ga02e061a03533010221ce47c043ddc53c}{01017}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__toolkit_ga02e061a03533010221ce47c043ddc53c}{vx\_search\_prime}}(mpz\_t\ p,\ \textcolor{keywordtype}{int}\ m\_id,\ \textcolor{keywordtype}{int}\ vx,\ \textcolor{keywordtype}{int}\ bit\_size)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01018}01018\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01019}01019\ \ \ \ \ \textcolor{comment}{//\ assert\ p\ is\ not\ NULL}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01020}01020\ \ \ \ \ assert(p\ \&\&\ \textcolor{stringliteral}{"{}p\ cannot\ be\ NULL\ in\ vx\_search\_prime."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01021}01021\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01022}01022\ \ \ \ \ bit\_size\ =\ \doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(bit\_size,\ 10);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01023}01023\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01024}01024\ \ \ \ \ \textcolor{comment}{//\ set\ m\_id\ randomly\ if\ not\ provided}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01025}01025\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_id\ !=\ -\/1\ \&\&\ m\_id\ !=\ 1)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01026}01026\ \ \ \ \ \ \ \ \ m\_id\ =\ (rand()\ \%\ 2)\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01027}01027\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01028}01028\ \ \ \ \ gmp\_randstate\_t\ state;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01029}01029\ \ \ \ \ gmp\_randinit\_default(state);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01030}01030\ \ \ \ \ \doxymbox{\hyperlink{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64}{gmp\_seed\_randstate}}(state);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01031}01031\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01032}01032\ \ \ \ \ \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *root\_primes\ =\ \doxymbox{\hyperlink{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}{SiZm}}(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01033}01033\ \ \ \ \ \textcolor{keywordflow}{if}\ (!root\_primes)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01034}01034\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01035}01035\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ initialize\ root\ primes\ in\ vx\_search\_prime"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01036}01036\ \ \ \ \ \ \ \ \ gmp\_randclear(state);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01037}01037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01038}01038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01039}01039\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01040}01040\ \ \ \ \ mpz\_t\ z,\ x\_z,\ y,\ yvx;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01041}01041\ \ \ \ \ mpz\_init(z);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01042}01042\ \ \ \ \ mpz\_init(x\_z);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01043}01043\ \ \ \ \ mpz\_init(y);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01044}01044\ \ \ \ \ mpz\_init(yvx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01045}01045\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01046}01046\ \ \ \ \ mpz\_urandomb(y,\ state,\ bit\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01047}01047\ \ \ \ \ mpz\_fdiv\_q\_ui(y,\ y,\ 6\ *\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01048}01048\ \ \ \ \ mpz\_mul\_ui(yvx,\ y,\ vx);\ \textcolor{comment}{//\ compute\ yvx\ =\ vx\ *\ y}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01049}01049\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01050}01050\ \ \ \ \ \textcolor{keywordtype}{int}\ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01051}01051\ \ \ \ \ \textcolor{keywordflow}{while}\ (!found)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01052}01052\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01053}01053\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}\ *bitmap\ =\ \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\_init}}(vx\ +\ 10,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01054}01054\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01055}01055\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sieve\ the\ bitmap\ with\ root\ primes\ skipping\ 2\ and\ 3}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01056}01056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 2;\ i\ <\ root\_primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01057}01057\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01058}01058\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ q\ =\ root\_primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i];}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01059}01059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ mark\ composites\ of\ q\ in\ the\ bitmap}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01060}01060\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\_clear\_steps}}(bitmap,\ q,\ \doxymbox{\hyperlink{group__iz__toolkit_ga3ee0fd9e3f27fd5d30fddfe7d1056c57}{iZm\_solve\_for\_x0\_mpz}}(m\_id,\ q,\ vx,\ y),\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01061}01061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01062}01062\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01063}01063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ random\_x\ =\ rand()\ \%\ (vx\ /\ 2);\ \textcolor{comment}{//\ random\ x\ <\ vx/2}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01064}01064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ random\_x;\ x\ <\ vx;\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01065}01065\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01066}01066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ z\ is\ prime\ candidate\ in\ bitmap}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01067}01067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(bitmap,\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01068}01068\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01069}01069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ compute\ x\_z\ =\ vx\ *\ y\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01070}01070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_z,\ yvx,\ x);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01071}01071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(z,\ x\_z,\ m\_id);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01072}01072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ z\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01073}01073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01074}01074\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01075}01075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ z\ is\ prime,\ set\ p\ =\ z}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01076}01076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01077}01077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01078}01078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_set(p,\ z);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01079}01079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01080}01080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01081}01081\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01082}01082\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01083}01083\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01084}01084\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ cleanup}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01085}01085\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\_free}}(\&bitmap);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01086}01086\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01087}01087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ increment\ y\ by\ 1\ for\ next\ vx\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01088}01088\ \ \ \ \ \ \ \ \ mpz\_add\_ui(y,\ y,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01089}01089\ \ \ \ \ \ \ \ \ mpz\_add\_ui(yvx,\ yvx,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01090}01090\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01091}01091\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01092}01092\ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\_free}}(\&root\_primes);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01093}01093\ \ \ \ \ mpz\_clears(z,\ x\_z,\ y,\ yvx,\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01094}01094\ \ \ \ \ gmp\_randclear(state);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01095}01095\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01096}01096\ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01097}01097\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01098}01098\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01114}\doxymbox{\hyperlink{group__iz__toolkit_ga58ea9ced15462006d8a8c223719c57f4}{01114}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__toolkit_ga58ea9ced15462006d8a8c223719c57f4}{vy\_search\_prime}}(mpz\_t\ p,\ \textcolor{keywordtype}{int}\ m\_id,\ mpz\_t\ vx)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01115}01115\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01116}01116\ \ \ \ \ assert(p\ \&\&\ vx\ \&\&\ \textcolor{stringliteral}{"{}Input\ parameters\ cannot\ be\ NULL"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01117}01117\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01118}01118\ \ \ \ \ \textcolor{keywordtype}{int}\ found\ =\ 0;\ \textcolor{comment}{//\ flag\ to\ indicate\ if\ a\ prime\ was\ found}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01119}01119\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01120}01120\ \ \ \ \ \textcolor{comment}{//\ set\ m\_id\ randomly\ if\ not\ provided}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01121}01121\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_id\ !=\ -\/1\ \&\&\ m\_id\ !=\ 1)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01122}01122\ \ \ \ \ \ \ \ \ m\_id\ =\ (rand()\ \%\ 2)\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01123}01123\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01124}01124\ \ \ \ \ gmp\_randstate\_t\ state;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01125}01125\ \ \ \ \ gmp\_randinit\_default(state);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01126}01126\ \ \ \ \ \doxymbox{\hyperlink{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64}{gmp\_seed\_randstate}}(state);\ \textcolor{comment}{//\ seed\ random\ state}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01127}01127\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01128}01128\ \ \ \ \ mpz\_t\ z,\ g;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01129}01129\ \ \ \ \ mpz\_init(z);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01130}01130\ \ \ \ \ mpz\_init(g);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01131}01131\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01132}01132\ \ \ \ \ \textcolor{comment}{//\ set\ random\ x\ value\ in\ the\ range\ of\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01133}01133\ \ \ \ \ mpz\_urandomm(z,\ state,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01134}01134\ \ \ \ \ \textcolor{comment}{//\ compute\ z\ =\ 6\ *\ z\ +\ i}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01135}01135\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(z,\ z,\ m\_id);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01136}01136\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01137}01137\ \ \ \ \ \textcolor{comment}{//\ search\ for\ x\ value\ such\ that\ gcd(iZ(x,\ m\_id),\ z)\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01138}01138\ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01139}01139\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01140}01140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ increment\ z\ by\ 6\ to\ advance\ x\ by\ 1}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01141}01141\ \ \ \ \ \ \ \ \ mpz\_add\_ui(z,\ z,\ 6);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01142}01142\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01143}01143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ g\ =\ gcd(vx,\ z)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01144}01144\ \ \ \ \ \ \ \ \ mpz\_gcd(g,\ vx,\ z);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01145}01145\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01146}01146\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ break\ if\ g\ =\ 1,}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01147}01147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ implying\ current\ x\ value\ can\ yield\ primes\ of\ the\ form\ iZ(x\ +\ vx\ *\ y,\ p\_id)}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01148}01148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp\_ui(g,\ 1)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01149}01149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01150}01150\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01151}01151\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01152}01152\ \ \ \ \ \textcolor{comment}{//\ set\ g\ =\ 6\ *\ vx\ to\ use\ as\ a\ step}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01153}01153\ \ \ \ \ mpz\_mul\_ui(g,\ vx,\ 6);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01154}01154\ \ \ \ \ \textcolor{comment}{//\ add\ z\ by\ rand\ *\ g}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01155}01155\ \ \ \ \ \textcolor{keywordtype}{int}\ rand\_steps\ =\ rand()\ \%\ 100;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01156}01156\ \ \ \ \ mpz\_addmul\_ui(z,\ g,\ rand\_steps);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01157}01157\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01158}01158\ \ \ \ \ \textcolor{keywordflow}{while}\ (!found)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01159}01159\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01160}01160\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ increment\ z\ by\ 6\ *\ vx\ to\ advance\ y\ by\ 1}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01161}01161\ \ \ \ \ \ \ \ \ mpz\_add(z,\ z,\ g);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01162}01162\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01163}01163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ z\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01164}01164\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga1dbb019b08a42984e1733f0c7c3881a0}{check\_primality}}(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}});}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01165}01165\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01166}01166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ z\ is\ prime,\ set\ p\ =\ z}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01167}01167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01168}01168\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_set(p,\ z);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01169}01169\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01170}01170\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01171}01171\ \ \ \ \ \textcolor{comment}{//\ cleanup}}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01172}01172\ \ \ \ \ gmp\_randclear(state);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01173}01173\ \ \ \ \ mpz\_clears(z,\ g,\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01174}01174\ }
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01175}01175\ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__toolkit_8c_source_l01176}01176\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,62 @@
+\doxysection{include/\+test\+\_\+api.h File Reference}
+\hypertarget{test__api_8h}{}\label{test__api_8h}\index{include/test\_api.h@{include/test\_api.h}}
+
+
+Public test/\+benchmark entry points for the iZ library.  
+
+
+{\ttfamily \+\#include $<$i\+Z\+\_\+api.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_s_i_e_v_e___l_i_m_i_t}{SIEVE\+\_\+\+LIMIT}}
+\item 
+struct \doxymbox{\hyperlink{struct_s_i_e_v_e___m_o_d_e_l}{SIEVE\+\_\+\+MODEL}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}(\texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__tests_ga8a197176cad14c93254c898bc5f87afe}{SIEVE\+\_\+\+FN}}) (uint64\+\_\+t)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{Indent}\textbf{ Sieve model tests/\+benchmarks}\par
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries TEST\+\_\+\+UTILS} (int verbose)
+\begin{DoxyCompactList}\small\item\em Validate utility helpers (numeric/\+range parsers and shared utilities). \end{DoxyCompactList}\item 
+int {\bfseries TEST\+\_\+\+SIEVE\+\_\+\+MODELS\+\_\+\+INTEGRITY} (int verbose)
+\begin{DoxyCompactList}\small\item\em Run correctness checks across all registered sieve models. \end{DoxyCompactList}\item 
+void {\bfseries BENCHMARK\+\_\+\+SIEVE\+\_\+\+MODELS} (int save\+\_\+results)
+\begin{DoxyCompactList}\small\item\em Benchmark registered sieve models and optionally persist results. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Range sieve tests/\+benchmarks}\par
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries TEST\+\_\+\+Si\+Z\+\_\+stream} (int verbose)
+\begin{DoxyCompactList}\small\item\em Validate {\ttfamily \doxylink{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}{Si\+Z\+\_\+stream}} behavior and output formatting. \end{DoxyCompactList}\item 
+int {\bfseries TEST\+\_\+\+Si\+Z\+\_\+count} (int verbose)
+\begin{DoxyCompactList}\small\item\em Validate {\ttfamily \doxylink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{Si\+Z\+\_\+count}} correctness across worker counts. \end{DoxyCompactList}\item 
+void {\bfseries BENCHMARK\+\_\+\+Si\+Z\+\_\+count} (int save\+\_\+results)
+\begin{DoxyCompactList}\small\item\em Benchmark {\ttfamily \doxylink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{Si\+Z\+\_\+count}} over increasing ranges starting from 10\texorpdfstring{$^\wedge$}{\string^}10, 10\texorpdfstring{$^\wedge$}{\string^}20, ..., 10\texorpdfstring{$^\wedge$}{\string^}100 using max cores. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Prime generation tests/\+benchmarks}\par
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries TEST\+\_\+i\+Z\+\_\+next\+\_\+prime} (int verbose)
+\begin{DoxyCompactList}\small\item\em Validate {\ttfamily \doxylink{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}{i\+Z\+\_\+next\+\_\+prime}} for forward/\+backward traversal cases. \end{DoxyCompactList}\item 
+int {\bfseries TEST\+\_\+vy\+\_\+random\+\_\+prime} (int verbose)
+\begin{DoxyCompactList}\small\item\em Validate {\ttfamily \doxylink{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}{vy\+\_\+random\+\_\+prime}} for primality and bit-\/length constraints. \end{DoxyCompactList}\item 
+int {\bfseries TEST\+\_\+vx\+\_\+random\+\_\+prime} (int verbose)
+\begin{DoxyCompactList}\small\item\em Validate {\ttfamily \doxylink{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}{vx\+\_\+random\+\_\+prime}} for primality and bit-\/length constraints. \end{DoxyCompactList}\item 
+int {\bfseries BENCHMARK\+\_\+\+P\+\_\+\+GEN\+\_\+\+ALGORITHMS} (int bit\+\_\+size, int test\+\_\+rounds, int save\+\_\+results)
+\begin{DoxyCompactList}\small\item\em Benchmark random-\/prime generation routines over repeated trials. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Public test/\+benchmark entry points for the iZ library. 
+
+Doxygen can include this header when documenting the project to expose the test harness API and benchmark entry points. 
+
+Definition in file \doxymbox{\hyperlink{test__api_8h_source}{test\+\_\+api.\+h}}.
+

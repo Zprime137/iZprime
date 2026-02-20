@@ -1,0 +1,87 @@
+\doxysection{printer.\+c}
+\hypertarget{printer_8c_source}{}\label{printer_8c_source}\index{src/toolkit/printer.c@{src/toolkit/printer.c}}
+\doxymbox{\hyperlink{printer_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{printer_8h}{printer.h}}>}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00010}\doxymbox{\hyperlink{group__iz__printer_ga2d7fb7434442142a76becdbe455f37ae}{00010}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__printer_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(\textcolor{keywordtype}{int}\ length,\ \textcolor{keywordtype}{char}\ fill\_char)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00012}00012\ \ \ \ \ \textcolor{keywordflow}{if}\ (fill\_char\ ==\ \textcolor{charliteral}{'\(\backslash\)0'})}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00013}00013\ \ \ \ \ \ \ \ \ fill\_char\ =\ \textcolor{charliteral}{'-\/'};}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00015}00015\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ length;\ ++i)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00016}00016\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%c"{}},\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00017}00017\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00018}00018\ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00020}\doxymbox{\hyperlink{group__iz__printer_ga2f2ab4de61685b555a3a182afb0b1e6b}{00020}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__printer_ga2f2ab4de61685b555a3a182afb0b1e6b}{print\_centered\_text}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{int}\ line\_length,\ \textcolor{keywordtype}{char}\ fill\_char)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00021}00021\ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{if}\ (text\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00023}00023\ \ \ \ \ \ \ \ \ text\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00025}00025\ \ \ \ \ \textcolor{keywordtype}{int}\ text\_length\ =\ (int)strlen(text);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{if}\ (text\_length\ >=\ line\_length)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00027}00027\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00028}00028\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ text);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00030}00030\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00032}00032\ \ \ \ \ \textcolor{keywordtype}{int}\ left\_padding\ =\ (line\_length\ -\/\ text\_length)\ /\ 2;}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00033}00033\ \ \ \ \ \textcolor{keywordtype}{int}\ right\_padding\ =\ line\_length\ -\/\ text\_length\ -\/\ left\_padding;}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ left\_padding;\ ++i)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00036}00036\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%c"{}},\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00037}00037\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s"{}},\ text);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ right\_padding;\ ++i)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%c"{}},\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00040}00040\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00041}00041\ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00043}\doxymbox{\hyperlink{group__iz__printer_gab2e3b4b0fe7c24db57a45dbab37f93c5}{00043}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__printer_gab2e3b4b0fe7c24db57a45dbab37f93c5}{log\_test}}(\textcolor{keywordtype}{int}\ result,\ \textcolor{keywordtype}{int}\ test\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *unit\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00044}00044\ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00045}00045\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00046}00046\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00048}00048\ \ \ \ \ \textcolor{keywordtype}{char}\ message[1024];}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00049}00049\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00050}00050\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wformat-\/nonliteral"{}}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00051}00051\ \ \ \ \ vsnprintf(message,\ \textcolor{keyword}{sizeof}(message),\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00052}00052\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00053}00053\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{if}\ (result)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00056}00056\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[\%02d]\ \%-\/30s\ [PASS]\ \%s\(\backslash\)n"{}},\ test\_id,\ unit\_name,\ message);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00060}00060\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00061}00061\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[\%02d]\ \%-\/30s\ [FAIL]\ \%s\(\backslash\)n"{}},\ test\_id,\ unit\_name,\ message);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00062}00062\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00063}00063\ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00065}\doxymbox{\hyperlink{group__iz__printer_ga42f7b23943b540d8cd28cc1ae6b1d948}{00065}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__printer_ga42f7b23943b540d8cd28cc1ae6b1d948}{log\_test\_summary}}(\textcolor{keywordtype}{char}\ *module\_name,\ \textcolor{keywordtype}{int}\ passed,\ \textcolor{keywordtype}{int}\ failed,\ \textcolor{keywordtype}{int}\ verbose)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00067}00067\ \ \ \ \ (void)verbose;}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00069}00069\ \ \ \ \ \doxymbox{\hyperlink{group__iz__printer_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00070}00070\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Results\ Summary\ for\ \%s\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00071}00071\ \ \ \ \ \doxymbox{\hyperlink{group__iz__printer_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'-\/'});}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00072}00072\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%-\/32s:\ \%d\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}Total\ Tests"{}},\ passed\ +\ failed);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00073}00073\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%-\/32s:\ \%d\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}Passed"{}},\ passed);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00074}00074\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%-\/32s:\ \%d\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}Failed"{}},\ failed);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00075}00075\ \ \ \ \ \doxymbox{\hyperlink{group__iz__printer_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'-\/'});}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (failed\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00077}00077\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[SUCCESS]\ ALL\ \%s\ TESTS\ PASSED!\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00079}00079\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00081}00081\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[FAILURE]\ SOME\ \%s\ TESTS\ FAILED\ :\(\backslash\)\(\backslash\)\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00084}00084\ \ \ \ \ \doxymbox{\hyperlink{group__iz__printer_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{printer_8c_source_l00085}00085\ \}}
+
+\end{DoxyCode}

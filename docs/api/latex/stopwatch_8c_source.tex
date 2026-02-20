@@ -1,0 +1,63 @@
+\doxysection{stopwatch.\+c}
+\hypertarget{stopwatch_8c_source}{}\label{stopwatch_8c_source}\index{src/toolkit/stopwatch.c@{src/toolkit/stopwatch.c}}
+\doxymbox{\hyperlink{stopwatch_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{utils_8h}{utils.h}}>}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00010}00010\ \textcolor{keyword}{static}\ \textcolor{keyword}{struct\ }timespec\ sw\_now\_timespec(void)}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{struct\ }timespec\ ts;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00013}00013\ \ \ \ \ clock\_gettime(CLOCK\_MONOTONIC,\ \&ts);}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00014}00014\ \ \ \ \ \textcolor{keywordflow}{return}\ ts;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00015}00015\ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00017}00017\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ sw\_elapsed\_between(\textcolor{keyword}{struct}\ timespec\ start,\ \textcolor{keyword}{struct}\ timespec\ end)}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00019}00019\ \ \ \ \ time\_t\ sec\ =\ end.tv\_sec\ -\/\ start.tv\_sec;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00020}00020\ \ \ \ \ \textcolor{keywordtype}{long}\ nsec\ =\ end.tv\_nsec\ -\/\ start.tv\_nsec;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00021}00021\ \ \ \ \ \textcolor{keywordflow}{if}\ (nsec\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00022}00022\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00023}00023\ \ \ \ \ \ \ \ \ sec\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00024}00024\ \ \ \ \ \ \ \ \ nsec\ +=\ 1000000000L;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00025}00025\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{double})sec\ +\ (double)nsec\ /\ 1000000000.0;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00030}\doxymbox{\hyperlink{group__iz__stopwatch_gaee035fe5ef09ff4e688b6e434b51a581}{00030}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__stopwatch_gaee035fe5ef09ff4e688b6e434b51a581}{sw\_start}}(\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}\ *sw)}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00031}00031\ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00032}00032\ \ \ \ \ assert(sw\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ stopwatch\ passed\ to\ sw\_start."{}});}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00033}00033\ \ \ \ \ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a4cedb16e8f0dad025c3dab18fafb247e}{start\_time}}\ =\ sw\_now\_timespec();}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00034}00034\ \ \ \ \ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ae9639bc9e9f66b2786a838fd43f96b42}{end\_time}}\ =\ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a4cedb16e8f0dad025c3dab18fafb247e}{start\_time}};}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00035}00035\ \ \ \ \ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a90ec5ab2cee83868690fb2f1e0a5c1b5}{running}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00036}00036\ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00038}\doxymbox{\hyperlink{group__iz__stopwatch_gad4a0ca0f1f376be85f517a7d3624088a}{00038}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__stopwatch_gad4a0ca0f1f376be85f517a7d3624088a}{sw\_stop}}(\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}\ *sw)}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00039}00039\ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00040}00040\ \ \ \ \ assert(sw\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ stopwatch\ passed\ to\ sw\_stop."{}});}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (!sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a90ec5ab2cee83868690fb2f1e0a5c1b5}{running}})}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00043}00043\ \ \ \ \ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ae9639bc9e9f66b2786a838fd43f96b42}{end\_time}}\ =\ sw\_now\_timespec();}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00044}00044\ \ \ \ \ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a90ec5ab2cee83868690fb2f1e0a5c1b5}{running}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00045}00045\ \ \ \ \ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ac81572977f9611d3b66dbb0055b23aff}{elapsed\_sec}}\ =\ sw\_elapsed\_between(sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a4cedb16e8f0dad025c3dab18fafb247e}{start\_time}},\ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ae9639bc9e9f66b2786a838fd43f96b42}{end\_time}});}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00046}00046\ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00048}\doxymbox{\hyperlink{group__iz__stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106}{00048}}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group__iz__stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106}{sw\_elapsed\_seconds}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}\ *sw)}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00049}00049\ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00050}00050\ \ \ \ \ assert(sw\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ stopwatch\ passed\ to\ sw\_elapsed\_seconds."{}});}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{if}\ (sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a90ec5ab2cee83868690fb2f1e0a5c1b5}{running}})}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00052}00052\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }timespec\ now\ =\ sw\_now\_timespec();}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sw\_elapsed\_between(sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_a4cedb16e8f0dad025c3dab18fafb247e}{start\_time}},\ now);}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00055}00055\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{return}\ sw-\/>\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h_ac81572977f9611d3b66dbb0055b23aff}{elapsed\_sec}};}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00057}00057\ \}}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00059}\doxymbox{\hyperlink{group__iz__stopwatch_ga45200a399e68acddf78aacf4c57c8052}{00059}}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group__iz__stopwatch_ga45200a399e68acddf78aacf4c57c8052}{sw\_elapsed\_now\_seconds}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00060}00060\ \{}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00061}00061\ \ \ \ \ \textcolor{keyword}{struct\ }timespec\ now\ =\ sw\_now\_timespec();}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{double})now.tv\_sec\ +\ (double)now.tv\_nsec\ /\ 1000000000.0;}
+\DoxyCodeLine{\Hypertarget{stopwatch_8c_source_l00063}00063\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,115 @@
+\chapter{Tests }
+\hypertarget{md_docs_2tests}{}\label{md_docs_2tests}\index{Tests@{Tests}}
+\label{md_docs_2tests_autotoc_md55}%
+\Hypertarget{md_docs_2tests_autotoc_md55}%
+
+
+This document describes test targets, execution commands, and current pass snapshots.\hypertarget{md_docs_2tests_autotoc_md56}{}\doxysection{\texorpdfstring{1. Test Targets}{1. Test Targets}}\label{md_docs_2tests_autotoc_md56}
+From repository root:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ test-\/all}
+\DoxyCodeLine{make\ test-\/unit}
+\DoxyCodeLine{make\ test-\/integration}
+
+\end{DoxyCode}
+
+
+Verbose output:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ test-\/all\ verbose}
+\DoxyCodeLine{make\ test-\/unit\ verbose}
+\DoxyCodeLine{make\ test-\/integration\ verbose}
+
+\end{DoxyCode}
+
+
+GNU make passthrough form (dash flags):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ -\/-\/\ test-\/all\ -\/-\/verbose}
+\DoxyCodeLine{make\ -\/-\/\ test-\/unit\ -\/-\/verbose}
+\DoxyCodeLine{make\ -\/-\/\ test-\/integration\ -\/-\/verbose}
+
+\end{DoxyCode}
+\hypertarget{md_docs_2tests_autotoc_md57}{}\doxysection{\texorpdfstring{2. What Each Target Runs}{2. What Each Target Runs}}\label{md_docs_2tests_autotoc_md57}
+
+\begin{DoxyItemize}
+\item {\ttfamily test-\/unit}:\+ bitmap/\+int-\/array/\+i\+Zm/\+vx-\/seg module-\/level tests.
+\item {\ttfamily test-\/integration}:\+ sieve hash integrity, range APIs, and prime-\/generation integration checks.
+\item {\ttfamily test-\/all}:\+ unit + integration suites through the shared test runner.
+\end{DoxyItemize}\hypertarget{md_docs_2tests_autotoc_md58}{}\doxysection{\texorpdfstring{3. Current Snapshot Results}{3. Current Snapshot Results}}\label{md_docs_2tests_autotoc_md58}
+Snapshot command set:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ test-\/unit}
+\DoxyCodeLine{make\ test-\/integration}
+\DoxyCodeLine{make\ test-\/all}
+
+\end{DoxyCode}
+
+
+Observed exit codes and summaries:\+
+
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Target  &\SetCell{r,bg=\tableheadbgcolor,font=\bfseries}Exit code  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Summary  \\
+{\ttfamily make test-\/unit}  &\SetCell{r}0  &6/\+6 module groups passed (100.\+0\%)  \\
+{\ttfamily make test-\/integration}  &\SetCell{r}0  &6/\+6 integration groups passed (100.\+0\%)  \\
+{\ttfamily make test-\/all}  &\SetCell{r}0  &full test runner completed successfully  \\
+\end{DoxyTable}
+
+
+Expected success markers in output:\+
+\begin{DoxyItemize}
+\item Unit suite:\+ {\ttfamily \+[SUCCESS]\+ ALL MODULE TESTS PASSED!}
+\item Integration suite:\+ {\ttfamily \+[SUCCESS]\+ ALL INTEGRATION TESTS PASSED!}
+\end{DoxyItemize}\hypertarget{md_docs_2tests_autotoc_md59}{}\doxysection{\texorpdfstring{4. Show Results In Terminal}{4. Show Results In Terminal}}\label{md_docs_2tests_autotoc_md59}
+Quick pass/\+fail runs:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ test-\/unit}
+\DoxyCodeLine{make\ test-\/integration}
+
+\end{DoxyCode}
+
+
+Detailed run (prints per-\/test information and hashes):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ test-\/integration\ verbose}
+
+\end{DoxyCode}
+
+
+Capture logs for review:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make\ test-\/unit\ >\ /tmp/test\_unit.log\ 2>\&1}
+\DoxyCodeLine{make\ test-\/integration\ >\ /tmp/test\_integration.log\ 2>\&1}
+
+\end{DoxyCode}
+
+
+Tail the summaries:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{tail\ -\/n\ 40\ /tmp/test\_unit.log}
+\DoxyCodeLine{tail\ -\/n\ 50\ /tmp/test\_integration.log}
+
+\end{DoxyCode}
+\hypertarget{md_docs_2tests_autotoc_md60}{}\doxysection{\texorpdfstring{5. Notes}{5. Notes}}\label{md_docs_2tests_autotoc_md60}
+
+\begin{DoxyItemize}
+\item The integrity suite intentionally skips {\ttfamily \doxylink{group__iz__api_ga1119ed76482796d548cee4f5a3ab8c06}{Si\+Zm\+\_\+vy}} in hash equality checks because it emits unordered prime lists.
+\item The test runner exits non-\/zero when any group fails; {\ttfamily make} surfaces that as a target failure. 
+\end{DoxyItemize}

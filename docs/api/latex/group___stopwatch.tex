@@ -1,0 +1,124 @@
+\doxysection{Stopwatch }
+\hypertarget{group___stopwatch}{}\label{group___stopwatch}\index{Stopwatch@{Stopwatch}}
+
+
+Monotonic wall-\/clock timing helpers for tests and benchmarks.  
+
+
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}
+\begin{DoxyCompactList}\small\item\em Stopwatch state for elapsed wall-\/clock measurements. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group___stopwatch_gaee035fe5ef09ff4e688b6e434b51a581}{sw\+\_\+start}} (\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}sw)
+\begin{DoxyCompactList}\small\item\em Start or restart a stopwatch. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group___stopwatch_gad4a0ca0f1f376be85f517a7d3624088a}{sw\+\_\+stop}} (\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}sw)
+\begin{DoxyCompactList}\small\item\em Stop a running stopwatch, capturing the elapsed time in seconds. \end{DoxyCompactList}\item 
+double \doxymbox{\hyperlink{group___stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106}{sw\+\_\+elapsed\+\_\+seconds}} (const \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}sw)
+\begin{DoxyCompactList}\small\item\em Return elapsed seconds for the stopwatch. \end{DoxyCompactList}\item 
+double \doxymbox{\hyperlink{group___stopwatch_ga45200a399e68acddf78aacf4c57c8052}{sw\+\_\+elapsed\+\_\+now\+\_\+seconds}} (void)
+\begin{DoxyCompactList}\small\item\em Capture the current monotonic time in seconds. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Monotonic wall-\/clock timing helpers for tests and benchmarks. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{group___stopwatch_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{group___stopwatch_ga45200a399e68acddf78aacf4c57c8052}\index{Stopwatch@{Stopwatch}!sw\_elapsed\_now\_seconds@{sw\_elapsed\_now\_seconds}}
+\index{sw\_elapsed\_now\_seconds@{sw\_elapsed\_now\_seconds}!Stopwatch@{Stopwatch}}
+\doxysubsubsection{\texorpdfstring{sw\_elapsed\_now\_seconds()}{sw\_elapsed\_now\_seconds()}}
+{\footnotesize\ttfamily \label{group___stopwatch_ga45200a399e68acddf78aacf4c57c8052} 
+double sw\+\_\+elapsed\+\_\+now\+\_\+seconds (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Capture the current monotonic time in seconds. 
+
+\begin{DoxyReturn}{Returns}
+Current monotonic timestamp in seconds. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{stopwatch_8c_source_l00059}{59}} of file \doxymbox{\hyperlink{stopwatch_8c_source}{stopwatch.\+c}}.
+
+\Hypertarget{group___stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106}\index{Stopwatch@{Stopwatch}!sw\_elapsed\_seconds@{sw\_elapsed\_seconds}}
+\index{sw\_elapsed\_seconds@{sw\_elapsed\_seconds}!Stopwatch@{Stopwatch}}
+\doxysubsubsection{\texorpdfstring{sw\_elapsed\_seconds()}{sw\_elapsed\_seconds()}}
+{\footnotesize\ttfamily \label{group___stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106} 
+double sw\+\_\+elapsed\+\_\+seconds (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}}]{sw}{}\end{DoxyParamCaption})}
+
+
+
+Return elapsed seconds for the stopwatch. 
+
+If the stopwatch is still running, elapsed time is computed against the current monotonic timestamp.
+
+
+\begin{DoxyParams}{Parameters}
+{\em sw} & Stopwatch object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Elapsed seconds. 
+\end{DoxyReturn}
+
+
+Definition at line \doxymbox{\hyperlink{stopwatch_8c_source_l00048}{48}} of file \doxymbox{\hyperlink{stopwatch_8c_source}{stopwatch.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{utils_8h_source_l00214}{STOPWATCH::\+elapsed\+\_\+sec}}, \doxymbox{\hyperlink{utils_8h_source_l00213}{STOPWATCH::\+running}}, and \doxymbox{\hyperlink{utils_8h_source_l00211}{STOPWATCH::\+start\+\_\+time}}.
+
+\Hypertarget{group___stopwatch_gaee035fe5ef09ff4e688b6e434b51a581}\index{Stopwatch@{Stopwatch}!sw\_start@{sw\_start}}
+\index{sw\_start@{sw\_start}!Stopwatch@{Stopwatch}}
+\doxysubsubsection{\texorpdfstring{sw\_start()}{sw\_start()}}
+{\footnotesize\ttfamily \label{group___stopwatch_gaee035fe5ef09ff4e688b6e434b51a581} 
+void sw\+\_\+start (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}}]{sw}{}\end{DoxyParamCaption})}
+
+
+
+Start or restart a stopwatch. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sw} & Stopwatch object. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \doxymbox{\hyperlink{stopwatch_8c_source_l00030}{30}} of file \doxymbox{\hyperlink{stopwatch_8c_source}{stopwatch.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{utils_8h_source_l00212}{STOPWATCH::\+end\+\_\+time}}, \doxymbox{\hyperlink{utils_8h_source_l00213}{STOPWATCH::\+running}}, and \doxymbox{\hyperlink{utils_8h_source_l00211}{STOPWATCH::\+start\+\_\+time}}.
+
+\Hypertarget{group___stopwatch_gad4a0ca0f1f376be85f517a7d3624088a}\index{Stopwatch@{Stopwatch}!sw\_stop@{sw\_stop}}
+\index{sw\_stop@{sw\_stop}!Stopwatch@{Stopwatch}}
+\doxysubsubsection{\texorpdfstring{sw\_stop()}{sw\_stop()}}
+{\footnotesize\ttfamily \label{group___stopwatch_gad4a0ca0f1f376be85f517a7d3624088a} 
+void sw\+\_\+stop (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}}]{sw}{}\end{DoxyParamCaption})}
+
+
+
+Stop a running stopwatch, capturing the elapsed time in seconds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sw} & Stopwatch object. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \doxymbox{\hyperlink{stopwatch_8c_source_l00038}{38}} of file \doxymbox{\hyperlink{stopwatch_8c_source}{stopwatch.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{utils_8h_source_l00214}{STOPWATCH::\+elapsed\+\_\+sec}}, \doxymbox{\hyperlink{utils_8h_source_l00212}{STOPWATCH::\+end\+\_\+time}}, \doxymbox{\hyperlink{utils_8h_source_l00213}{STOPWATCH::\+running}}, and \doxymbox{\hyperlink{utils_8h_source_l00211}{STOPWATCH::\+start\+\_\+time}}.
+

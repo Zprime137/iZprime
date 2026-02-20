@@ -1,0 +1,229 @@
+\chapter{Makefile documentation (i\+Zprime) }
+\hypertarget{md_docs_2_makefile}{}\label{md_docs_2_makefile}\index{Makefile documentation (iZprime)@{Makefile documentation (iZprime)}}
+\label{md_docs_2_makefile_autotoc_md34}%
+\Hypertarget{md_docs_2_makefile_autotoc_md34}%
+
+
+This document describes the modular {\ttfamily make} workflow for this repository.\hypertarget{md_docs_2_makefile_autotoc_md35}{}\doxysection{\texorpdfstring{Quick start}{Quick start}}\label{md_docs_2_makefile_autotoc_md35}
+
+\begin{DoxyItemize}
+\item Build static library + CLI and run:\+
+\begin{DoxyItemize}
+\item {\ttfamily make}
+\end{DoxyItemize}
+\item Build library only:\+
+\begin{DoxyItemize}
+\item {\ttfamily make lib}
+\end{DoxyItemize}
+\item Check dependencies:\+
+\begin{DoxyItemize}
+\item {\ttfamily make doctor}
+\end{DoxyItemize}
+\item Create release source archive:\+
+\begin{DoxyItemize}
+\item {\ttfamily make dist VERSION=1.\+0.\+0}
+\end{DoxyItemize}
+\item Run unit + integration tests:\+
+\begin{DoxyItemize}
+\item {\ttfamily make test-\/all}
+\end{DoxyItemize}
+\item Run sieve benchmarks:\+
+\begin{DoxyItemize}
+\item {\ttfamily make benchmark-\/p\+\_\+sieve}
+\end{DoxyItemize}
+\item Run prime-\/generation benchmarks:\+
+\begin{DoxyItemize}
+\item {\ttfamily make benchmark-\/p\+\_\+gen}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md36}{}\doxysection{\texorpdfstring{Dependencies}{Dependencies}}\label{md_docs_2_makefile_autotoc_md36}
+
+\begin{DoxyItemize}
+\item C toolchain:\+ {\ttfamily gcc} or {\ttfamily clang}
+\item Build tool:\+ {\ttfamily make}
+\item Libraries:\+
+\begin{DoxyItemize}
+\item GMP ({\ttfamily -\/lgmp})
+\item Open\+SSL 3 ({\ttfamily -\/lssl -\/lcrypto})
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+The Makefile prefers {\ttfamily pkg-\/config} for portability; on mac\+OS it also supports Homebrew path fallbacks.\hypertarget{md_docs_2_makefile_autotoc_md37}{}\doxysection{\texorpdfstring{Targets}{Targets}}\label{md_docs_2_makefile_autotoc_md37}
+\hypertarget{md_docs_2_makefile_autotoc_md38}{}\doxysubsection{\texorpdfstring{Build /\+ run}{Build /\+ run}}\label{md_docs_2_makefile_autotoc_md38}
+
+\begin{DoxyItemize}
+\item {\ttfamily all} (default):\+ Builds the CLI and runs it
+\item {\ttfamily lib}:\+ Builds {\ttfamily build/\+lib/\+libizprime.\+a} and shared-\/library artifacts (default)
+\item {\ttfamily cli}:\+ Builds {\ttfamily build/\+bin/\+izprime} (or {\ttfamily PROGRAM} override)
+\item {\ttfamily run}:\+ Runs the CLI binary (builds first if needed)
+\item {\ttfamily debug}:\+ Builds with debug flags ({\ttfamily -\/O0 -\/g}) and logging enabled
+\item {\ttfamily release}:\+ Builds an optimized binary and disables logging
+\item {\ttfamily clean}:\+ Removes build artifacts and generated output/\+log directories
+\item {\ttfamily help}:\+ Prints a concise help summary of targets and options
+\item {\ttfamily install}:\+ Installs headers, static/\+shared libraries, CLI, and {\ttfamily pkg-\/config} file
+\item {\ttfamily install-\/lib}:\+ Installs headers, static/\+shared libraries, and {\ttfamily pkg-\/config} file
+\item {\ttfamily uninstall}:\+ Removes files installed by the targets above
+\item {\ttfamily doctor}:\+ Verifies build dependencies with a compile/\+link smoke test
+\item {\ttfamily dist}:\+ Builds source tarball and SHA256 checksum under {\ttfamily dist/\+}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md39}{}\doxysubsection{\texorpdfstring{Tests}{Tests}}\label{md_docs_2_makefile_autotoc_md39}
+The primary test runner is built at {\ttfamily build/\+test/\+test\+\_\+runner}. It links against the static library target ({\ttfamily build/\+lib/\+libizprime.\+a}).
+
+
+\begin{DoxyItemize}
+\item {\ttfamily test-\/all}:\+ Runs unit + integration tests
+\item {\ttfamily test-\/unit}:\+ Runs unit tests only
+\item {\ttfamily test-\/integration}:\+ Runs integration tests only
+\end{DoxyItemize}
+
+Notes:\+
+
+
+\begin{DoxyItemize}
+\item Test selection defaults to {\ttfamily -\/-\/unit -\/-\/integration} when no flags are provided.
+\item Test runner arguments can be extended via {\ttfamily TEST\+\_\+\+ARGS}.
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md40}{}\doxysubsection{\texorpdfstring{Benchmarks}{Benchmarks}}\label{md_docs_2_makefile_autotoc_md40}
+Benchmarks are intentionally separate from tests, so they can be invoked explicitly and kept out of typical CI workflows.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily benchmark-\/p\+\_\+sieve}:\+ Runs prime sieve model benchmarks
+\begin{DoxyItemize}
+\item Invokes:\+ {\ttfamily ./\+build/\+test/\+test\+\_\+runner -\/-\/benchmark-\/p-\/sieve ...}
+\end{DoxyItemize}
+\item {\ttfamily benchmark-\/p\+\_\+gen}:\+ Runs random prime generation benchmarks
+\begin{DoxyItemize}
+\item Invokes:\+ {\ttfamily ./\+build/\+test/\+test\+\_\+runner -\/-\/benchmark-\/p-\/gen ...}
+\end{DoxyItemize}
+\item {\ttfamily benchmark-\/\+Si\+Z\+\_\+count}:\+ Runs large-\/window Si\+Z\+\_\+count benchmark
+\begin{DoxyItemize}
+\item Invokes:\+ {\ttfamily ./\+build/\+test/\+test\+\_\+runner -\/-\/benchmark-\/siz-\/count ...}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md41}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{md_docs_2_makefile_autotoc_md41}
+
+\begin{DoxyItemize}
+\item {\ttfamily examples}:\+ Builds all example programs into {\ttfamily build/\+examples/\+}
+\item {\ttfamily run-\/example}:\+ Runs one example
+\begin{DoxyItemize}
+\item Required variables:\+
+\begin{DoxyItemize}
+\item {\ttfamily EX=\texorpdfstring{$<$}{<}example\+\_\+name\texorpdfstring{$>$}{>}} (name of the example source without extension)
+\item {\ttfamily ARGS="{}..."{}} (optional arguments passed to the example)
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Example:\+
+
+
+\begin{DoxyItemize}
+\item {\ttfamily make run-\/example EX=sieve\+\_\+primes ARGS="{}\doxylink{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}{Si\+Zm} 10000000 10"{}}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md42}{}\doxysection{\texorpdfstring{Configuration variables}{Configuration variables}}\label{md_docs_2_makefile_autotoc_md42}
+\hypertarget{md_docs_2_makefile_autotoc_md43}{}\doxysubsection{\texorpdfstring{Local configuration file}{Local configuration file}}\label{md_docs_2_makefile_autotoc_md43}
+
+\begin{DoxyItemize}
+\item {\ttfamily config.\+mk} (optional, local)
+\begin{DoxyItemize}
+\item If present, it overrides defaults in {\ttfamily Makefile}.
+\item Start from:\+
+\begin{DoxyItemize}
+\item {\ttfamily cp config.\+mk.\+example config.\+mk}
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md44}{}\doxysubsection{\texorpdfstring{Dependency discovery}{Dependency discovery}}\label{md_docs_2_makefile_autotoc_md44}
+
+\begin{DoxyItemize}
+\item {\ttfamily USE\+\_\+\+PKG\+\_\+\+CONFIG} (default:\+ {\ttfamily 1})
+\begin{DoxyItemize}
+\item When {\ttfamily 1}, attempts to use {\ttfamily pkg-\/config} to discover GMP and Open\+SSL.
+\item When {\ttfamily 0}, skips {\ttfamily pkg-\/config} and uses the Homebrew/\+generic fallbacks.
+\end{DoxyItemize}
+\item {\ttfamily PKG\+\_\+\+CONFIG} (default:\+ {\ttfamily pkg-\/config})
+\begin{DoxyItemize}
+\item Override if you need a specific {\ttfamily pkg-\/config} binary.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md45}{}\doxysubsection{\texorpdfstring{Build toggles}{Build toggles}}\label{md_docs_2_makefile_autotoc_md45}
+
+\begin{DoxyItemize}
+\item {\ttfamily LOGGING} (default:\+ {\ttfamily 1})
+\begin{DoxyItemize}
+\item When {\ttfamily 1}, compiles with {\ttfamily -\/DENABLE\+\_\+\+LOGGING}.
+\item The {\ttfamily release} target forces {\ttfamily LOGGING=0}.
+\end{DoxyItemize}
+\item {\ttfamily PROGRAM} (default:\+ {\ttfamily izprime})
+\begin{DoxyItemize}
+\item Output name for the CLI binary under {\ttfamily build/\+bin/\+}.
+\end{DoxyItemize}
+\item {\ttfamily CLI\+\_\+\+ENTRY} (default:\+ {\ttfamily src/\+main.\+c})
+\begin{DoxyItemize}
+\item Source file used as CLI entrypoint ({\ttfamily main()}).
+\end{DoxyItemize}
+\item {\ttfamily VERSION} (default:\+ {\ttfamily 1.\+0.\+0})
+\begin{DoxyItemize}
+\item Release/\+version metadata for the CLI and shared library.
+\end{DoxyItemize}
+\item {\ttfamily SOVERSION} (default:\+ first component of {\ttfamily VERSION})
+\begin{DoxyItemize}
+\item Shared-\/library ABI major version.
+\end{DoxyItemize}
+\item {\ttfamily BUILD\+\_\+\+SHARED} (default:\+ {\ttfamily 1})
+\begin{DoxyItemize}
+\item Build shared library artifacts in addition to static library.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md46}{}\doxysubsection{\texorpdfstring{Test/\+benchmark options}{Test/\+benchmark options}}\label{md_docs_2_makefile_autotoc_md46}
+
+\begin{DoxyItemize}
+\item {\ttfamily VERBOSE} (default:\+ {\ttfamily 0})
+\begin{DoxyItemize}
+\item When {\ttfamily 1}, adds {\ttfamily -\/-\/verbose} to the test runner.
+\end{DoxyItemize}
+\item {\ttfamily SAVE\+\_\+\+RESULTS} (default:\+ {\ttfamily 0})
+\begin{DoxyItemize}
+\item When {\ttfamily 1}, adds {\ttfamily -\/-\/save-\/results} to benchmark runs (where supported).
+\end{DoxyItemize}
+\item {\ttfamily TEST\+\_\+\+OUTPUT} (default:\+ empty)
+\begin{DoxyItemize}
+\item When set, redirects test runner output to the given file.
+\end{DoxyItemize}
+\item {\ttfamily TEST\+\_\+\+ARGS} (default:\+ empty)
+\begin{DoxyItemize}
+\item Extra arguments appended to the test runner invocation.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md47}{}\doxysection{\texorpdfstring{Common recipes}{Common recipes}}\label{md_docs_2_makefile_autotoc_md47}
+
+\begin{DoxyItemize}
+\item Run integration tests with verbose output:\+
+\begin{DoxyItemize}
+\item {\ttfamily make test-\/integration VERBOSE=1}
+\end{DoxyItemize}
+\item Save benchmark results:\+
+\begin{DoxyItemize}
+\item {\ttfamily make benchmark-\/p\+\_\+sieve SAVE\+\_\+\+RESULTS=1}
+\item {\ttfamily make benchmark-\/p\+\_\+gen SAVE\+\_\+\+RESULTS=1}
+\item {\ttfamily make benchmark-\/\+Si\+Z\+\_\+count SAVE\+\_\+\+RESULTS=1}
+\end{DoxyItemize}
+\item Redirect test output to a file:\+
+\begin{DoxyItemize}
+\item {\ttfamily make test-\/all TEST\+\_\+\+OUTPUT=output/\+test\+\_\+all.\+txt}
+\end{DoxyItemize}
+\item Pass extra args to the test runner:\+
+\begin{DoxyItemize}
+\item {\ttfamily make test-\/all TEST\+\_\+\+ARGS="{}-\/-\/help"{}}
+\end{DoxyItemize}
+\item Install under a local prefix:\+
+\begin{DoxyItemize}
+\item {\ttfamily make install PREFIX=\$HOME/\+.local}
+\end{DoxyItemize}
+\item Build static-\/only artifacts:\+
+\begin{DoxyItemize}
+\item {\ttfamily make lib BUILD\+\_\+\+SHARED=0}
+\end{DoxyItemize}
+\item Create a release tarball:\+
+\begin{DoxyItemize}
+\item {\ttfamily make dist VERSION=1.\+0.\+0}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md_docs_2_makefile_autotoc_md48}{}\doxysection{\texorpdfstring{Notes on outputs}{Notes on outputs}}\label{md_docs_2_makefile_autotoc_md48}
+
+\begin{DoxyItemize}
+\item Build outputs live under {\ttfamily build/\+}.
+\item Benchmark/\+test logs can be redirected via {\ttfamily TEST\+\_\+\+OUTPUT}.
+\item Some benchmarks may be long-\/running; use {\ttfamily SAVE\+\_\+\+RESULTS=1} to persist results when supported by that benchmark. 
+\end{DoxyItemize}

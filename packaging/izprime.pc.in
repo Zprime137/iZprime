@@ -1,0 +1,10 @@
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: izprime
+Description: Prime generation and sieve toolkit (classic + SiZ family)
+Version: @VERSION@
+Libs: -L${libdir} @LIBS@
+Cflags: @CFLAGS@

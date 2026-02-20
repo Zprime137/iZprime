@@ -1,0 +1,73 @@
+\doxysection{include/\+bitmap.h File Reference}
+\hypertarget{bitmap_8h}{}\label{bitmap_8h}\index{include/bitmap.h@{include/bitmap.h}}
+
+
+Bitmap container and bit operations used by sieve implementations.  
+
+
+{\ttfamily \+\#include $<$utils.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}
+\begin{DoxyCompactList}\small\item\em Packed bit-\/array with optional SHA-\/256 checksum. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_ga5c05923dedefd4e7cdd93d4242589ae1}{TEST\+\_\+\+BITMAP}} (int verbose)
+\begin{DoxyCompactList}\small\item\em Run bitmap module tests. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Lifecycle}\par
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\+\_\+init}} (size\+\_\+t size, int set\+\_\+bits)
+\begin{DoxyCompactList}\small\item\em Allocate a bitmap with {\ttfamily size} bits. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\+\_\+free}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Free a bitmap and set the caller pointer to NULL. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\+\_\+clone}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}src)
+\begin{DoxyCompactList}\small\item\em Deep-\/copy a bitmap, including data and checksum. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Single-\/bit Operations}\par
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\+\_\+get\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Read bit value at {\ttfamily idx}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_gac4b86fad09a6d97932143a9f3e04a024}{bitmap\+\_\+set\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Set bit at {\ttfamily idx} to 1. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga540e108d22ac9f423581ba6f4f6b8c03}{bitmap\+\_\+flip\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Toggle bit at {\ttfamily idx}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\+\_\+clear\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Clear bit at {\ttfamily idx} (set to 0). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Bulk Operations}\par
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2}{bitmap\+\_\+set\+\_\+all}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Set all bits to 1. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga978e786c92f2cd76110175a6f1c95973}{bitmap\+\_\+clear\+\_\+all}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Clear all bits to 0. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, uint64\+\_\+t step, uint64\+\_\+t start\+\_\+idx, uint64\+\_\+t limit)
+\begin{DoxyCompactList}\small\item\em Clear every {\ttfamily step-\/th} bit from {\ttfamily start\+\_\+idx} up to {\ttfamily limit}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, uint64\+\_\+t step, uint64\+\_\+t start\+\_\+idx, uint64\+\_\+t limit)
+\begin{DoxyCompactList}\small\item\em SIMD-\/accelerated variant of \doxylink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps()}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Integrity and I/\+O}\par
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga08742aa937df01c455675a8a4884904f}{bitmap\+\_\+compute\+\_\+hash}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Compute SHA-\/256 over bitmap data and store it in \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256}. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_gab9eee7af8183812a4b2917295466d9f2}{bitmap\+\_\+validate\+\_\+hash}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Verify \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256} against current bitmap data. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_gafd7cb301fe71bb295c9773e7117aeedc}{bitmap\+\_\+fwrite}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Write bitmap payload and checksum to a binary stream. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_gaf18da857e5bee7e2b4ed7a2f355143d8}{bitmap\+\_\+fread}} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Read bitmap payload and checksum from a binary stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailed Description}
+Bitmap container and bit operations used by sieve implementations. 
+
+The bitmap API is intentionally minimal and fast:\+ a packed bit-\/array plus helpers for per-\/bit operations, stepped clearing (for sieving), hashing, and binary serialization. 
+
+Definition in file \doxymbox{\hyperlink{bitmap_8h_source}{bitmap.\+h}}.
+

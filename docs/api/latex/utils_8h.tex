@@ -1,0 +1,96 @@
+\doxysection{include/\+utils.h File Reference}
+\hypertarget{utils_8h}{}\label{utils_8h}\index{include/utils.h@{include/utils.h}}
+
+
+Shared utilities and common includes for the i\+Zprime library.  
+
+
+{\ttfamily \+\#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdint.\+h$>$}\newline
+{\ttfamily \+\#include $<$stddef.\+h$>$}\newline
+{\ttfamily \+\#include $<$string.\+h$>$}\newline
+{\ttfamily \+\#include $<$assert.\+h$>$}\newline
+{\ttfamily \+\#include $<$math.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdio.\+h$>$}\newline
+{\ttfamily \+\#include $<$sys/\+stat.\+h$>$}\newline
+{\ttfamily \+\#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \+\#include $<$unistd.\+h$>$}\newline
+{\ttfamily \+\#include $<$signal.\+h$>$}\newline
+{\ttfamily \+\#include $<$sys/\+wait.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \+\#include $<$time.\+h$>$}\newline
+{\ttfamily \+\#include $<$logger.\+h$>$}\newline
+{\ttfamily \+\#include $<$gmp.\+h$>$}\newline
+{\ttfamily \+\#include $<$openssl/\+sha.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}}
+\begin{DoxyCompactList}\small\item\em Stopwatch state for elapsed wall-\/clock measurements. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(a,  b)
+\begin{DoxyCompactList}\small\item\em Return the smaller of two expressions. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(a,  b)
+\begin{DoxyCompactList}\small\item\em Return the larger of two expressions. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_ga32ee2169045d9168fab5d9a3578fd10f}{DIR\+\_\+output}}~"{}./\+output"{}
+\item 
+\+\#define \doxymbox{\hyperlink{group__iz__utils_ga009855593b59738d24dbfc236edb3b14}{MAX\+\_\+\+CORES}}~\doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\+\_\+cpu\+\_\+cores\+\_\+count}}()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__utils_gaf48194e5acec35fa8b04f1df7397dc7f}{create\+\_\+dir}} (const char \texorpdfstring{$\ast$}{*}dir)
+\begin{DoxyCompactList}\small\item\em Create a directory if it does not exist. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gace854eb07b55e4d4aab8d067cc5eaffc}{is\+\_\+numeric\+\_\+str}} (const char \texorpdfstring{$\ast$}{*}str)
+\begin{DoxyCompactList}\small\item\em Return non-\/zero if {\ttfamily str} contains only ASCII digits. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gab38733d1f6b78b2fe613d1f287c14295}{parse\+\_\+numeric\+\_\+expr\+\_\+mpz}} (mpz\+\_\+t out, const char \texorpdfstring{$\ast$}{*}expr)
+\begin{DoxyCompactList}\small\item\em Parse an integer expression into an mpz value. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_ga2654c69373a11daf95724bc72b2ec36c}{parse\+\_\+numeric\+\_\+expr\+\_\+u64}} (const char \texorpdfstring{$\ast$}{*}expr, uint64\+\_\+t \texorpdfstring{$\ast$}{*}out)
+\begin{DoxyCompactList}\small\item\em Parse an integer expression into uint64\+\_\+t. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gaae16a1deb2b6c0b2fa223ba34e1d5431}{parse\+\_\+inclusive\+\_\+range\+\_\+mpz}} (const char \texorpdfstring{$\ast$}{*}range\+\_\+expr, mpz\+\_\+t lower, mpz\+\_\+t upper)
+\begin{DoxyCompactList}\small\item\em Parse an inclusive range expression into lower/\+upper bounds. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__utils_ga05d1ac8d90873705cd22e1c83345fa71}{gcd}} (uint64\+\_\+t a, uint64\+\_\+t b)
+\begin{DoxyCompactList}\small\item\em Compute the greatest common divisor of {\ttfamily a} and {\ttfamily b}. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__utils_ga595ea61a3090228f6f23a32b046feaef}{modular\+\_\+inverse}} (uint64\+\_\+t a, uint64\+\_\+t m)
+\begin{DoxyCompactList}\small\item\em Compute the modular inverse of {\ttfamily a} modulo {\ttfamily m}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__utils_ga66ae2bd59e23d5bfc0103ceebbbdfa64}{gmp\+\_\+seed\+\_\+randstate}} (gmp\+\_\+randstate\+\_\+t state)
+\begin{DoxyCompactList}\small\item\em Seed a GMP random state. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\+\_\+cpu\+\_\+cores\+\_\+count}} (void)
+\begin{DoxyCompactList}\small\item\em Get the number of online CPU cores (\texorpdfstring{$>$}{>}= 1). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__utils_gac79290998392d17d4420f651f7ad31e9}{get\+\_\+cpu\+\_\+\+L2\+\_\+cache\+\_\+size\+\_\+bits}} (void)
+\begin{DoxyCompactList}\small\item\em Return the CPU L2 cache size in bits (best effort). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga8505a25915c2d06845e24ad4b5182a21}{print\+\_\+sha256\+\_\+hash}} (const unsigned char \texorpdfstring{$\ast$}{*}hash)
+\begin{DoxyCompactList}\small\item\em Print a SHA-\/256 digest as hex to stdout. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\+\_\+line}} (int length, char fill\+\_\+char)
+\begin{DoxyCompactList}\small\item\em Print a repeated-\/character horizontal line. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga2f2ab4de61685b555a3a182afb0b1e6b}{print\+\_\+centered\+\_\+text}} (const char \texorpdfstring{$\ast$}{*}text, int line\+\_\+length, char fill\+\_\+char)
+\begin{DoxyCompactList}\small\item\em Print text centered inside a padded line. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_gaee4bc5c6e9ef03fceea3269f680d105a}{print\+\_\+test\+\_\+table\+\_\+header}} (void)
+\begin{DoxyCompactList}\small\item\em Print the generic test runner header. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga72466c8280896724a1c9de6e0bc8fa29}{print\+\_\+test\+\_\+module\+\_\+header}} (char \texorpdfstring{$\ast$}{*}module\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Print a test-\/suite header banner for a module. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga42f2952626219f7a40085dfd6cb805c1}{print\+\_\+test\+\_\+fn\+\_\+header}} (char \texorpdfstring{$\ast$}{*}fn\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Print a formatted header for a test function. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_gaeff329da19376513f0ea3b7d190e58e0}{print\+\_\+test\+\_\+module\+\_\+result}} (int result, int test\+\_\+id, const char \texorpdfstring{$\ast$}{*}unit\+\_\+name, const char \texorpdfstring{$\ast$}{*}format,...)
+\begin{DoxyCompactList}\small\item\em Print a single test-\/row result. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__print__utils_ga67f5a331ba8b5d5b9de55a72e119a7c3}{print\+\_\+test\+\_\+summary}} (char \texorpdfstring{$\ast$}{*}module\+\_\+name, int passed, int failed, int verbose)
+\begin{DoxyCompactList}\small\item\em Print module-\/level test summary. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__stopwatch_gaee035fe5ef09ff4e688b6e434b51a581}{sw\+\_\+start}} (\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}sw)
+\begin{DoxyCompactList}\small\item\em Start or restart a stopwatch. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__stopwatch_gad4a0ca0f1f376be85f517a7d3624088a}{sw\+\_\+stop}} (\doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}sw)
+\begin{DoxyCompactList}\small\item\em Stop a running stopwatch, capturing the elapsed time in seconds. \end{DoxyCompactList}\item 
+double \doxymbox{\hyperlink{group__iz__stopwatch_gae3ffcd75b9a814ce8a0947bfdc6c8106}{sw\+\_\+elapsed\+\_\+seconds}} (const \doxymbox{\hyperlink{struct_s_t_o_p_w_a_t_c_h}{STOPWATCH}} \texorpdfstring{$\ast$}{*}sw)
+\begin{DoxyCompactList}\small\item\em Return elapsed seconds for the stopwatch. \end{DoxyCompactList}\item 
+double \doxymbox{\hyperlink{group__iz__stopwatch_ga45200a399e68acddf78aacf4c57c8052}{sw\+\_\+elapsed\+\_\+now\+\_\+seconds}} (void)
+\begin{DoxyCompactList}\small\item\em Capture the current monotonic time in seconds. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Shared utilities and common includes for the i\+Zprime library. 
+
+This header centralizes cross-\/cutting helpers (string checks, arithmetic, formatting, GMP helpers, and system queries). 
+
+Definition in file \doxymbox{\hyperlink{utils_8h_source}{utils.\+h}}.
+

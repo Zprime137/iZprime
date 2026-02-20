@@ -1,0 +1,171 @@
+\doxysection{Integer Arrays }
+\hypertarget{group__iz__arrays}{}\label{group__iz__arrays}\index{Integer Arrays@{Integer Arrays}}
+
+
+Dynamic integer containers used by sieve and toolkit layers.  
+
+
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \doxymbox{\hyperlink{int__arrays_8c}{int\+\_\+arrays.\+c}}
+\begin{DoxyCompactList}\small\item\em Implementation of dynamic integer array module for 16-\/bit, 32-\/bit, and 64-\/bit unsigned integers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}}
+\begin{DoxyCompactList}\small\item\em Dynamic array for uint16\+\_\+t values. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}}
+\begin{DoxyCompactList}\small\item\em Dynamic array for uint32\+\_\+t values. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}}
+\begin{DoxyCompactList}\small\item\em Dynamic array for uint64\+\_\+t values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__arrays_ga3243610d8f1b9c7cd225dc0d7f80323e}{TEST\+\_\+\+GENERIC\+\_\+\+INT\+\_\+\+ARRAYS}} (int verbose)
+\begin{DoxyCompactList}\small\item\em Run generic dispatch tests for C11 \+\_\+\+Generic helper macros. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{UI16 API}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{group__iz__arrays_ga495a195fcf45ae02c9402bcb389e7343}\label{group__iz__arrays_ga495a195fcf45ae02c9402bcb389e7343} 
+\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} {\bfseries ui16\+\_\+init} (int capacity)
+\begin{DoxyCompactList}\small\item\em Allocate a UI16 array with an initial capacity. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga6711fa1c3d7f6f57924486106423e18b}\label{group__iz__arrays_ga6711fa1c3d7f6f57924486106423e18b} 
+void {\bfseries ui16\+\_\+free} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Free a UI16 array and null the caller pointer. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga21a92b774130f9f33845f3f900a43eef}\label{group__iz__arrays_ga21a92b774130f9f33845f3f900a43eef} 
+void {\bfseries ui16\+\_\+resize\+\_\+to} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, int new\+\_\+capacity)
+\begin{DoxyCompactList}\small\item\em Resize UI16 storage to {\ttfamily new\+\_\+capacity} (must be \texorpdfstring{$>$}{>}= count). \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gaf1deed7b80ddde21d44b48a5c3e7d6aa}\label{group__iz__arrays_gaf1deed7b80ddde21d44b48a5c3e7d6aa} 
+void {\bfseries ui16\+\_\+resize\+\_\+to\+\_\+fit} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Shrink UI16 storage so capacity equals count. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gaf19906d91639a464ff36cc425968bdae}\label{group__iz__arrays_gaf19906d91639a464ff36cc425968bdae} 
+void {\bfseries ui16\+\_\+push} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, uint16\+\_\+t element)
+\begin{DoxyCompactList}\small\item\em Append a uint16 value, growing storage if needed. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga72126631540f1e1295bbdd257ea5ae4e}\label{group__iz__arrays_ga72126631540f1e1295bbdd257ea5ae4e} 
+void {\bfseries ui16\+\_\+sort} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Sort values in ascending order. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gaa1b0e0246e02d96d5c76165c0830195e}\label{group__iz__arrays_gaa1b0e0246e02d96d5c76165c0830195e} 
+void {\bfseries ui16\+\_\+pop} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Remove the last element if the array is non-\/empty. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gae5edd59c81f9cd3672b67c3ff05d63fb}\label{group__iz__arrays_gae5edd59c81f9cd3672b67c3ff05d63fb} 
+void {\bfseries ui16\+\_\+compute\+\_\+hash} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Compute SHA-\/256 checksum over active payload. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga6ab03be91fb04962417367ef88421d4a}\label{group__iz__arrays_ga6ab03be91fb04962417367ef88421d4a} 
+int {\bfseries ui16\+\_\+verify\+\_\+hash} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Verify the stored checksum against current payload. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga8f7b42c7d845b7c026e76e83d77afd32}\label{group__iz__arrays_ga8f7b42c7d845b7c026e76e83d77afd32} 
+int {\bfseries ui16\+\_\+fwrite} (\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Serialize count, payload, and checksum to a binary stream. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga616eb2b2b8180179f9f5df5d19d7a148}\label{group__iz__arrays_ga616eb2b2b8180179f9f5df5d19d7a148} 
+\doxymbox{\hyperlink{struct_u_i16___a_r_r_a_y}{UI16\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} {\bfseries ui16\+\_\+fread} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Deserialize a UI16 array from a binary stream. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gae4cc2062186d91d12f48e911c353d690}\label{group__iz__arrays_gae4cc2062186d91d12f48e911c353d690} 
+int {\bfseries TEST\+\_\+\+UI16\+\_\+\+ARRAY} (int verbose)
+\begin{DoxyCompactList}\small\item\em Execute UI16 test suite. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{UI32 API}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{group__iz__arrays_ga193b9c53d6b016638cedf5ef2ffd4fc6}\label{group__iz__arrays_ga193b9c53d6b016638cedf5ef2ffd4fc6} 
+\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} {\bfseries ui32\+\_\+init} (int capacity)
+\begin{DoxyCompactList}\small\item\em Allocate a UI32 array with an initial capacity. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga79d97e8e13a5fa86f19e3c0bfa4cbc8f}\label{group__iz__arrays_ga79d97e8e13a5fa86f19e3c0bfa4cbc8f} 
+void {\bfseries ui32\+\_\+free} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Free a UI32 array and null the caller pointer. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga57f66c3ec55620a7e366c5cec1559d5e}\label{group__iz__arrays_ga57f66c3ec55620a7e366c5cec1559d5e} 
+void {\bfseries ui32\+\_\+resize\+\_\+to} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, int new\+\_\+capacity)
+\begin{DoxyCompactList}\small\item\em Resize UI32 storage to {\ttfamily new\+\_\+capacity} (must be \texorpdfstring{$>$}{>}= count). \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga852da9e6f32cca24c54b789dc10f5f0f}\label{group__iz__arrays_ga852da9e6f32cca24c54b789dc10f5f0f} 
+void {\bfseries ui32\+\_\+resize\+\_\+to\+\_\+fit} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Shrink UI32 storage so capacity equals count. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gab14fc77ac9a6c3cf96acfebc0cc68d7c}\label{group__iz__arrays_gab14fc77ac9a6c3cf96acfebc0cc68d7c} 
+void {\bfseries ui32\+\_\+push} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, uint32\+\_\+t element)
+\begin{DoxyCompactList}\small\item\em Append a uint32 value, growing storage if needed. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga89099b1ed52f3e32fbf69acf267b7987}\label{group__iz__arrays_ga89099b1ed52f3e32fbf69acf267b7987} 
+void {\bfseries ui32\+\_\+sort} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Sort values in ascending order. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga57d3f1ba1634a6a7a0c5a4af30b6e1f3}\label{group__iz__arrays_ga57d3f1ba1634a6a7a0c5a4af30b6e1f3} 
+void {\bfseries ui32\+\_\+pop} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Remove the last element if the array is non-\/empty. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga3f2d3b232bdbd7f16932608307c92095}\label{group__iz__arrays_ga3f2d3b232bdbd7f16932608307c92095} 
+void {\bfseries ui32\+\_\+compute\+\_\+hash} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Compute SHA-\/256 checksum over active payload. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga5fd08b07f239090c5a43529af8da9293}\label{group__iz__arrays_ga5fd08b07f239090c5a43529af8da9293} 
+int {\bfseries ui32\+\_\+verify\+\_\+hash} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Verify the stored checksum against current payload. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga953724c1389581ace4fde515ff5e764a}\label{group__iz__arrays_ga953724c1389581ace4fde515ff5e764a} 
+int {\bfseries ui32\+\_\+fwrite} (\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Serialize count, payload, and checksum to a binary stream. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gab3374952d5c3e6ce581adc97e8810c67}\label{group__iz__arrays_gab3374952d5c3e6ce581adc97e8810c67} 
+\doxymbox{\hyperlink{struct_u_i32___a_r_r_a_y}{UI32\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} {\bfseries ui32\+\_\+fread} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Deserialize a UI32 array from a binary stream. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga7595baa49a5d4cae398f5bc5f60a46e2}\label{group__iz__arrays_ga7595baa49a5d4cae398f5bc5f60a46e2} 
+int {\bfseries TEST\+\_\+\+UI32\+\_\+\+ARRAY} (int verbose)
+\begin{DoxyCompactList}\small\item\em Execute UI32 test suite. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{UI64 API}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce}\label{group__iz__arrays_gaf9ef1b739df3c37089c62c7f1adbfdce} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} {\bfseries ui64\+\_\+init} (int capacity)
+\begin{DoxyCompactList}\small\item\em Allocate a UI64 array with an initial capacity. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}\label{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851} 
+void {\bfseries ui64\+\_\+free} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Free a UI64 array and null the caller pointer. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga764c7a9ffc62dadb419d77fed5eaa632}\label{group__iz__arrays_ga764c7a9ffc62dadb419d77fed5eaa632} 
+void {\bfseries ui64\+\_\+resize\+\_\+to} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, int new\+\_\+capacity)
+\begin{DoxyCompactList}\small\item\em Resize UI64 storage to {\ttfamily new\+\_\+capacity} (must be \texorpdfstring{$>$}{>}= count). \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499}\label{group__iz__arrays_ga1038fbdfa17c8304140992047eb94499} 
+void {\bfseries ui64\+\_\+resize\+\_\+to\+\_\+fit} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Shrink UI64 storage so capacity equals count. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68}\label{group__iz__arrays_ga51cf8a13f4a4ae5c076a1be3a3333a68} 
+void {\bfseries ui64\+\_\+push} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, uint64\+\_\+t element)
+\begin{DoxyCompactList}\small\item\em Append a uint64 value, growing storage if needed. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga3efabadef73b5e7b48a4afebe77ef097}\label{group__iz__arrays_ga3efabadef73b5e7b48a4afebe77ef097} 
+void {\bfseries ui64\+\_\+sort} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Sort values in ascending order. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga8cb72793e3dfa3035ef63156423b6f08}\label{group__iz__arrays_ga8cb72793e3dfa3035ef63156423b6f08} 
+void {\bfseries ui64\+\_\+pop} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Remove the last element if the array is non-\/empty. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga3a9b9be8dbb4c2071e79bbc82ab21638}\label{group__iz__arrays_ga3a9b9be8dbb4c2071e79bbc82ab21638} 
+void {\bfseries ui64\+\_\+compute\+\_\+hash} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Compute SHA-\/256 checksum over active payload. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gae5dc022c5afbe9813b27c802335da11a}\label{group__iz__arrays_gae5dc022c5afbe9813b27c802335da11a} 
+int {\bfseries ui64\+\_\+verify\+\_\+hash} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array)
+\begin{DoxyCompactList}\small\item\em Verify the stored checksum against current payload. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_ga03d03581caca2e0f0ff1eb4fa473d500}\label{group__iz__arrays_ga03d03581caca2e0f0ff1eb4fa473d500} 
+int {\bfseries ui64\+\_\+fwrite} (\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*}array, FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Serialize count, payload, and checksum to a binary stream. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gac3a248337ee692bc06957962efe281b1}\label{group__iz__arrays_gac3a248337ee692bc06957962efe281b1} 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} {\bfseries ui64\+\_\+fread} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Deserialize a UI64 array from a binary stream. \end{DoxyCompactList}\item 
+\Hypertarget{group__iz__arrays_gae8b2f9023399794d20a8e52275ee62b5}\label{group__iz__arrays_gae8b2f9023399794d20a8e52275ee62b5} 
+int {\bfseries TEST\+\_\+\+UI64\+\_\+\+ARRAY} (int verbose)
+\begin{DoxyCompactList}\small\item\em Execute UI64 test suite. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Dynamic integer containers used by sieve and toolkit layers. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{group__iz__arrays_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{group__iz__arrays_ga3243610d8f1b9c7cd225dc0d7f80323e}\index{Integer Arrays@{Integer Arrays}!TEST\_GENERIC\_INT\_ARRAYS@{TEST\_GENERIC\_INT\_ARRAYS}}
+\index{TEST\_GENERIC\_INT\_ARRAYS@{TEST\_GENERIC\_INT\_ARRAYS}!Integer Arrays@{Integer Arrays}}
+\doxysubsubsection{\texorpdfstring{TEST\_GENERIC\_INT\_ARRAYS()}{TEST\_GENERIC\_INT\_ARRAYS()}}
+{\footnotesize\ttfamily \label{group__iz__arrays_ga3243610d8f1b9c7cd225dc0d7f80323e} 
+int TEST\+\_\+\+GENERIC\+\_\+\+INT\+\_\+\+ARRAYS (\begin{DoxyParamCaption}\item[{int}]{verbose}{}\end{DoxyParamCaption})}
+
+
+
+Run generic dispatch tests for C11 \+\_\+\+Generic helper macros. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em verbose} & Non-\/zero enables detailed logging. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 when all tests pass, otherwise 0. 
+\end{DoxyReturn}

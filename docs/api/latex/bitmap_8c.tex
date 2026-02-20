@@ -1,0 +1,82 @@
+\doxysection{src/\+toolkit/\+bitmap.c File Reference}
+\hypertarget{bitmap_8c}{}\label{bitmap_8c}\index{src/toolkit/bitmap.c@{src/toolkit/bitmap.c}}
+
+
+Implementation of the bitmap module for efficient bit array operations.  
+
+
+{\ttfamily \+\#include $<$bitmap.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\+\_\+init}} (size\+\_\+t size, int set\+\_\+bits)
+\begin{DoxyCompactList}\small\item\em Creates and initializes a new bitmap with the specified number of bits. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\+\_\+free}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Frees all memory associated with a bitmap and nullifies the pointer. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_gac4b86fad09a6d97932143a9f3e04a024}{bitmap\+\_\+set\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Sets a specific bit to 1. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\+\_\+get\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Gets the value of a specific bit. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga540e108d22ac9f423581ba6f4f6b8c03}{bitmap\+\_\+flip\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Flips the value of a specific bit. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\+\_\+clear\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Clears (sets to 0) a specific bit. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2}{bitmap\+\_\+set\+\_\+all}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Sets all bits in the array to 1. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga978e786c92f2cd76110175a6f1c95973}{bitmap\+\_\+clear\+\_\+all}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Clears all bits in the bitmap (sets them to 0). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, uint64\+\_\+t step, uint64\+\_\+t start\+\_\+idx, uint64\+\_\+t limit)
+\begin{DoxyCompactList}\small\item\em Clear every {\ttfamily step-\/th} bit from {\ttfamily start\+\_\+idx} up to {\ttfamily limit}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, uint64\+\_\+t step, uint64\+\_\+t start\+\_\+idx, uint64\+\_\+t limit)
+\begin{DoxyCompactList}\small\item\em SIMD-\/optimized version of bitmap\+\_\+clear\+\_\+steps. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\+\_\+clone}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}src)
+\begin{DoxyCompactList}\small\item\em Creates a deep copy (clone) of an existing bitmap. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga08742aa937df01c455675a8a4884904f}{bitmap\+\_\+compute\+\_\+hash}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Generates a SHA-\/256 hash for the bitmap-\/\texorpdfstring{$>$}{>}data. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_gab9eee7af8183812a4b2917295466d9f2}{bitmap\+\_\+validate\+\_\+hash}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Validates the SHA-\/256 hash stored in bitmap-\/\texorpdfstring{$>$}{>}sha256. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_gafd7cb301fe71bb295c9773e7117aeedc}{bitmap\+\_\+fwrite}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Writes the bitmap to a binary file. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_gaf18da857e5bee7e2b4ed7a2f355143d8}{bitmap\+\_\+fread}} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Reads a bitmap from a binary file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of the bitmap module for efficient bit array operations. 
+
+This file provides the complete implementation of bitmap functions including memory management, bit manipulation, data integrity verification via SHA-\/256 hashing, and binary file I/\+O with automatic hash validation.\hypertarget{bitmap_8c_autotoc_md0}{}\doxysubsubsection{\texorpdfstring{Implementation Notes}{Implementation Notes}}\label{bitmap_8c_autotoc_md0}
+
+\begin{DoxyItemize}
+\item All functions include NULL pointer and bounds checking
+\item File I/\+O operations verify all read/\+write operations succeed
+\item Overflow protection is implemented in loop-\/based operations
+\item Memory is managed with proper cleanup on errors
+\item SHA-\/256 hashing uses Open\+SSL library
+\end{DoxyItemize}\hypertarget{bitmap_8c_autotoc_md1}{}\doxysubsubsection{\texorpdfstring{Performance Characteristics}{Performance Characteristics}}\label{bitmap_8c_autotoc_md1}
+
+\begin{DoxyItemize}
+\item \doxylink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\+\_\+init()}:\+ O(n/\+8) where n is number of bits
+\item Individual bit ops:\+ O(1)
+\item Bulk operations:\+ O(n/\+8)
+\item Hash computation:\+ O(n/\+8)
+\item File I/\+O:\+ O(n/\+8)
+\end{DoxyItemize}
+
+\begin{DoxyAuthor}{Author}
+i\+Zprime.\+com 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+October 2025 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0 
+\end{DoxyVersion}
+\begin{DoxySeeAlso}{See also}
+\doxylink{bitmap_8h}{bitmap.\+h} for API documentation 
+
+test/\+test\+\_\+bitmap.\+c for test suite 
+\end{DoxySeeAlso}
+
+
+Definition in file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+

@@ -1,0 +1,69 @@
+\doxysection{include/\+i\+Z\+\_\+api.h File Reference}
+\hypertarget{i_z__api_8h}{}\label{i_z__api_8h}\index{include/iZ\_api.h@{include/iZ\_api.h}}
+
+
+Public API for prime sieving, range scans, and prime generation.  
+
+
+{\ttfamily \+\#include $<$utils.\+h$>$}\newline
+{\ttfamily \+\#include $<$i\+Z\+\_\+toolkit.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}}
+\begin{DoxyCompactList}\small\item\em Input parameters for range sieving/\+counting. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{Indent}\textbf{ Classic Prime Sieve Algorithms}\par
+{\em Baseline sieves up to a numeric limit.
+
+All classic sieve functions take a limit {\ttfamily n} and return an ascending list of primes \texorpdfstring{$<$}{<}= {\ttfamily n}. }\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga2df5338a07925f1aee4b301565a8b489}{SoE}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Optimized Sieve of Eratosthenes. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga51ffe428b73f193100ff6a1275c2c57f}{SSoE}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Segmented Sieve of Eratosthenes. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga41adac38b8d9dea30778f1286417c1ed}{So\+Eu}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Euler (linear) sieve. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_gab82ab3c7dbaa78d3da0338a405b84108}{SoS}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Sieve of Sundaram. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga415d41154325d73e264c51cebd4ab628}{SoA}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Sieve of Atkin. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ i\+Z-\/based Sieve Algorithms}\par
+{\em Sieve family operating in the 6x-\/1 /\+ 6x+1 index space. }\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_gaeff7d8923d54b5d606c51301bc9bc0e7}{SiZ}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Solid Sieve-\/iZ (wheel 6, iZ index space). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}{Si\+Zm}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Segmented Sieve-\/i\+Zm (VX segmented, horizontal processing). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\+\_\+\+ARRAY}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__api_ga1119ed76482796d548cee4f5a3ab8c06}{Si\+Zm\+\_\+vy}} (uint64\+\_\+t n)
+\begin{DoxyCompactList}\small\item\em Segmented Sieve-\/i\+Zm (vertical processing; faster, unordered output). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Prime Generators}\par
+{\em Probabilistic prime searches using i\+Zm/\+\+VX machinery. }\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}{vy\+\_\+random\+\_\+prime}} (mpz\+\_\+t p, int bit\+\_\+size, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Search for a random prime using vertical (vy) sieving. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}{vx\+\_\+random\+\_\+prime}} (mpz\+\_\+t p, int bit\+\_\+size, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Search for a random prime using horizontal (vx) sieving. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}{i\+Z\+\_\+next\+\_\+prime}} (mpz\+\_\+t p, mpz\+\_\+t base, int forward)
+\begin{DoxyCompactList}\small\item\em Advance to the next (or previous) prime from a base value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\doxysubsubsection*{SiZ Range Variants}
+Count/\+stream primes over a numeric interval. \begin{DoxyCompactItemize}
+\item 
+typedef struct INPUT\+\_\+\+SIEVE\+\_\+\+RANGE \doxymbox{\hyperlink{group__iz__api_ga1c239b1ed1fb5e5d9d1a51f67f98738a}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}}
+\begin{DoxyCompactList}\small\item\em Input parameters for range sieving/\+counting. \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}{Si\+Z\+\_\+stream}} (\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}range)
+\begin{DoxyCompactList}\small\item\em Stream primes in a range to {\ttfamily filepath} (and return the count). \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{Si\+Z\+\_\+count}} (\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\+\_\+\+SIEVE\+\_\+\+RANGE}} \texorpdfstring{$\ast$}{*}input\+\_\+range, int cores\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Count primes in a range using multiple worker processes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Public API for prime sieving, range scans, and prime generation. 
+
+This header provides the stable, high-\/level entry points for the iZ library. Most functions return a heap-\/allocated {\ttfamily UI64\+\_\+\+ARRAY\texorpdfstring{$\ast$}{*}} that must be released with \doxylink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\+\_\+free()}. 
+
+Definition in file \doxymbox{\hyperlink{i_z__api_8h_source}{i\+Z\+\_\+api.\+h}}.
+

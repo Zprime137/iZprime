@@ -1,0 +1,33 @@
+# Copy to `config.mk` and adjust for your machine/workflow.
+#
+# This file is intentionally not loaded from version control by default.
+# Keep your local overrides in `config.mk`.
+
+# Toolchain
+# CC_BASE = clang
+# USE_CCACHE = 1
+
+# Dependency discovery
+# USE_PKG_CONFIG = 1
+# PKG_CONFIG = pkg-config
+
+# Build behavior
+# LOGGING = 1
+# OPT_LEVEL = -O3
+# LTO_FLAGS = -flto
+# ARCH_NATIVE = 1
+# TUNE_NATIVE = 1
+# ENABLE_NDEBUG = 1
+# ENABLE_STRIP_DEAD = 1
+# BUILD_SHARED = 1
+# VERSION = 1.0.0
+# SOVERSION = 1
+
+# CLI binary name and entrypoint
+# PROGRAM = izprime
+# CLI_ENTRY = src/main.c
+
+# Optional install layout
+# PREFIX = /usr/local
+# CLI_INSTALL_NAME = izprime
+# LIB_INSTALL_NAME = libizprime.a

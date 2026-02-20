@@ -1,0 +1,882 @@
+\doxysection{i\+Z\+\_\+apps.\+c}
+\hypertarget{i_z__apps_8c_source}{}\label{i_z__apps_8c_source}\index{src/iZ\_apps.c@{src/iZ\_apps.c}}
+\doxymbox{\hyperlink{i_z__apps_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{i_z__api_8h}{iZ\_api.h}}>}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00012}00012\ \textcolor{comment}{//\ =========================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00013}00013\ \textcolor{comment}{//\ *\ SiZ\ Range\ Variants}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00014}00014\ \textcolor{comment}{//\ =========================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00035}\doxymbox{\hyperlink{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}{00035}}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__api_gaca8a6b1666081b5b98bf1296ae7313b1}{SiZ\_stream}}(\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\_SIEVE\_RANGE}}\ *input\_range)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00036}00036\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00037}00037\ \ \ \ \ assert(input\_range\ \&\&\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}{start}}\ \&\&\ \textcolor{stringliteral}{"{}Invalid\ INPUT\_SIEVE\_RANGE\ passed\ to\ SiZ\_stream."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00039}00039\ \ \ \ \ \textcolor{keywordtype}{int}\ has\_output\_file\ =\ (input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9}{filepath}}\ \&\&\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9}{filepath}}[0]\ !=\ \textcolor{charliteral}{'\(\backslash\)0'});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00040}00040\ \ \ \ \ FILE\ *output\ =\ stdout;\ \textcolor{comment}{//\ default\ to\ stdout\ if\ no\ valid\ filepath\ is\ provided}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_output\_file)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00043}00043\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ output\ =\ fopen(input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9}{filepath}},\ \textcolor{stringliteral}{"{}w"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (output\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ open\ output\ file:\ \%s"{}},\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aacfdca4e158ceb7d1a53ba52afb7cee9}{filepath}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00049}00049\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00050}00050\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00052}00052\ \ \ \ \ uint64\_t\ total\ =\ 0;\ \textcolor{comment}{//\ output:\ total\ prime\ count}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00054}00054\ \ \ \ \ \textcolor{keywordtype}{int}\ vx\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga7510fdd07a68973d711e47ff3296e3ba}{VX6}};\ \textcolor{comment}{//\ Use\ VX6\ segment\ size\ (1,616,615\ bits)\ for\ optimal\ results}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\ Miller-\/Rabin\ rounds,\ bounded\ [5,\ 50]}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00056}00056\ \ \ \ \ \textcolor{keywordtype}{int}\ mr\_rounds\ =\ \doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(\doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_af8c8f0e616bbab35348c0dac5d65b4a7}{mr\_rounds}},\ 5),\ 50);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00058}00058\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o}{IZM\_RANGE\_INFO}}\ info\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga5ada19be750a6f9b0837805ef34a1de4}{range\_info\_init}}(input\_range,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{if}\ (info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a3f8fe0b07e9ac77cf634438cfff9a31b}{y\_range}}\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00060}00060\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_output\_file)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ fclose(output);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00063}00063\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gab053af28699e3138640445b16a1311f7}{range\_info\_free}}(\&info);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00065}00065\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00067}00067\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00068}00068\ \ \ \ \ mpz\_t\ current\_y;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00069}00069\ \ \ \ \ mpz\_init(current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00070}00070\ \ \ \ \ mpz\_set(current\_y,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a79e2a9589301aef116ef5d6e0f729cbe}{Ys}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00071}00071\ \ \ \ \ \textcolor{keywordtype}{int}\ start\_x\ =\ mpz\_fdiv\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a1946eaa4ccabece4bd5bd2eb7d59881a}{vx}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00072}00072\ \ \ \ \ \textcolor{keywordtype}{int}\ end\_x\ =\ mpz\_fdiv\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a1946eaa4ccabece4bd5bd2eb7d59881a}{vx}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00074}00074\ \ \ \ \ \textcolor{comment}{//\ if\ Ys\ =\ 0,\ use\ SiZm\ for\ the\ first\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp\_ui(current\_y,\ 0)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00076}00076\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00077}00077\ \ \ \ \ \ \ \ \ uint64\_t\ limit\ =\ mpz\_cmp\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ 0)\ >\ 0\ ?\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a1946eaa4ccabece4bd5bd2eb7d59881a}{vx}}\ :\ end\_x;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *primes\ =\ \doxymbox{\hyperlink{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}{SiZm}}(limit\ *\ 6\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!primes)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00080}00080\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ stream\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00085}00085\ \ \ \ \ \ \ \ \ uint64\_t\ s\ =\ mpz\_get\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00086}00086\ \ \ \ \ \ \ \ \ uint64\_t\ e\ =\ mpz\_get\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00089}00089\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ primes\ in\ [Zs,\ Ze]}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]\ >\ s\ \&\&\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]\ <=\ e)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total++;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fprintf(output,\ \textcolor{stringliteral}{"{}\%llu\ "{}},\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00096}00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ start\_x\ =\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ next\ segment\ starts\ at\ x=1}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00099}00099\ \ \ \ \ \ \ \ \ mpz\_add\_ui(current\_y,\ current\_y,\ 1);\ \textcolor{comment}{//\ increment\ Ys\ for\ the\ next\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\_free}}(\&primes);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00102}00102\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00104}00104\ \ \ \ \ \textcolor{comment}{//\ No\ remaining\ vx\ segments\ after\ the\ initial\ one.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp(current\_y,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}})\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00106}00106\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ stream\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00108}00108\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00110}00110\ \ \ \ \ \textcolor{comment}{//\ Initialize\ iZm\ structure\ for\ vx\ segments}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00111}00111\ \ \ \ \ iZm\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gaeb29a4d0536bb0aa227e230539081d98}{iZm\_init}}(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00113}00113\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ stream\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00116}00116\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00118}00118\ \ \ \ \ \textcolor{comment}{//\ Process\ remaining\ segments\ for\ y\ in\ [current\_y:Ye]}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00119}00119\ \ \ \ \ \textcolor{keywordtype}{int}\ first\_segment\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{while}\ (mpz\_cmp(current\_y,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}})\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00121}00121\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ seg\_start\_x\ =\ first\_segment\ ?\ start\_x\ :\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ seg\_end\_x\ =\ (mpz\_cmp(current\_y,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}})\ ==\ 0)\ ?\ end\_x\ :\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *y\_str\ =\ mpz\_get\_str(NULL,\ 10,\ current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00125}00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!y\_str)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00126}00126\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ stream\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00129}00129\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00131}00131\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga234719b01a0e090a1f66ed7766fe6d0f}{vx\_init}}(iZm,\ seg\_start\_x,\ seg\_end\_x,\ y\_str,\ mr\_rounds);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ free(y\_str);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00134}00134\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ logs\ for\ errors}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ stream\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00138}00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00140}00140\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga591a1d1fae4f8a241c6b6ed7f495eae6}{vx\_stream}}(vx\_obj,\ output);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00141}00141\ \ \ \ \ \ \ \ \ total\ +=\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}};\ \textcolor{comment}{//\ accumulate\ prime\ count}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00143}00143\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga89a2804cb4fa979a32e4213ade786ec4}{vx\_free}}(\&vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ first\_segment\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ mpz\_add\_ui(current\_y,\ current\_y,\ 1);\ \textcolor{comment}{//\ increment\ Ys\ for\ the\ next\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00146}00146\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00148}00148\ stream\_cleanup:}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00149}00149\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00150}00150\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gab053af28699e3138640445b16a1311f7}{range\_info\_free}}(\&info);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00151}00151\ \ \ \ \ mpz\_clear(current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_output\_file)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ fclose(output);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00155}00155\ \ \ \ \ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{return}\ total;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00158}00158\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00184}\doxymbox{\hyperlink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{00184}}\ uint64\_t\ \doxymbox{\hyperlink{group__iz__api_ga4f6632c0d38434ec6bce4d26d164c33c}{SiZ\_count}}(\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e}{INPUT\_SIEVE\_RANGE}}\ *input\_range,\ \textcolor{keywordtype}{int}\ cores\_num)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00185}00185\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00186}00186\ \ \ \ \ assert(input\_range\ \&\&\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aa130dc66a14ad2622c250382fcef83b5}{start}}\ \&\&\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_aad5d9f7a094db43297ca9fff6cf4ddd9}{range}}\ >\ 100\ \&\&}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Invalid\ INPUT\_SIEVE\_RANGE\ passed\ to\ SiZ\_count."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00189}00189\ \ \ \ \ uint64\_t\ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{int}\ vx\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gac92eb547227979fc0774e0529efa6180}{compute\_l2\_vx}}(pow(10,\ 9));\ \textcolor{comment}{//\ Use\ a\ segment\ width\ that\ balances\ workload\ and\ overhead\ for\ 10\string^9\ range}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00191}00191\ \ \ \ \ cores\_num\ =\ \doxymbox{\hyperlink{group__iz__utils_ga3acffbd305ee72dcd4593c0d8af64a4f}{MIN}}(cores\_num,\ \doxymbox{\hyperlink{group__iz__utils_gac28c1aea8b0f344393afc370d815473c}{get\_cpu\_cores\_count}}());}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00192}00192\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00193}00193\ \ \ \ \ int\ (*pipe\_fds)[2]\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00194}00194\ \ \ \ \ pid\_t\ *pids\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00196}00196\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o}{IZM\_RANGE\_INFO}}\ info\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga5ada19be750a6f9b0837805ef34a1de4}{range\_info\_init}}(input\_range,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00197}00197\ \ \ \ \ \textcolor{keywordflow}{if}\ (info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a3f8fe0b07e9ac77cf634438cfff9a31b}{y\_range}}\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00198}00198\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00199}00199\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gab053af28699e3138640445b16a1311f7}{range\_info\_free}}(\&info);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00201}00201\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00203}00203\ \ \ \ \ mpz\_t\ current\_y;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00204}00204\ \ \ \ \ mpz\_init(current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00205}00205\ \ \ \ \ mpz\_set(current\_y,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a79e2a9589301aef116ef5d6e0f729cbe}{Ys}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00206}00206\ \ \ \ \ \textcolor{keywordtype}{int}\ start\_x\ =\ mpz\_fdiv\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00207}00207\ \ \ \ \ \textcolor{keywordtype}{int}\ end\_x\ =\ mpz\_fdiv\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00209}00209\ \ \ \ \ \textcolor{comment}{//\ if\ current\_y\ =\ 0,\ use\ sieve\_iZm\ for\ the\ first\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00210}00210\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp\_ui(current\_y,\ 0)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00211}00211\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00212}00212\ \ \ \ \ \ \ \ \ uint64\_t\ limit\ =\ mpz\_cmp\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ 0)\ >\ 0\ ?\ vx\ :\ end\_x;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00213}00213\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y}{UI64\_ARRAY}}\ *primes\ =\ \doxymbox{\hyperlink{group__iz__api_ga9ca94c578547d87c05b381034897f3a6}{SiZm}}(limit\ *\ 6\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!primes)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00220}00220\ \ \ \ \ \ \ \ \ total\ +=\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00221}00221\ \ \ \ \ \ \ \ \ uint64\_t\ s\ =\ mpz\_get\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00222}00222\ \ \ \ \ \ \ \ \ uint64\_t\ e\ =\ mpz\_get\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a5eb007453bedeebe1332d5c2dddaa7c8}{count}};\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00225}00225\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Exclude\ values\ outside\ [Zs,\ Ze]\ from\ the\ first\ solid\ segment.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]\ <\ s\ ||\ primes-\/>\doxymbox{\hyperlink{struct_u_i64___a_r_r_a_y_a337d001ba534fed8a25bb9b80351f332}{array}}[i]\ >\ e)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total-\/-\/;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00231}00231\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00233}00233\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__arrays_gab1a0ced5e600649da6e519693a3a2851}{ui64\_free}}(\&primes);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00234}00234\ \ \ \ \ \ \ \ \ start\_x\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00235}00235\ \ \ \ \ \ \ \ \ mpz\_add\_ui(current\_y,\ current\_y,\ 1);\ \textcolor{comment}{//\ increment\ Ys\ for\ the\ next\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp(current\_y,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}})\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00239}00239\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00241}00241\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00243}00243\ \ \ \ \ iZm\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gaeb29a4d0536bb0aa227e230539081d98}{iZm\_init}}(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00245}00245\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00246}00246\ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00248}00248\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00250}00250\ \ \ \ \ \textcolor{comment}{//\ Handle\ edge\ cases:}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00251}00251\ \ \ \ \ mpz\_t\ prime\_z;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00252}00252\ \ \ \ \ mpz\_init(prime\_z);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00253}00253\ \ \ \ \ \textcolor{comment}{//\ if\ Ys\ >\ 0\ and\ Zs\ \%\ 6\ <=\ 1}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00254}00254\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp\_ui(current\_y,\ 0)\ >\ 0\ \&\&\ mpz\_fdiv\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}},\ 6)\ <=\ 1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00255}00255\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00256}00256\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ iZ(Xs,\ -\/1)\ <\ Zs\ and\ prime,\ decrement\ total}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00257}00257\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(prime\_z,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aec64414685210cc45b6d75249b170561}{Xs}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00258}00258\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp(prime\_z,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a8e9a581955081eb9709028a3a81ebdef}{Zs}})\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00259}00259\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_probab\_prime\_p(prime\_z,\ 25))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total-\/-\/;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00264}00264\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00265}00265\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00266}00266\ \ \ \ \ \textcolor{comment}{//\ if\ Ye\ >\ 0\ and\ Ze\ \%\ 6\ <=\ 1}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00267}00267\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}},\ 0)\ >\ 0\ \&\&\ mpz\_fdiv\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}},\ 6)\ <=\ 1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00268}00268\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ iZ(Xe,\ 1)\ >\ Ze\ and\ prime,\ decrement\ total}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(prime\_z,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_acc00a32b6cffc91a9e947ecbb6ea97dc}{Xe}},\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_cmp(prime\_z,\ info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_a28b5500837aa3d2cf68145ee5934afad}{Ze}})\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00272}00272\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_probab\_prime\_p(prime\_z,\ 25))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total-\/-\/;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00277}00277\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00278}00278\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00279}00279\ \ \ \ \ mpz\_clear(prime\_z);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00281}00281\ \ \ \ \ \textcolor{keywordtype}{int}\ total\_segments\ =\ (int)(mpz\_get\_ui(info.\doxymbox{\hyperlink{struct_i_z_m___r_a_n_g_e___i_n_f_o_aa89816e932bfef3052a120c3971b09c7}{Ye}})\ -\/\ mpz\_get\_ui(current\_y)\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00282}00282\ \ \ \ \ \textcolor{keywordflow}{if}\ (total\_segments\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00283}00283\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00285}00285\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00287}00287\ \ \ \ \ \textcolor{comment}{//\ Single-\/process\ processing\ of\ all\ segments}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{if}\ (cores\_num\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00289}00289\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ first\_segment\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ total\_segments;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ seg\_start\_x\ =\ first\_segment\ ?\ start\_x\ :\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ seg\_end\_x\ =\ (i\ ==\ total\_segments\ -\/\ 1)\ ?\ end\_x\ :\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *y\_str\ =\ mpz\_get\_str(NULL,\ 10,\ current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!y\_str)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga234719b01a0e090a1f66ed7766fe6d0f}{vx\_init}}(iZm,\ seg\_start\_x,\ seg\_end\_x,\ y\_str,\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_af8c8f0e616bbab35348c0dac5d65b4a7}{mr\_rounds}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ free(y\_str);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga214f95ac7b685a7ff0c596afc70036b7}{vx\_full\_sieve}}(vx\_obj,\ 0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ total\ +=\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga89a2804cb4fa979a32e4213ade786ec4}{vx\_free}}(\&vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ first\_segment\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(current\_y,\ current\_y,\ 1);\ \textcolor{comment}{//\ increment\ Ys\ for\ the\ next\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00316}00316\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00318}00318\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00320}00320\ \ \ \ \ \textcolor{comment}{//\ Multi-\/process\ processing\ of\ remaining\ segments}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00321}00321\ \ \ \ \ \textcolor{comment}{//\ if\ total\_segments\ <\ cores\_num,\ adjust\ cores\_num}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{if}\ (total\_segments\ <\ cores\_num)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00323}00323\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00324}00324\ \ \ \ \ \ \ \ \ cores\_num\ =\ total\_segments;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00325}00325\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00327}00327\ \ \ \ \ \textcolor{keywordtype}{int}\ segments\_per\_core\ =\ total\_segments\ /\ cores\_num;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00328}00328\ \ \ \ \ \textcolor{keywordtype}{int}\ remainder\_segments\ =\ total\_segments\ \%\ cores\_num;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00330}00330\ \ \ \ \ pipe\_fds\ =\ malloc((\textcolor{keywordtype}{size\_t})cores\_num\ *\ \textcolor{keyword}{sizeof}(*pipe\_fds));}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00331}00331\ \ \ \ \ pids\ =\ malloc((\textcolor{keywordtype}{size\_t})cores\_num\ *\ \textcolor{keyword}{sizeof}(*pids));}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00332}00332\ \ \ \ \ \textcolor{keywordflow}{if}\ (!pipe\_fds\ ||\ !pids)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00333}00333\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Failed\ to\ allocate\ process\ bookkeeping\ arrays."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00336}00336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00337}00337\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00339}00339\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ cores\_num;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00340}00340\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00341}00341\ \ \ \ \ \ \ \ \ pids[i]\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00342}00342\ \ \ \ \ \ \ \ \ pipe\_fds[i][0]\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00343}00343\ \ \ \ \ \ \ \ \ pipe\_fds[i][1]\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00344}00344\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00346}00346\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ core\ =\ 0;\ core\ <\ cores\_num;\ core++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00347}00347\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00348}00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe(pipe\_fds[core])\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00349}00349\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Failed\ to\ create\ pipe\ for\ core\ \%d.\ Aborting."{}},\ core);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ cleanup\ and\ abort\ on\ any\ pipe\ error}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <=\ core;\ j++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe\_fds[j][0]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[j][0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe\_fds[j][1]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[j][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00361}00361\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00363}00363\ \ \ \ \ \ \ \ \ pids[core]\ =\ fork();}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00364}00364\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pids[core]\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00365}00365\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Failed\ to\ fork\ process\ for\ core\ \%d.\ Aborting."{}},\ core);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ close\ this\ core's\ pipe\ and\ any\ previous\ ones,\ then\ exit}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <=\ core;\ j++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe\_fds[j][0]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[j][0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe\_fds[j][1]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[j][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pids[core]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00380}00380\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Child\ process}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Close\ unrelated\ pipes}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ cores\_num;\ j++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ !=\ core\ \&\&\ pipe\_fds[j][0]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[j][0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (j\ !=\ core\ \&\&\ pipe\_fds[j][1]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[j][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][0]);\ \textcolor{comment}{//\ close\ read\ end}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compute\ this\ child's\ starting\ Y\ and\ number\ of\ segments}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ offset\ =\ core\ *\ segments\_per\_core\ +\ (core\ <\ remainder\_segments\ ?\ core\ :\ remainder\_segments);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ local\_segments\ =\ segments\_per\_core\ +\ (core\ <\ remainder\_segments\ ?\ 1\ :\ 0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ child\_total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (local\_segments\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_t\ local\_Ys;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_init(local\_Ys);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_set(local\_Ys,\ current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(local\_Ys,\ local\_Ys,\ offset);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Each\ child\ has\ its\ own\ IZM\ to\ avoid\ data\ races}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm\_local\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gaa8c21336f708189a8d18f41085468c5c}{iZm\_clone}}(iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm\_local)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(local\_Ys);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00413}00413\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ local\_segments;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ global\_segment\ =\ offset\ +\ i;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ seg\_start\_x\ =\ (global\_segment\ ==\ 0)\ ?\ start\_x\ :\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ seg\_end\_x\ =\ (global\_segment\ ==\ total\_segments\ -\/\ 1)\ ?\ end\_x\ :\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *y\_str\ =\ mpz\_get\_str(NULL,\ 10,\ local\_Ys);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!y\_str)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm\_local);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(local\_Ys);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_v_x___s_e_g}{VX\_SEG}}\ *vx\_obj\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga234719b01a0e090a1f66ed7766fe6d0f}{vx\_init}}(iZm\_local,\ seg\_start\_x,\ seg\_end\_x,\ y\_str,\ input\_range-\/>\doxymbox{\hyperlink{struct_i_n_p_u_t___s_i_e_v_e___r_a_n_g_e_af8c8f0e616bbab35348c0dac5d65b4a7}{mr\_rounds}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free(y\_str);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!vx\_obj)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm\_local);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(local\_Ys);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga214f95ac7b685a7ff0c596afc70036b7}{vx\_full\_sieve}}(vx\_obj,\ 0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ child\_total\ +=\ vx\_obj-\/>\doxymbox{\hyperlink{struct_v_x___s_e_g_a5f0828d3ca77feea9d7ac78d6639f194}{p\_count}};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga89a2804cb4fa979a32e4213ade786ec4}{vx\_free}}(\&vx\_obj);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(local\_Ys,\ local\_Ys,\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm\_local);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(local\_Ys);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ result\ to\ parent}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ ssize\_t\ written\ =\ write(pipe\_fds[core][1],\ \&child\_total,\ \textcolor{keyword}{sizeof}(child\_total));}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00451}00451\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (written\ !=\ \textcolor{keyword}{sizeof}(child\_total))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Child\ \%d\ failed\ to\ write\ result."{}},\ core);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ exit(0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00458}00458\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00460}00460\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Parent\ process}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][1]);\ \textcolor{comment}{//\ close\ write\ end}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ pipe\_fds[core][1]\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00464}00464\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00465}00465\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00467}00467\ \ \ \ \ \textcolor{comment}{//\ Collect\ results}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00468}00468\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ core\ =\ 0;\ core\ <\ cores\_num;\ core++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00469}00469\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pids[core]\ >\ 0\ \&\&\ pipe\_fds[core][0]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00471}00471\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ child\_total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ ssize\_t\ bytes\_read\ =\ read(pipe\_fds[core][0],\ \&child\_total,\ \textcolor{keyword}{sizeof}(child\_total));}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bytes\_read\ ==\ \textcolor{keyword}{sizeof}(child\_total))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total\ +=\ child\_total;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (bytes\_read\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Child\ \%d\ closed\ pipe\ without\ sending\ result."{}},\ core);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (bytes\_read\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Failed\ to\ read\ result\ from\ child\ \%d."{}},\ core);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Partial\ read\ from\ child\ \%d\ (got\ \%zd\ bytes)."{}},\ core,\ bytes\_read);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ pipe\_fds[core][0]\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ status;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ waitpid(pids[core],\ \&status,\ 0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (WIFEXITED(status)\ \&\&\ WEXITSTATUS(status)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Child\ \%d\ exited\ with\ status\ \%d."{}},\ core,\ WEXITSTATUS(status));}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ propagate\ child\ failure\ as\ an\ overall\ error}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (WIFSIGNALED(status))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}SiZ\_count:\ Child\ \%d\ terminated\ by\ signal\ \%d."{}},\ core,\ WTERMSIG(status));}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ count\_cleanup;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00508}00508\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00509}00509\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (pipe\_fds[core][0]\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00511}00511\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ close(pipe\_fds[core][0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ pipe\_fds[core][0]\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00514}00514\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00515}00515\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00517}00517\ count\_cleanup:}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00518}00518\ \ \ \ \ free(pids);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00519}00519\ \ \ \ \ free(pipe\_fds);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00520}00520\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gab053af28699e3138640445b16a1311f7}{range\_info\_free}}(\&info);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00521}00521\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00522}00522\ \ \ \ \ mpz\_clear(current\_y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00524}00524\ \ \ \ \ \textcolor{keywordflow}{return}\ total;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00525}00525\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00526}00526\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00527}00527\ \textcolor{comment}{//\ =========================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00528}00528\ \textcolor{comment}{//\ *\ Random\ Prime\ Generation}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00529}00529\ \textcolor{comment}{//\ =========================================================}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00545}\doxymbox{\hyperlink{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}{00545}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__api_gab866bfc1754c38a6382038f7abf7845c}{vy\_random\_prime}}(mpz\_t\ p,\ \textcolor{keywordtype}{int}\ bit\_size,\ \textcolor{keywordtype}{int}\ cores\_num)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00546}00546\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00547}00547\ \ \ \ \ \textcolor{keywordtype}{int}\ found\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ flag\ to\ indicate\ if\ a\ prime\ was\ found}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00548}00548\ \ \ \ \ bit\_size\ =\ \doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(bit\_size,\ 10);\ \textcolor{comment}{//\ Set\ minimum\ bit\ size}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00549}00549\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00550}00550\ \ \ \ \ \textcolor{comment}{//\ 1.\ Compute\ max\ vx\ for\ the\ given\ bit-\/size}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00551}00551\ \ \ \ \ mpz\_t\ vx;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00552}00552\ \ \ \ \ mpz\_init(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00553}00553\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga23df437281a4315af3cff9b76fab9dd8}{compute\_max\_vx}}(vx,\ bit\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00554}00554\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00555}00555\ \ \ \ \ \textcolor{comment}{//\ 2.\ If\ <\ 2\ cores,\ run\ the\ search\ in-\/process}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{if}\ (cores\_num\ <\ 2)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00557}00557\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00558}00558\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga58ea9ced15462006d8a8c223719c57f4}{vy\_search\_prime}}(p,\ 0,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00559}00559\ \ \ \ \ \ \ \ \ mpz\_clear(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00560}00560\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00561}00561\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00563}00563\ \ \ \ \ \textcolor{comment}{//\ 3.\ Else,\ fork\ multiple\ processes\ to\ search\ for\ a\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00564}00564\ \ \ \ \ \textcolor{comment}{//\ Create\ a\ pipe\ for\ inter-\/process\ communication.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00565}00565\ \ \ \ \ \textcolor{keywordtype}{int}\ fd[2];}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00566}00566\ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe(fd)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00567}00567\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00568}00568\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ create\ pipe\ in\ vy\_random\_prime.\ Falling\ back\ to\ in-\/process\ search."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00569}00569\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga58ea9ced15462006d8a8c223719c57f4}{vy\_search\_prime}}(p,\ 0,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00570}00570\ \ \ \ \ \ \ \ \ mpz\_clear(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00571}00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00572}00572\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00573}00573\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00574}00574\ \ \ \ \ pid\_t\ pids[cores\_num];}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00575}00575\ \ \ \ \ \textcolor{keywordtype}{int}\ forks\_created\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00576}00576\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00577}00577\ \ \ \ \ \textcolor{comment}{//\ Fork\ child\ processes.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00578}00578\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ cores\_num;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00579}00579\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00580}00580\ \ \ \ \ \ \ \ \ pid\_t\ pid\ =\ fork();}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00581}00581\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pid\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00582}00582\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ fork\ process\ \%d\ in\ vy\_random\_prime"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \textcolor{comment}{//\ Skip\ this\ fork\ failure\ and\ continue\ creating\ other\ forks}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00585}00585\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00586}00586\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (pid\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00587}00587\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Child\ process:\ close\ the\ read-\/end.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ close(fd[0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00590}00590\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_t\ local\_p;\ \textcolor{comment}{//\ local\ prime\ candidate}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_init(local\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Search\ for\ a\ candidate\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga58ea9ced15462006d8a8c223719c57f4}{vy\_search\_prime}}(local\_p,\ 0,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ a\ candidate\ is\ found,\ send\ it\ via\ the\ pipe.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *p\_str\ =\ mpz\_get\_str(NULL,\ 10,\ local\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\_str)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write(fd[1],\ p\_str,\ strlen(p\_str)\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free(p\_str);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(local\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00608}00608\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ close(fd[1]);\ \textcolor{comment}{//\ Close\ the\ write-\/end.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ exit(0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00611}00611\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00612}00612\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00613}00613\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Parent\ process\ saves\ child's\ PID.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ pids[i]\ =\ pid;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00616}00616\ \ \ \ \ \ \ \ \ \ \ \ \ forks\_created++;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00617}00617\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00618}00618\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00619}00619\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00620}00620\ \ \ \ \ \textcolor{comment}{//\ 4.\ Parent\ reads\ first\ result\ from\ the\ pipe.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00621}00621\ \ \ \ \ close(fd[1]);\ \textcolor{comment}{//\ Close\ the\ write-\/end.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00623}00623\ \ \ \ \ \textcolor{keywordflow}{if}\ (forks\_created\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00624}00624\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00625}00625\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}No\ child\ processes\ were\ created\ in\ vy\_random\_prime,\ falling\ back\ to\ in-\/process\ search"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00626}00626\ \ \ \ \ \ \ \ \ close(fd[0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00627}00627\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga58ea9ced15462006d8a8c223719c57f4}{vy\_search\_prime}}(p,\ 0,\ vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00628}00628\ \ \ \ \ \ \ \ \ mpz\_clear(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00629}00629\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00630}00630\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00631}00631\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00632}00632\ \ \ \ \ \textcolor{comment}{//\ Allocate\ a\ sufficiently\ large\ buffer\ to\ hold\ the\ prime\ string\ +\ null\ terminator}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00633}00633\ \ \ \ \ \textcolor{comment}{//\ bit\_size\ *\ 0.302\ is\ approx\ digits,\ add\ extra\ padding\ for\ safety}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00634}00634\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ buf\_size\ =\ (size\_t)(bit\_size\ *\ 0.4);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00635}00635\ \ \ \ \ \textcolor{keywordtype}{char}\ *buf\ =\ malloc(buf\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00636}00636\ \ \ \ \ \textcolor{keywordflow}{if}\ (!buf)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00637}00637\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00638}00638\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ allocate\ buffer\ in\ vy\_random\_prime"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00639}00639\ \ \ \ \ \ \ \ \ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00640}00640\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00641}00641\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00642}00642\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00643}00643\ \ \ \ \ \ \ \ \ ssize\_t\ n\ =\ read(fd[0],\ buf,\ buf\_size\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00644}00644\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00645}00645\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00646}00646\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ read\ from\ pipe\ in\ vx\_random\_prime"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00647}00647\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00648}00648\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00649}00649\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (n\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00650}00650\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ buf[n]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};\ \textcolor{comment}{//\ Ensure\ null-\/termination}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00652}00652\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_set\_str(p,\ buf,\ 10)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00653}00653\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00654}00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00655}00655\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00656}00656\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00657}00657\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ set\ prime\ from\ buffer\ in\ vx\_random\_prime"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00661}00661\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00662}00662\ \ \ \ \ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00663}00663\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00664}00664\ \ \ \ \ close(fd[0]);\ \textcolor{comment}{//\ Close\ the\ read-\/end\ of\ the\ pipe.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00665}00665\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00666}00666\ \ \ \ \ \textcolor{comment}{//\ 5.\ Terminate\ all\ child\ processes}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00667}00667\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ forks\_created;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00668}00668\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00669}00669\ \ \ \ \ \ \ \ \ kill(pids[i],\ SIGTERM);\ \ \ \ \textcolor{comment}{//\ Terminate\ child\ process}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00670}00670\ \ \ \ \ \ \ \ \ waitpid(pids[i],\ NULL,\ 0);\ \textcolor{comment}{//\ Wait\ for\ child\ process\ to\ terminate}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00671}00671\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00673}00673\ \ \ \ \ mpz\_clear(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00674}00674\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00675}00675\ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00676}00676\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00677}00677\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00692}\doxymbox{\hyperlink{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}{00692}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__api_ga8b8bc6e0c7f7cf34114f2d47fd76d690}{vx\_random\_prime}}(mpz\_t\ p,\ \textcolor{keywordtype}{int}\ bit\_size,\ \textcolor{keywordtype}{int}\ cores\_num)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00693}00693\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00694}00694\ \ \ \ \ \textcolor{keywordtype}{int}\ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00695}00695\ \ \ \ \ bit\_size\ =\ \doxymbox{\hyperlink{group__iz__utils_gafa99ec4acc4ecb2dc3c2d05da15d0e3f}{MAX}}(bit\_size,\ 10);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00696}00696\ \ \ \ \ \textcolor{keywordtype}{int}\ vx\ =\ bit\_size\ <=\ 2048\ ?\ \doxymbox{\hyperlink{group__iz__toolkit_ga70f1e9557da83099d06828cc5d9719b0}{VX5}}\ :\ \doxymbox{\hyperlink{group__iz__toolkit_ga7510fdd07a68973d711e47ff3296e3ba}{VX6}};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00698}00698\ \ \ \ \ \textcolor{comment}{//\ 2.\ If\ <\ 2\ cores,\ run\ the\ search\ in-\/process}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00699}00699\ \ \ \ \ \textcolor{keywordflow}{if}\ (cores\_num\ <\ 2)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00700}00700\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00701}00701\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga02e061a03533010221ce47c043ddc53c}{vx\_search\_prime}}(p,\ 0,\ vx,\ bit\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00702}00702\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00703}00703\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00704}00704\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00705}00705\ \ \ \ \ \textcolor{comment}{//\ 3.\ Multi-\/core:\ fork\ processes}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00706}00706\ \ \ \ \ \textcolor{keywordtype}{int}\ fd[2];}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00707}00707\ \ \ \ \ \textcolor{keywordflow}{if}\ (pipe(fd)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00708}00708\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00709}00709\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ create\ pipe\ in\ vx\_random\_prime.\ Falling\ back\ to\ in-\/process\ search."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00710}00710\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga02e061a03533010221ce47c043ddc53c}{vx\_search\_prime}}(p,\ 0,\ vx,\ bit\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00711}00711\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00712}00712\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00713}00713\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00714}00714\ \ \ \ \ pid\_t\ pids[cores\_num];}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00715}00715\ \ \ \ \ \textcolor{keywordtype}{int}\ forks\_created\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00716}00716\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00717}00717\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ cores\_num;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00718}00718\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00719}00719\ \ \ \ \ \ \ \ \ pid\_t\ pid\ =\ fork();}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00720}00720\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pid\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00721}00721\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ fork\ process\ \%d\ in\ vx\_random\_prime"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00724}00724\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00725}00725\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (pid\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00726}00726\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ CHILD\ PROCESS:\ Initialize\ everything\ fresh}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00728}00728\ \ \ \ \ \ \ \ \ \ \ \ \ close(fd[0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00729}00729\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00730}00730\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Search\ for\ prime\ with\ child's\ own\ objects}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_t\ local\_p;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00732}00732\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_init(local\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00733}00733\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ child\_found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga02e061a03533010221ce47c043ddc53c}{vx\_search\_prime}}(local\_p,\ 0,\ vx,\ bit\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00734}00734\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (child\_found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00736}00736\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *p\_str\ =\ mpz\_get\_str(NULL,\ 10,\ local\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00738}00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\_str\ !=\ NULL)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write(fd[1],\ p\_str,\ strlen(p\_str)\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ free(p\_str);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00742}00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00743}00743\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00744}00744\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00745}00745\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cleanup\ child\ resources}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00746}00746\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(local\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00747}00747\ \ \ \ \ \ \ \ \ \ \ \ \ close(fd[1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00748}00748\ \ \ \ \ \ \ \ \ \ \ \ \ exit(0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00749}00749\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00750}00750\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00751}00751\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ pids[i]\ =\ pid;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ forks\_created++;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00754}00754\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00755}00755\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00756}00756\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00757}00757\ \ \ \ \ \textcolor{comment}{//\ 4.\ Parent\ process\ reads\ result}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00758}00758\ \ \ \ \ close(fd[1]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00759}00759\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00760}00760\ \ \ \ \ \textcolor{keywordflow}{if}\ (forks\_created\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00761}00761\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00762}00762\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}No\ child\ processes\ were\ created\ in\ vx\_random\_prime,\ falling\ back\ to\ in-\/process\ search"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00763}00763\ \ \ \ \ \ \ \ \ close(fd[0]);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00764}00764\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fallback\ to\ in-\/process\ search}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00765}00765\ \ \ \ \ \ \ \ \ found\ =\ \doxymbox{\hyperlink{group__iz__toolkit_ga02e061a03533010221ce47c043ddc53c}{vx\_search\_prime}}(p,\ 0,\ vx,\ bit\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00766}00766\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00767}00767\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00768}00768\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00769}00769\ \ \ \ \ \textcolor{comment}{//\ Allocate\ a\ sufficiently\ large\ buffer\ to\ hold\ the\ prime\ string\ +\ null\ terminator}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00770}00770\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ buf\_size\ =\ (size\_t)(bit\_size\ *\ 0.4);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00771}00771\ \ \ \ \ \textcolor{keywordtype}{char}\ *buf\ =\ malloc(buf\_size);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00772}00772\ \ \ \ \ \textcolor{keywordflow}{if}\ (!buf)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00773}00773\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00774}00774\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ allocate\ buffer\ in\ vx\_random\_prime"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00775}00775\ \ \ \ \ \ \ \ \ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00776}00776\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00777}00777\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00778}00778\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00779}00779\ \ \ \ \ \ \ \ \ ssize\_t\ n\ =\ read(fd[0],\ buf,\ buf\_size\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00780}00780\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (n\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00781}00781\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00782}00782\ \ \ \ \ \ \ \ \ \ \ \ \ buf[n]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};\ \textcolor{comment}{//\ Ensure\ null-\/termination}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00783}00783\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_set\_str(p,\ buf,\ 10)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00784}00784\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00785}00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00786}00786\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00787}00787\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00788}00788\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00789}00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}Failed\ to\ set\ prime\ from\ buffer\ in\ vx\_random\_prime"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00790}00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00791}00791\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00792}00792\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00793}00793\ \ \ \ \ \ \ \ \ free(buf);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00794}00794\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00796}00796\ \ \ \ \ close(fd[0]);\ \textcolor{comment}{//\ Close\ the\ read-\/end\ of\ the\ pipe.}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00797}00797\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00798}00798\ \ \ \ \ \textcolor{comment}{//\ Terminate\ children}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00799}00799\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ forks\_created;\ i++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00800}00800\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00801}00801\ \ \ \ \ \ \ \ \ kill(pids[i],\ SIGTERM);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00802}00802\ \ \ \ \ \ \ \ \ waitpid(pids[i],\ NULL,\ 0);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00803}00803\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00805}00805\ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00806}00806\ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00807}00807\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00819}\doxymbox{\hyperlink{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}{00819}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__iz__api_ga6d12fd66b275c217816ea86c29f69c0a}{iZ\_next\_prime}}(mpz\_t\ p,\ mpz\_t\ base,\ \textcolor{keywordtype}{int}\ forward)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00820}00820\ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00821}00821\ \ \ \ \ \textcolor{comment}{//\ 1.\ Initialization}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00822}00822\ \ \ \ \ \textcolor{keywordtype}{int}\ found\ =\ 0;\ \textcolor{comment}{//\ flag\ to\ indicate\ if\ a\ prime\ was\ found}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00823}00823\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00824}00824\ \ \ \ \ \textcolor{comment}{//\ tmp\ variable\ to\ hold\ the\ value\ until\ a\ prime\ is\ found}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00825}00825\ \ \ \ \ mpz\_t\ z;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00826}00826\ \ \ \ \ mpz\_init\_set(z,\ base);\ \textcolor{comment}{//\ set\ tmp\ =\ base}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00827}00827\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00828}00828\ \ \ \ \ \textcolor{comment}{//\ a.\ Edge\ cases:}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00829}00829\ \ \ \ \ \textcolor{comment}{//\ if\ forward\ and\ base\ is\ iZ-\/,\ check\ next\ iZ+}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00830}00830\ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_fdiv\_ui(z,\ 6)\ ==\ 5\ \&\&\ forward)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00831}00831\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00832}00832\ \ \ \ \ \ \ \ \ mpz\_add\_ui(z,\ z,\ 2);\ \textcolor{comment}{//\ increment\ tmp\ by\ 2}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00833}00833\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_probab\_prime\_p(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}}))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00834}00834\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00835}00835\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_set(p,\ z);\ \textcolor{comment}{//\ set\ p\ =\ tmp\ +\ 2}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(z);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00837}00837\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00838}00838\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00839}00839\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00840}00840\ \ \ \ \ \textcolor{comment}{//\ if\ backward\ and\ base\ is\ iZ+,\ check\ previous\ iZ-\/}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00841}00841\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (mpz\_fdiv\_ui(z,\ 6)\ ==\ 1\ \&\&\ !forward)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00842}00842\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00843}00843\ \ \ \ \ \ \ \ \ mpz\_sub\_ui(z,\ z,\ 2);\ \textcolor{comment}{//\ decrement\ tmp\ by\ 2}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00844}00844\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mpz\_probab\_prime\_p(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}}))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00845}00845\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_set(p,\ z);\ \textcolor{comment}{//\ set\ p\ =\ tmp\ -\/\ 2}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_clear(z);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00849}00849\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00850}00850\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00851}00851\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00852}00852\ \ \ \ \ \textcolor{keywordtype}{int}\ vx\ =\ (mpz\_sizeinbase(base,\ 2)\ >\ 2048)\ ?\ \doxymbox{\hyperlink{group__iz__toolkit_ga7510fdd07a68973d711e47ff3296e3ba}{VX6}}\ :\ \doxymbox{\hyperlink{group__iz__toolkit_ga70f1e9557da83099d06828cc5d9719b0}{VX5}};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00853}00853\ \ \ \ \ \doxymbox{\hyperlink{struct_i_z_m}{IZM}}\ *iZm\ =\ \doxymbox{\hyperlink{group__iz__toolkit_gaeb29a4d0536bb0aa227e230539081d98}{iZm\_init}}(vx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00854}00854\ \ \ \ \ \textcolor{keywordflow}{if}\ (!iZm)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00855}00855\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00856}00856\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(\textcolor{stringliteral}{"{}iZm\ initialization\ failed\ in\ iZ\_next\_prime."{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00857}00857\ \ \ \ \ \ \ \ \ mpz\_clear(z);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00858}00858\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00859}00859\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00861}00861\ \ \ \ \ \textcolor{comment}{//\ c.\ Initialize\ and\ set\ y\ and\ yvx}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00862}00862\ \ \ \ \ mpz\_t\ y,\ yvx,\ x\_p;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00863}00863\ \ \ \ \ mpz\_init(y);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00864}00864\ \ \ \ \ mpz\_init(yvx);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00865}00865\ \ \ \ \ mpz\_init(x\_p);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00866}00866\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00867}00867\ \ \ \ \ mpz\_div\_ui(y,\ base,\ 6\ *\ vx);\ \textcolor{comment}{//\ compute\ y\ =\ base\ /\ 6\ *\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00868}00868\ \ \ \ \ mpz\_mul\_ui(yvx,\ y,\ vx);\ \ \ \ \ \ \textcolor{comment}{//\ compute\ yvx\ =\ y\ *\ vx}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00869}00869\ \ \ \ \ mpz\_div\_ui(x\_p,\ z,\ 6);\ \ \ \ \ \ \ \textcolor{comment}{//\ compute\ x\_p\ =\ tmp\ /\ 6}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00870}00870\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00871}00871\ \ \ \ \ \textcolor{comment}{//\ 2.\ Iterate\ over\ the\ x5\ and\ x7\ bitmaps\ to\ find\ a\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00872}00872\ \ \ \ \ \textcolor{comment}{//\ set\ start\_x\ =\ x\_p\ \%\ vx\ +/-\/\ 1}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00873}00873\ \ \ \ \ \textcolor{keywordtype}{int}\ step\ =\ forward\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00874}00874\ \ \ \ \ \textcolor{keywordtype}{int}\ start\_x\ =\ mpz\_fdiv\_ui(x\_p,\ vx)\ +\ step;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00875}00875\ \ \ \ \ \textcolor{keywordtype}{int}\ end\_x\ =\ forward\ ?\ vx\ :\ 1;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00876}00876\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00877}00877\ \ \ \ \ \textcolor{keywordtype}{int}\ i\ =\ 0;\ \textcolor{comment}{//\ segment\ counter}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00878}00878\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00879}00879\ \ \ \ \ \textcolor{keywordflow}{while}\ (!found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00880}00880\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00881}00881\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (forward)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00882}00882\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ start\_x\ =\ 1;\ \textcolor{comment}{//\ start\ from\ the\ beginning\ of\ the\ bitmap}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00885}00885\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00886}00886\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ start\_x;\ x\ <=\ end\_x;\ x++)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00887}00887\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ x5[x]\ is\ set}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00889}00889\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00890}00890\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00891}00891\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ yvx,\ x);\ \textcolor{comment}{//\ set\ x\_p\ =\ yvx\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(z,\ x\_p,\ -\/1);\ \ \ \ \ \ \textcolor{comment}{//\ compute\ p\ =\ iZ(x\_p,\ -\/1)}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00893}00893\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ tmp\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00894}00894\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ mpz\_probab\_prime\_p(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00895}00895\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00896}00896\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00897}00897\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00898}00898\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00899}00899\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00900}00900\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ x7[x]\ is\ set}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00901}00901\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00902}00902\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00903}00903\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ yvx,\ x);\ \textcolor{comment}{//\ set\ x\_p\ =\ yvx\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00904}00904\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(z,\ x\_p,\ 1);\ \ \ \ \ \ \ \textcolor{comment}{//\ compute\ tmp\ =\ iZ(x\_p,\ 1)}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00905}00905\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ tmp\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ mpz\_probab\_prime\_p(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00907}00907\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00908}00908\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00909}00909\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00910}00910\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00911}00911\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00912}00912\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00913}00913\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(yvx,\ yvx,\ vx);\ \textcolor{comment}{//\ increment\ yvx\ by\ vx\ for\ next\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00914}00914\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00915}00915\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{comment}{//\ backward\ search}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00916}00916\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00917}00917\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00918}00918\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ start\_x\ =\ vx;\ \textcolor{comment}{//\ start\ from\ the\ end\ of\ the\ bitmaps}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00919}00919\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00920}00920\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ iZ+\ first\ if\ backward}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00921}00921\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ start\_x;\ x\ >=\ end\_x;\ x-\/-\/)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00922}00922\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00923}00923\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ x7[x]\ is\ set}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00924}00924\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afe3d89b8ae3ad315e952093c945e1073}{base\_x7}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00925}00925\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ yvx,\ x);\ \textcolor{comment}{//\ set\ x\_p\ =\ yvx\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(z,\ x\_p,\ 1);\ \ \ \ \ \ \ \textcolor{comment}{//\ compute\ tmp\ =\ iZ(x\_p,\ 1)}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00928}00928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ tmp\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00929}00929\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ mpz\_probab\_prime\_p(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00930}00930\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00931}00931\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00932}00932\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00933}00933\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00934}00934\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00935}00935\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ iZ-\/}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00936}00936\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\_get\_bit}}(iZm-\/>\doxymbox{\hyperlink{struct_i_z_m_afbda5590cfc085366c41769a8054fcde}{base\_x5}},\ x))}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00937}00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00938}00938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_add\_ui(x\_p,\ yvx,\ x);\ \textcolor{comment}{//\ set\ x\_p\ =\ yvx\ +\ x}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_gaa3f0472ebd680beaa6b0759acbedd9eb}{iZ\_mpz}}(z,\ x\_p,\ -\/1);\ \ \ \ \ \ \textcolor{comment}{//\ compute\ p\ =\ iZ(x\_p,\ -\/1)}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00940}00940\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ tmp\ is\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00941}00941\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ mpz\_probab\_prime\_p(z,\ \doxymbox{\hyperlink{group__iz__toolkit_gaa00f10dbfb5d0730503a789900de9134}{MR\_ROUNDS}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00942}00942\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00943}00943\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00944}00944\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00945}00945\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00946}00946\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00947}00947\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00948}00948\ \ \ \ \ \ \ \ \ \ \ \ \ mpz\_sub\_ui(yvx,\ yvx,\ vx);\ \textcolor{comment}{//\ decrement\ yvx\ by\ vx\ for\ next\ segment}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00949}00949\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00950}00950\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00951}00951\ \ \ \ \ \ \ \ \ i++;\ \textcolor{comment}{//\ increment\ segment\ counter}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00952}00952\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00953}00953\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00954}00954\ \ \ \ \ \textcolor{comment}{//\ 3.\ Set\ the\ found\ prime}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00955}00955\ \ \ \ \ \textcolor{keywordflow}{if}\ (found)}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00956}00956\ \ \ \ \ \ \ \ \ mpz\_set(p,\ z);\ \textcolor{comment}{//\ set\ p\ =\ tmp}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00957}00957\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00958}00958\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_gaf7baafafb28cb0a703025ac39d8470c6}{log\_debug}}(\textcolor{stringliteral}{"{}No\ prime\ found\ :/"{}});}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00959}00959\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00960}00960\ \ \ \ \ \textcolor{comment}{//\ cleanup}}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00961}00961\ \ \ \ \ \doxymbox{\hyperlink{group__iz__toolkit_ga81a316b2719f678e9fbc4ac8c835460c}{iZm\_free}}(\&iZm);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00962}00962\ \ \ \ \ mpz\_clears(y,\ yvx,\ x\_p,\ z,\ NULL);}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00963}00963\ }
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00964}00964\ \ \ \ \ \textcolor{keywordflow}{return}\ found;}
+\DoxyCodeLine{\Hypertarget{i_z__apps_8c_source_l00965}00965\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,119 @@
+\doxysection{print\+\_\+utils.\+c}
+\hypertarget{print__utils_8c_source}{}\label{print__utils_8c_source}\index{src/toolkit/print\_utils.c@{src/toolkit/print\_utils.c}}
+\doxymbox{\hyperlink{print__utils_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{utils_8h}{utils.h}}>}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00014}\doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{00014}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(\textcolor{keywordtype}{int}\ length,\ \textcolor{keywordtype}{char}\ fill\_char)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00015}00015\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00016}00016\ \ \ \ \ \textcolor{keywordflow}{if}\ (fill\_char\ ==\ \textcolor{charliteral}{'\(\backslash\)0'})}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00017}00017\ \ \ \ \ \ \ \ \ fill\_char\ =\ \textcolor{charliteral}{'-\/'};}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ length;\ ++i)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00020}00020\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%c"{}},\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00021}00021\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00022}00022\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00030}\doxymbox{\hyperlink{group__print__utils_ga2f2ab4de61685b555a3a182afb0b1e6b}{00030}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga2f2ab4de61685b555a3a182afb0b1e6b}{print\_centered\_text}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{int}\ line\_length,\ \textcolor{keywordtype}{char}\ fill\_char)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00031}00031\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (text\ ==\ NULL)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00033}00033\ \ \ \ \ \ \ \ \ text\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00035}00035\ \ \ \ \ \textcolor{keywordtype}{int}\ text\_length\ =\ (int)strlen(text);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{if}\ (text\_length\ >=\ line\_length)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00037}00037\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00038}00038\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s\(\backslash\)n"{}},\ text);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00040}00040\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00042}00042\ \ \ \ \ \textcolor{keywordtype}{int}\ left\_padding\ =\ (line\_length\ -\/\ text\_length)\ /\ 2;}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00043}00043\ \ \ \ \ \textcolor{keywordtype}{int}\ right\_padding\ =\ line\_length\ -\/\ text\_length\ -\/\ left\_padding;}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ left\_padding;\ ++i)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%c"{}},\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00047}00047\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%s"{}},\ text);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ right\_padding;\ ++i)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00049}00049\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%c"{}},\ fill\_char);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00050}00050\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00051}00051\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00058}\doxymbox{\hyperlink{group__print__utils_ga8505a25915c2d06845e24ad4b5182a21}{00058}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga8505a25915c2d06845e24ad4b5182a21}{print\_sha256\_hash}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *hash)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00059}00059\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ SHA256\_DIGEST\_LENGTH;\ i++)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00061}00061\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%02x"{}},\ hash[i]);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00063}00063\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00064}00064\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00070}\doxymbox{\hyperlink{group__print__utils_ga72466c8280896724a1c9de6e0bc8fa29}{00070}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga72466c8280896724a1c9de6e0bc8fa29}{print\_test\_module\_header}}(\textcolor{keywordtype}{char}\ *module\_name)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00071}00071\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00072}00072\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00073}00073\ \ \ \ \ printf(\textcolor{stringliteral}{"{}*\ \%s\ MODULE\ TEST\ SUITE\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00074}00074\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00075}00075\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00080}\doxymbox{\hyperlink{group__print__utils_gaee4bc5c6e9ef03fceea3269f680d105a}{00080}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_gaee4bc5c6e9ef03fceea3269f680d105a}{print\_test\_table\_header}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00081}00081\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00082}00082\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(92,\ \textcolor{charliteral}{'-\/'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00083}00083\ \ \ \ \ printf(\textcolor{stringliteral}{"{}[\%s]\ \%-\/30s\ \%s\ \%-\/66s\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}ID"{}},\ \textcolor{stringliteral}{"{}Unit\ Name"{}},\ \textcolor{stringliteral}{"{}Result"{}},\ \textcolor{stringliteral}{"{}Details"{}});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00084}00084\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(92,\ \textcolor{charliteral}{'-\/'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00085}00085\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00096}\doxymbox{\hyperlink{group__print__utils_gaeff329da19376513f0ea3b7d190e58e0}{00096}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_gaeff329da19376513f0ea3b7d190e58e0}{print\_test\_module\_result}}(\textcolor{keywordtype}{int}\ result,\ \textcolor{keywordtype}{int}\ test\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *unit\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00098}00098\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00099}00099\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00101}00101\ \ \ \ \ \textcolor{keywordtype}{char}\ message[1024];}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00102}00102\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00103}00103\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wformat-\/nonliteral"{}}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00104}00104\ \ \ \ \ vsnprintf(message,\ \textcolor{keyword}{sizeof}(message),\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00105}00105\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00106}00106\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{if}\ (result)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00109}00109\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00110}00110\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[\%02d]\ \%-\/30s\ [PASS]\ \%s\(\backslash\)n"{}},\ test\_id,\ unit\_name,\ message);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00111}00111\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00113}00113\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[\%02d]\ \%-\/30s\ [FAIL]\ \%s\(\backslash\)n"{}},\ test\_id,\ unit\_name,\ message);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00115}00115\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00116}00116\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00126}\doxymbox{\hyperlink{group__print__utils_ga67f5a331ba8b5d5b9de55a72e119a7c3}{00126}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga67f5a331ba8b5d5b9de55a72e119a7c3}{print\_test\_summary}}(\textcolor{keywordtype}{char}\ *module\_name,\ \textcolor{keywordtype}{int}\ passed,\ \textcolor{keywordtype}{int}\ failed,\ \textcolor{keywordtype}{int}\ verbose)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00127}00127\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00128}00128\ \ \ \ \ (void)verbose;}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00130}00130\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00131}00131\ \ \ \ \ printf(\textcolor{stringliteral}{"{}Results\ Summary\ for\ \%s\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00132}00132\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'-\/'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00133}00133\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%-\/32s:\ \%d\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}Total\ Tests"{}},\ passed\ +\ failed);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00134}00134\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%-\/32s:\ \%d\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}Passed"{}},\ passed);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00135}00135\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%-\/32s:\ \%d\(\backslash\)n"{}},\ \textcolor{stringliteral}{"{}Failed"{}},\ failed);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00136}00136\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'-\/'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00137}00137\ \ \ \ \ \textcolor{keywordflow}{if}\ (failed\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00138}00138\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00139}00139\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[SUCCESS]\ ALL\ \%s\ TESTS\ PASSED!\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00140}00140\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00142}00142\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00143}00143\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}[FAILURE]\ SOME\ \%s\ TESTS\ FAILED\ :\(\backslash\)\(\backslash\)\(\backslash\)n"{}},\ module\_name);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00144}00144\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00145}00145\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00146}00146\ \}}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00148}\doxymbox{\hyperlink{group__print__utils_ga42f2952626219f7a40085dfd6cb805c1}{00148}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__print__utils_ga42f2952626219f7a40085dfd6cb805c1}{print\_test\_fn\_header}}(\textcolor{keywordtype}{char}\ *fn\_name)}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00149}00149\ \{}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{char}\ header[64];}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00151}00151\ \ \ \ \ snprintf(header,\ \textcolor{keyword}{sizeof}(header),\ \textcolor{stringliteral}{"{}\ Testing\ \%s\ "{}},\ fn\_name);}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00153}00153\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00154}00154\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2f2ab4de61685b555a3a182afb0b1e6b}{print\_centered\_text}}(header,\ 60,\ \textcolor{charliteral}{'='});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00155}00155\ \ \ \ \ \doxymbox{\hyperlink{group__print__utils_ga2d7fb7434442142a76becdbe455f37ae}{print\_line}}(60,\ \textcolor{charliteral}{'*'});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00156}00156\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{print__utils_8c_source_l00157}00157\ \}}
+
+\end{DoxyCode}

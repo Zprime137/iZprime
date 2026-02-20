@@ -1,0 +1,65 @@
+\doxysection{logger.\+h}
+\hypertarget{logger_8h_source}{}\label{logger_8h_source}\index{include/logger.h@{include/logger.h}}
+\doxymbox{\hyperlink{logger_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00032}00032\ \textcolor{preprocessor}{\#ifndef\ LOGGER\_H}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00033}00033\ \textcolor{preprocessor}{\#define\ LOGGER\_H}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00035}00035\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00036}00036\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00037}00037\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00047}00047\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)\ ||\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00048}00048\ \textcolor{preprocessor}{\#define\ LOGGER\_FORMAT\_PRINTF(fmt\_idx,\ arg\_idx)\ \_\_attribute\_\_((format(printf,\ fmt\_idx,\ arg\_idx)))}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00049}00049\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00050}\doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{00050}}\ \textcolor{preprocessor}{\#define\ LOGGER\_FORMAT\_PRINTF(fmt\_idx,\ arg\_idx)}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00051}00051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00053}00053\ \textcolor{comment}{//\ Log\ directory\ and\ file\ configuration}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00054}\doxymbox{\hyperlink{group__iz__logger_gacd4d3023d24d5314b895981b17825666}{00054}}\ \textcolor{preprocessor}{\#define\ LOG\_DIR\ "{}logs/"{}\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00055}\doxymbox{\hyperlink{group__iz__logger_ga69d4676733f5e850f451942b6d901382}{00055}}\ \textcolor{preprocessor}{\#define\ LOG\_FILE\ LOG\_DIR\ "{}log.txt"{}\ \ \ }}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00056}\doxymbox{\hyperlink{group__iz__logger_gae890bbd431aa7d19fcbe247502ce3feb}{00056}}\ \textcolor{preprocessor}{\#define\ LOG\_MAX\_SIZE\ 1024\ *\ 1024\ *\ 5\ }}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00065}\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{00065}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00067}\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ab9f002c6ffbfd511da8090213227454e}{00067}}\ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ab9f002c6ffbfd511da8090213227454e}{LOG\_DEBUG}},\ \ \ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00068}\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{00068}}\ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a6e98ff471e3ce6c4ef2d75c37ee51837}{LOG\_INFO}},\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00069}\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a8f6fe15bfe15104da6d1b360194a5400}{00069}}\ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a8f6fe15bfe15104da6d1b360194a5400}{LOG\_WARNING}},\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00070}\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{00070}}\ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9a230506cce5c68c3bac5a821c42ed3473}{LOG\_ERROR}},\ \ \ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00071}\doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ac630750884d91cb9767ef2200bbb048b}{00071}}\ \ \ \ \ \doxymbox{\hyperlink{group__iz__logger_ggaca1fd1d8935433e6ba2e3918214e07f9ac630750884d91cb9767ef2200bbb048b}{LOG\_FATAL}}\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00072}00072\ \}\ \doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}};}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00074}00074\ \textcolor{comment}{//\ Function\ declarations}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00082}\doxymbox{\hyperlink{group__iz__logger_ga41857877494326c2bd54dff09bffee95}{00082}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{group__iz__logger_ga41857877494326c2bd54dff09bffee95}{log\_level\_to\_string}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00091}\doxymbox{\hyperlink{group__iz__logger_ga1a8053031ff21d475948d75721ec30c0}{00091}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga1a8053031ff21d475948d75721ec30c0}{log\_init}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *log\_file);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00096}\doxymbox{\hyperlink{group__iz__logger_ga8a87f4bbb465c4e00e07605d0b464b49}{00096}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga8a87f4bbb465c4e00e07605d0b464b49}{log\_shutdown}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00103}\doxymbox{\hyperlink{group__iz__logger_ga952b8093aa13f8522e9b9d32e21ae9e4}{00103}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga952b8093aa13f8522e9b9d32e21ae9e4}{log\_set\_log\_level}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00113}\doxymbox{\hyperlink{group__iz__logger_ga595db5141cf773f1c22dff6170950e85}{00113}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga595db5141cf773f1c22dff6170950e85}{log\_message}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(2,\ 3);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00125}\doxymbox{\hyperlink{group__iz__logger_ga2914b55ba7cdd33d6694ca1704763e8a}{00125}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga2914b55ba7cdd33d6694ca1704763e8a}{log\_message\_extended}}(\doxymbox{\hyperlink{group__iz__logger_gaca1fd1d8935433e6ba2e3918214e07f9}{LogLevel}}\ level,\ const\ \textcolor{keywordtype}{char}\ *file\_name,\ \textcolor{keywordtype}{int}\ line\_number,\ const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(4,\ 5);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00134}\doxymbox{\hyperlink{group__iz__logger_gacf9e3d9c44a7600be990f89c03294c5e}{00134}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_gacf9e3d9c44a7600be990f89c03294c5e}{log\_console}}(const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(1,\ 2);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00136}00136\ \textcolor{comment}{//\ Convenience\ logging\ functions\ for\ different\ log\ levels}}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00142}\doxymbox{\hyperlink{group__iz__logger_gaf7baafafb28cb0a703025ac39d8470c6}{00142}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_gaf7baafafb28cb0a703025ac39d8470c6}{log\_debug}}(const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(1,\ 2);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00149}\doxymbox{\hyperlink{group__iz__logger_ga49528dc2f0c8d5628f13358382f8d5b4}{00149}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga49528dc2f0c8d5628f13358382f8d5b4}{log\_info}}(const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(1,\ 2);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00156}\doxymbox{\hyperlink{group__iz__logger_ga590f02c03b5ef1bc3331a6e50c5d2d3d}{00156}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga590f02c03b5ef1bc3331a6e50c5d2d3d}{log\_warn}}(const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(1,\ 2);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00163}\doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{00163}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\_error}}(const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(1,\ 2);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00170}\doxymbox{\hyperlink{group__iz__logger_ga063fe1b30374b3afc0b6078b1e2eb5ec}{00170}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__iz__logger_ga063fe1b30374b3afc0b6078b1e2eb5ec}{log\_fatal}}(const\ \textcolor{keywordtype}{char}\ *format,\ ...)\ \doxymbox{\hyperlink{group__iz__logger_ga1b4e4a40f9aefb54432be8574ff8fd6e}{LOGGER\_FORMAT\_PRINTF}}(1,\ 2);}
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{logger_8h_source_l00174}00174\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ LOGGER\_H}}
+
+\end{DoxyCode}

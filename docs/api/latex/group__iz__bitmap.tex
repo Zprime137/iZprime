@@ -1,0 +1,745 @@
+\doxysection{Bitmap Module }
+\hypertarget{group__iz__bitmap}{}\label{group__iz__bitmap}\index{Bitmap Module@{Bitmap Module}}
+
+
+Packed bit-\/array primitives for sieve and toolkit modules.  
+
+
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \doxymbox{\hyperlink{bitmap_8c}{bitmap.\+c}}
+\begin{DoxyCompactList}\small\item\em Implementation of the bitmap module for efficient bit array operations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}}
+\begin{DoxyCompactList}\small\item\em Packed bit-\/array with optional SHA-\/256 checksum. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_ga5c05923dedefd4e7cdd93d4242589ae1}{TEST\+\_\+\+BITMAP}} (int verbose)
+\begin{DoxyCompactList}\small\item\em Run bitmap module tests. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Lifecycle}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}{bitmap\+\_\+init}} (size\+\_\+t size, int set\+\_\+bits)
+\begin{DoxyCompactList}\small\item\em Allocate a bitmap with {\ttfamily size} bits. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\+\_\+free}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Free a bitmap and set the caller pointer to NULL. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}{bitmap\+\_\+clone}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}src)
+\begin{DoxyCompactList}\small\item\em Deep-\/copy a bitmap, including data and checksum. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Single-\/bit Operations}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}{bitmap\+\_\+get\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Read bit value at {\ttfamily idx}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_gac4b86fad09a6d97932143a9f3e04a024}{bitmap\+\_\+set\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Set bit at {\ttfamily idx} to 1. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga540e108d22ac9f423581ba6f4f6b8c03}{bitmap\+\_\+flip\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Toggle bit at {\ttfamily idx}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}{bitmap\+\_\+clear\+\_\+bit}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, size\+\_\+t idx)
+\begin{DoxyCompactList}\small\item\em Clear bit at {\ttfamily idx} (set to 0). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Bulk Operations}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2}{bitmap\+\_\+set\+\_\+all}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Set all bits to 1. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga978e786c92f2cd76110175a6f1c95973}{bitmap\+\_\+clear\+\_\+all}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Clear all bits to 0. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, uint64\+\_\+t step, uint64\+\_\+t start\+\_\+idx, uint64\+\_\+t limit)
+\begin{DoxyCompactList}\small\item\em Clear every {\ttfamily step-\/th} bit from {\ttfamily start\+\_\+idx} up to {\ttfamily limit}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}{bitmap\+\_\+clear\+\_\+steps\+\_\+simd}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, uint64\+\_\+t step, uint64\+\_\+t start\+\_\+idx, uint64\+\_\+t limit)
+\begin{DoxyCompactList}\small\item\em SIMD-\/accelerated variant of \doxylink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps()}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Integrity and I/\+O}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{group__iz__bitmap_ga08742aa937df01c455675a8a4884904f}{bitmap\+\_\+compute\+\_\+hash}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Compute SHA-\/256 over bitmap data and store it in \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256}. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_gab9eee7af8183812a4b2917295466d9f2}{bitmap\+\_\+validate\+\_\+hash}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap)
+\begin{DoxyCompactList}\small\item\em Verify \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256} against current bitmap data. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{group__iz__bitmap_gafd7cb301fe71bb295c9773e7117aeedc}{bitmap\+\_\+fwrite}} (\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}bitmap, FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Write bitmap payload and checksum to a binary stream. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{group__iz__bitmap_gaf18da857e5bee7e2b4ed7a2f355143d8}{bitmap\+\_\+fread}} (FILE \texorpdfstring{$\ast$}{*}file)
+\begin{DoxyCompactList}\small\item\em Read bitmap payload and checksum from a binary stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Packed bit-\/array primitives for sieve and toolkit modules. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{group__iz__bitmap_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{group__iz__bitmap_ga978e786c92f2cd76110175a6f1c95973}\index{Bitmap Module@{Bitmap Module}!bitmap\_clear\_all@{bitmap\_clear\_all}}
+\index{bitmap\_clear\_all@{bitmap\_clear\_all}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_clear\_all()}{bitmap\_clear\_all()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga978e786c92f2cd76110175a6f1c95973} 
+void bitmap\+\_\+clear\+\_\+all (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{}\end{DoxyParamCaption})}
+
+
+
+Clear all bits to 0. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify.\\
+\hline
+\end{DoxyParams}
+Clear all bits to 0.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & A pointer to the \doxylink{struct_b_i_t_m_a_p}{BITMAP} structure. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00180}{180}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+\Hypertarget{group__iz__bitmap_ga958df9e667d4516791537c988fb01999}\index{Bitmap Module@{Bitmap Module}!bitmap\_clear\_bit@{bitmap\_clear\_bit}}
+\index{bitmap\_clear\_bit@{bitmap\_clear\_bit}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_clear\_bit()}{bitmap\_clear\_bit()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga958df9e667d4516791537c988fb01999} 
+void bitmap\+\_\+clear\+\_\+bit (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{size\+\_\+t}]{idx}{}\end{DoxyParamCaption})}
+
+
+
+Clear bit at {\ttfamily idx} (set to 0). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify. \\
+\hline
+{\em idx} & Zero-\/based bit index.\\
+\hline
+\end{DoxyParams}
+Clear bit at {\ttfamily idx} (set to 0).
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} to modify. \\
+\hline
+{\em idx} & The index of the bit to clear. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00159}{159}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00363}{i\+Zm\+\_\+construct\+\_\+vx\+\_\+base()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00200}{So\+Eu()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00633}{vx\+\_\+prob\+\_\+sieve()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00866}{vx\+\_\+stream()}}.
+
+\Hypertarget{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}\index{Bitmap Module@{Bitmap Module}!bitmap\_clear\_steps@{bitmap\_clear\_steps}}
+\index{bitmap\_clear\_steps@{bitmap\_clear\_steps}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_clear\_steps()}{bitmap\_clear\_steps()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93} 
+void bitmap\+\_\+clear\+\_\+steps (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{uint64\+\_\+t}]{step}{, }\item[{uint64\+\_\+t}]{start\+\_\+idx}{, }\item[{uint64\+\_\+t}]{limit}{}\end{DoxyParamCaption})}
+
+
+
+Clear every {\ttfamily step-\/th} bit from {\ttfamily start\+\_\+idx} up to {\ttfamily limit}. 
+
+This is the core primitive for marking composite progressions in sieve code.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify. \\
+\hline
+{\em step} & Index increment between cleared bits. \\
+\hline
+{\em start\+\_\+idx} & First index to clear. \\
+\hline
+{\em limit} & Inclusive upper index bound. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00210}{210}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{utils_8h_source_l00048}{MIN}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}.
+
+\Hypertarget{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7}\index{Bitmap Module@{Bitmap Module}!bitmap\_clear\_steps\_simd@{bitmap\_clear\_steps\_simd}}
+\index{bitmap\_clear\_steps\_simd@{bitmap\_clear\_steps\_simd}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_clear\_steps\_simd()}{bitmap\_clear\_steps\_simd()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga80c50898b0382af34259c599a4b329f7} 
+void bitmap\+\_\+clear\+\_\+steps\+\_\+simd (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{uint64\+\_\+t}]{step}{, }\item[{uint64\+\_\+t}]{start\+\_\+idx}{, }\item[{uint64\+\_\+t}]{limit}{}\end{DoxyParamCaption})}
+
+
+
+SIMD-\/accelerated variant of \doxylink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps()}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify. \\
+\hline
+{\em step} & Index increment between cleared bits. \\
+\hline
+{\em start\+\_\+idx} & First index to clear. \\
+\hline
+{\em limit} & Inclusive upper index bound.\\
+\hline
+\end{DoxyParams}
+SIMD-\/accelerated variant of \doxylink{group__iz__bitmap_ga8589bfd273ccc48de55072eeefd1dd93}{bitmap\+\_\+clear\+\_\+steps()}.
+
+This function uses SIMD instructions (AVX2, SSE2, or NEON) to clear bits at regular intervals in the bitmap. It processes multiple bits in parallel for improved performance on large bitmaps.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Pointer to the bitmap to modify \\
+\hline
+{\em step} & Interval between bits to clear (must be \texorpdfstring{$>$}{>} 0) \\
+\hline
+{\em start\+\_\+idx} & Starting bit index (inclusive) \\
+\hline
+{\em limit} & Upper bound for clearing (inclusive) \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00233}{233}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{utils_8h_source_l00048}{MIN}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00363}{i\+Zm\+\_\+construct\+\_\+vx\+\_\+base()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00070}{process\+\_\+i\+Z\+\_\+bitmaps()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00038}{process\+\_\+\+N\+\_\+bitmap()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00328}{So\+A()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00264}{So\+S()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{SSo\+E()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00566}{vx\+\_\+det\+\_\+sieve()}}.
+
+\Hypertarget{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9}\index{Bitmap Module@{Bitmap Module}!bitmap\_clone@{bitmap\_clone}}
+\index{bitmap\_clone@{bitmap\_clone}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_clone()}{bitmap\_clone()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_gabc118534bd59159ed55c509bd1b795e9} 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} bitmap\+\_\+clone (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{src}{}\end{DoxyParamCaption})}
+
+
+
+Deep-\/copy a bitmap, including data and checksum. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em src} & Source bitmap. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cloned bitmap, or NULL on failure.
+\end{DoxyReturn}
+Deep-\/copy a bitmap, including data and checksum.
+
+Allocates a new bitmap with the same size as the source and copies all data including the bit array and SHA-\/256 hash. The returned bitmap is completely independent of the source and must be freed separately.
+
+
+\begin{DoxyParams}{Parameters}
+{\em src} & Pointer to the source bitmap to clone \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to newly allocated cloned \doxylink{struct_b_i_t_m_a_p}{BITMAP}, or NULL on failure
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em NULL} & if src is NULL, src-\/\texorpdfstring{$>$}{>}size is 0, or memory allocation fails\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+The clone includes a copy of the SHA-\/256 hash from the source 
+
+Caller must free the returned bitmap using \doxylink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\+\_\+free()} 
+
+Changes to the clone do not affect the source and vice versa 
+\end{DoxyNote}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00382}{382}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{bitmap_8h_source_l00031}{BITMAP::\+sha256}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00232}{i\+Zm\+\_\+clone()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00713}{vx\+\_\+init()}}.
+
+\Hypertarget{group__iz__bitmap_ga08742aa937df01c455675a8a4884904f}\index{Bitmap Module@{Bitmap Module}!bitmap\_compute\_hash@{bitmap\_compute\_hash}}
+\index{bitmap\_compute\_hash@{bitmap\_compute\_hash}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_compute\_hash()}{bitmap\_compute\_hash()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga08742aa937df01c455675a8a4884904f} 
+void bitmap\+\_\+compute\+\_\+hash (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{}\end{DoxyParamCaption})}
+
+
+
+Compute SHA-\/256 over bitmap data and store it in \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to hash.\\
+\hline
+\end{DoxyParams}
+Compute SHA-\/256 over bitmap data and store it in \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} for which the SHA-\/256 hash is generated. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00398}{398}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00031}{BITMAP::\+sha256}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00440}{bitmap\+\_\+fwrite()}}.
+
+\Hypertarget{group__iz__bitmap_ga540e108d22ac9f423581ba6f4f6b8c03}\index{Bitmap Module@{Bitmap Module}!bitmap\_flip\_bit@{bitmap\_flip\_bit}}
+\index{bitmap\_flip\_bit@{bitmap\_flip\_bit}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_flip\_bit()}{bitmap\_flip\_bit()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga540e108d22ac9f423581ba6f4f6b8c03} 
+void bitmap\+\_\+flip\+\_\+bit (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{size\+\_\+t}]{idx}{}\end{DoxyParamCaption})}
+
+
+
+Toggle bit at {\ttfamily idx}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify. \\
+\hline
+{\em idx} & Zero-\/based bit index.\\
+\hline
+\end{DoxyParams}
+Toggle bit at {\ttfamily idx}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} to modify. \\
+\hline
+{\em idx} & The index of the bit to flip. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00148}{148}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{prime__sieve_8c_source_l00328}{So\+A()}}.
+
+\Hypertarget{group__iz__bitmap_gaf18da857e5bee7e2b4ed7a2f355143d8}\index{Bitmap Module@{Bitmap Module}!bitmap\_fread@{bitmap\_fread}}
+\index{bitmap\_fread@{bitmap\_fread}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_fread()}{bitmap\_fread()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_gaf18da857e5bee7e2b4ed7a2f355143d8} 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} bitmap\+\_\+fread (\begin{DoxyParamCaption}\item[{FILE \texorpdfstring{$\ast$}{*}}]{file}{}\end{DoxyParamCaption})}
+
+
+
+Read bitmap payload and checksum from a binary stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file} & Readable stream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Newly allocated bitmap, or NULL on parse/\+verification failure.
+\end{DoxyReturn}
+Read bitmap payload and checksum from a binary stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file} & The file pointer to read from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+BITMAP\texorpdfstring{$\ast$}{*} A pointer to the newly created \doxylink{struct_b_i_t_m_a_p}{BITMAP}, or NULL on failure. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00492}{492}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8c_source_l00103}{bitmap\+\_\+free()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00057}{bitmap\+\_\+init()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00412}{bitmap\+\_\+validate\+\_\+hash()}}, \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00031}{BITMAP::\+sha256}}.
+
+\Hypertarget{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}\index{Bitmap Module@{Bitmap Module}!bitmap\_free@{bitmap\_free}}
+\index{bitmap\_free@{bitmap\_free}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_free()}{bitmap\_free()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15} 
+void bitmap\+\_\+free (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{bitmap}{}\end{DoxyParamCaption})}
+
+
+
+Free a bitmap and set the caller pointer to NULL. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Address of a \doxylink{struct_b_i_t_m_a_p}{BITMAP} pointer.\\
+\hline
+\end{DoxyParams}
+Free a bitmap and set the caller pointer to NULL.
+
+This function safely deallocates the bitmap\textquotesingle{}s data array and the structure itself, then sets the pointer to NULL to prevent use-\/after-\/free bugs and double-\/free errors. Safe to call with NULL pointers.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Double pointer to the \doxylink{struct_b_i_t_m_a_p}{BITMAP} to free\\
+\hline
+\end{DoxyParams}
+\begin{DoxyPostcond}{Postcondition}
+\texorpdfstring{$\ast$}{*}bitmap is set to NULL after successful deallocation 
+
+Safe to call multiple times on the same pointer
+\end{DoxyPostcond}
+\begin{DoxyNote}{Note}
+No operation performed if bitmap == NULL or \texorpdfstring{$\ast$}{*}bitmap == NULL 
+
+This is the only correct way to free a \doxylink{struct_b_i_t_m_a_p}{BITMAP}; never use free() directly 
+\end{DoxyNote}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00103}{103}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00492}{bitmap\+\_\+fread()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00112}{get\+\_\+root\+\_\+primes()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00266}{i\+Zm\+\_\+free()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00444}{Si\+Z()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00328}{So\+A()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00072}{So\+E()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00200}{So\+Eu()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00264}{So\+S()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{SSo\+E()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00759}{vx\+\_\+free()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}.
+
+\Hypertarget{group__iz__bitmap_gafd7cb301fe71bb295c9773e7117aeedc}\index{Bitmap Module@{Bitmap Module}!bitmap\_fwrite@{bitmap\_fwrite}}
+\index{bitmap\_fwrite@{bitmap\_fwrite}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_fwrite()}{bitmap\_fwrite()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_gafd7cb301fe71bb295c9773e7117aeedc} 
+int bitmap\+\_\+fwrite (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{FILE \texorpdfstring{$\ast$}{*}}]{file}{}\end{DoxyParamCaption})}
+
+
+
+Write bitmap payload and checksum to a binary stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to serialize. \\
+\hline
+{\em file} & Writable stream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 on success, otherwise 0.
+\end{DoxyReturn}
+Write bitmap payload and checksum to a binary stream.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} to write. \\
+\hline
+{\em file} & The file pointer to write to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 1 on success, 0 on failure. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00440}{440}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8c_source_l00398}{bitmap\+\_\+compute\+\_\+hash()}}, \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{bitmap_8h_source_l00031}{BITMAP::\+sha256}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+\Hypertarget{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f}\index{Bitmap Module@{Bitmap Module}!bitmap\_get\_bit@{bitmap\_get\_bit}}
+\index{bitmap\_get\_bit@{bitmap\_get\_bit}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_get\_bit()}{bitmap\_get\_bit()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga7a2c67bab864cee11a8ffcf2f5b6ce8f} 
+int bitmap\+\_\+get\+\_\+bit (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{size\+\_\+t}]{idx}{}\end{DoxyParamCaption})}
+
+
+
+Read bit value at {\ttfamily idx}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to inspect. \\
+\hline
+{\em idx} & Zero-\/based bit index. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if set, otherwise 0.
+\end{DoxyReturn}
+Read bit value at {\ttfamily idx}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} to read from. \\
+\hline
+{\em idx} & The index of the bit to read. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 1 if the bit is set, 0 if unset, -\/1 on error. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00137}{137}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__apps_8c_source_l00819}{i\+Z\+\_\+next\+\_\+prime()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00070}{process\+\_\+i\+Z\+\_\+bitmaps()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00038}{process\+\_\+\+N\+\_\+bitmap()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00328}{So\+A()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00200}{So\+Eu()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00264}{So\+S()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{SSo\+E()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00787}{vx\+\_\+collect\+\_\+p\+\_\+gaps()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00566}{vx\+\_\+det\+\_\+sieve()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00633}{vx\+\_\+prob\+\_\+sieve()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00866}{vx\+\_\+stream()}}.
+
+\Hypertarget{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1}\index{Bitmap Module@{Bitmap Module}!bitmap\_init@{bitmap\_init}}
+\index{bitmap\_init@{bitmap\_init}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_init()}{bitmap\_init()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga165a40f31d911d8939771e064e2b87c1} 
+\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*} bitmap\+\_\+init (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{int}]{set\+\_\+bits}{}\end{DoxyParamCaption})}
+
+
+
+Allocate a bitmap with {\ttfamily size} bits. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Number of bits to allocate (must be \texorpdfstring{$>$}{>} 0). \\
+\hline
+{\em set\+\_\+bits} & Non-\/zero initializes all bits to 1, otherwise to 0. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Newly allocated bitmap, or NULL on allocation failure.
+\end{DoxyReturn}
+Allocate a bitmap with {\ttfamily size} bits.
+
+Allocates memory for both the \doxylink{struct_b_i_t_m_a_p}{BITMAP} structure and its underlying data array. The data array is allocated using calloc(), ensuring all bits start at 0. The SHA-\/256 hash field is initialized to all zeros.
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & The number of bits in the bitmap (must be \texorpdfstring{$>$}{>} 0) \\
+\hline
+{\em set\+\_\+bits} & If non-\/zero, initializes all bits to 1; otherwise, all bits are 0. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to newly allocated \doxylink{struct_b_i_t_m_a_p}{BITMAP} on success, NULL on failure
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em NULL} & if size is 0 \\
+\hline
+{\em NULL} & if memory allocation fails\\
+\hline
+\end{DoxyRetVals}
+\begin{DoxyNote}{Note}
+Memory allocated:\+ sizeof(\+BITMAP) + ⌈size/\+8⌉ bytes 
+
+On failure, any partially allocated memory is freed before returning 
+\end{DoxyNote}
+\begin{DoxyWarning}{Warning}
+Caller must free returned bitmap using \doxylink{group__iz__bitmap_ga66cb254c9bf38d7adfe83d723baa2e15}{bitmap\+\_\+free()}, not free() 
+\end{DoxyWarning}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00057}{57}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, \doxymbox{\hyperlink{bitmap_8h_source_l00031}{BITMAP::\+sha256}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00382}{bitmap\+\_\+clone()}}, \doxymbox{\hyperlink{bitmap_8c_source_l00492}{bitmap\+\_\+fread()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00112}{get\+\_\+root\+\_\+primes()}}, \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00184}{i\+Zm\+\_\+init()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00444}{Si\+Z()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00516}{Si\+Zm()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00328}{So\+A()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00072}{So\+E()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00200}{So\+Eu()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00264}{So\+S()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{SSo\+E()}}, and \doxymbox{\hyperlink{i_z__toolkit_8c_source_l01017}{vx\+\_\+search\+\_\+prime()}}.
+
+\Hypertarget{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2}\index{Bitmap Module@{Bitmap Module}!bitmap\_set\_all@{bitmap\_set\_all}}
+\index{bitmap\_set\_all@{bitmap\_set\_all}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_set\_all()}{bitmap\_set\_all()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_gad0afb1000bb11c5aca082e45f813ded2} 
+void bitmap\+\_\+set\+\_\+all (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{}\end{DoxyParamCaption})}
+
+
+
+Set all bits to 1. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify.\\
+\hline
+\end{DoxyParams}
+Set all bits to 1.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} to modify. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00170}{170}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00028}{BITMAP::\+size}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{i_z__toolkit_8c_source_l00363}{i\+Zm\+\_\+construct\+\_\+vx\+\_\+base()}}, \doxymbox{\hyperlink{prime__sieve_8c_source_l00623}{Si\+Zm\+\_\+vy()}}, and \doxymbox{\hyperlink{prime__sieve_8c_source_l00114}{SSo\+E()}}.
+
+\Hypertarget{group__iz__bitmap_gac4b86fad09a6d97932143a9f3e04a024}\index{Bitmap Module@{Bitmap Module}!bitmap\_set\_bit@{bitmap\_set\_bit}}
+\index{bitmap\_set\_bit@{bitmap\_set\_bit}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_set\_bit()}{bitmap\_set\_bit()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_gac4b86fad09a6d97932143a9f3e04a024} 
+void bitmap\+\_\+set\+\_\+bit (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{, }\item[{size\+\_\+t}]{idx}{}\end{DoxyParamCaption})}
+
+
+
+Set bit at {\ttfamily idx} to 1. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to modify. \\
+\hline
+{\em idx} & Zero-\/based bit index.\\
+\hline
+\end{DoxyParams}
+Set bit at {\ttfamily idx} to 1.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} to modify. \\
+\hline
+{\em idx} & The index of the bit to set. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00125}{125}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}.
+
+\Hypertarget{group__iz__bitmap_gab9eee7af8183812a4b2917295466d9f2}\index{Bitmap Module@{Bitmap Module}!bitmap\_validate\_hash@{bitmap\_validate\_hash}}
+\index{bitmap\_validate\_hash@{bitmap\_validate\_hash}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{bitmap\_validate\_hash()}{bitmap\_validate\_hash()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_gab9eee7af8183812a4b2917295466d9f2} 
+int bitmap\+\_\+validate\+\_\+hash (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_b_i_t_m_a_p}{BITMAP}} \texorpdfstring{$\ast$}{*}}]{bitmap}{}\end{DoxyParamCaption})}
+
+
+
+Verify \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256} against current bitmap data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & Bitmap to verify. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if checksum matches, otherwise 0.
+\end{DoxyReturn}
+Verify \doxylink{struct_b_i_t_m_a_p_aae9a46b0b2a05387d54f18f780632bbe}{BITMAP::\+sha256} against current bitmap data.
+
+
+\begin{DoxyParams}{Parameters}
+{\em bitmap} & The \doxylink{struct_b_i_t_m_a_p}{BITMAP} whose hash is validated. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 1 if the hash matches, 0 otherwise. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\doxymbox{\hyperlink{_2_users_2hazemmounir_2_workspace_2i_zproject_2i_zprime_2src_2toolkit_2bitmap_8c-example}{/\+\+Users/\+hazemmounir/\+\+Workspace/\+i\+Zproject/\+i\+Zprime/\+src/\+toolkit/\+bitmap.\+c}}.\end{Desc}
+
+
+Definition at line \doxymbox{\hyperlink{bitmap_8c_source_l00412}{412}} of file \doxymbox{\hyperlink{bitmap_8c_source}{bitmap.\+c}}.
+
+
+
+References \doxymbox{\hyperlink{bitmap_8h_source_l00029}{BITMAP::\+byte\+\_\+size}}, \doxymbox{\hyperlink{bitmap_8h_source_l00030}{BITMAP::\+data}}, \doxymbox{\hyperlink{group__iz__logger_ga3dc3bd5ec0c013065ffc731ea33271d5}{log\+\_\+error()}}, and \doxymbox{\hyperlink{bitmap_8h_source_l00031}{BITMAP::\+sha256}}.
+
+
+
+Referenced by \doxymbox{\hyperlink{bitmap_8c_source_l00492}{bitmap\+\_\+fread()}}.
+
+\Hypertarget{group__iz__bitmap_ga5c05923dedefd4e7cdd93d4242589ae1}\index{Bitmap Module@{Bitmap Module}!TEST\_BITMAP@{TEST\_BITMAP}}
+\index{TEST\_BITMAP@{TEST\_BITMAP}!Bitmap Module@{Bitmap Module}}
+\doxysubsubsection{\texorpdfstring{TEST\_BITMAP()}{TEST\_BITMAP()}}
+{\footnotesize\ttfamily \label{group__iz__bitmap_ga5c05923dedefd4e7cdd93d4242589ae1} 
+int TEST\+\_\+\+BITMAP (\begin{DoxyParamCaption}\item[{int}]{verbose}{}\end{DoxyParamCaption})}
+
+
+
+Run bitmap module tests. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em verbose} & Non-\/zero enables detailed logging. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 when all tests pass, otherwise 0. 
+\end{DoxyReturn}
