@@ -486,9 +486,9 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
     int alg_num = sizeof(algorithms) / sizeof(algorithms[0]);
     GenResult *all_results[alg_num];
     int total_tests = 0;
+    int ok = 1;
 
     // * Testing vy_random_prime
-    int cores_num = 1;
     GenResult *vy_results = BENCHMARK_vy_random_prime(bit_size, test_rounds, 1);
     all_results[total_tests++] = vy_results;
 
@@ -522,9 +522,12 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
 
     if (save_results)
     {
-        struct stat st = {0};
-        if (stat(DIR_output, &st) == -1)
-            mkdir(DIR_output, 0700);
+        if (iz_platform_create_dir(DIR_output) != 0)
+        {
+            log_error("Failed to create output directory in BENCHMARK_P_GEN_ALGORITHMS: %s", DIR_output);
+            ok = 0;
+            goto cleanup;
+        }
 
         // Get the current timestamp for file naming.
         time_t now = time(NULL);
@@ -540,7 +543,8 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
         if (file == NULL)
         {
             log_error("Failed to open file in TEST_P_GEN_ALGORITHMS: %s", file_path);
-            return 0;
+            ok = 0;
+            goto cleanup;
         }
 
         for (int i = 0; i < total_tests; i++)
@@ -574,6 +578,7 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
         fflush(stdout);
     }
 
+cleanup:
     // Free all results
     for (int i = 0; i < total_tests; i++)
     {
@@ -581,5 +586,5 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
         free(all_results[i]);
     }
 
-    return 1;
+    return ok;
 }
