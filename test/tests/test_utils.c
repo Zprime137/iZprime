@@ -74,11 +74,12 @@ int TEST_UTILS(int verbose)
 
     // Test 5: very large expression parser (mpz)
     current_test_idx++;
-    mpz_t parsed_mpz, expected_mpz;
-    mpz_inits(parsed_mpz, expected_mpz, NULL);
+    mpz_t parsed_mpz, expected_mpz, addend_mpz;
+    mpz_inits(parsed_mpz, expected_mpz, addend_mpz, NULL);
     int ok_mpz = parse_numeric_expr_mpz(parsed_mpz, "10e100 + 10e9");
     mpz_ui_pow_ui(expected_mpz, 10, 101);
-    mpz_add_ui(expected_mpz, expected_mpz, 10000000000ULL);
+    mpz_set_str(addend_mpz, "10000000000", 10);
+    mpz_add(expected_mpz, expected_mpz, addend_mpz);
     if (ok_mpz && mpz_cmp(parsed_mpz, expected_mpz) == 0)
     {
         passed_tests++;
@@ -91,7 +92,7 @@ int TEST_UTILS(int verbose)
         if (verbose)
             print_test_module_result(0, current_test_idx, "parse_numeric_expr_mpz", "Failed large expression parse");
     }
-    mpz_clears(parsed_mpz, expected_mpz, NULL);
+    mpz_clears(parsed_mpz, expected_mpz, addend_mpz, NULL);
 
     // Test 6: inclusive range parser with grouped decimals
     current_test_idx++;
