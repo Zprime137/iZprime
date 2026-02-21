@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(MAKE) lib cli ARCH_NATIVE=0 TUNE_NATIVE=0
+
+override_dh_auto_install:
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr ARCH_NATIVE=0 TUNE_NATIVE=0

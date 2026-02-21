@@ -1,0 +1,15 @@
+PackageIdentifier: Zprime137.iZprime
+PackageVersion: @VERSION@
+PackageName: iZprime
+Publisher: Zprime137
+License: MIT
+ShortDescription: High-performance prime sieving library and CLI
+Installers:
+  - Architecture: x64
+    InstallerType: portable
+    InstallerUrl: https://github.com/Zprime137/iZprime/releases/download/v@VERSION@/izprime-@VERSION@-windows-x64.zip
+    InstallerSha256: @SHA256@
+Commands:
+  - izprime
+ManifestType: singleton
+ManifestVersion: 1.6.0

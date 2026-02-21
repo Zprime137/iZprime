@@ -1,0 +1,31 @@
+Source: izprime
+Section: science
+Priority: optional
+Maintainer: Hazem Mounir <hazemmounir@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13), gcc, make, pkgconf, libgmp-dev, libssl-dev
+Standards-Version: 4.7.0
+Homepage: https://github.com/Zprime137/iZprime
+Rules-Requires-Root: no
+
+Package: libizprime1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Runtime shared library for iZprime
+ High-performance prime sieving and range-counting runtime library.
+
+Package: libizprime-dev
+Section: libdevel
+Architecture: any
+Depends: libizprime1 (= ${binary:Version}), ${misc:Depends}
+Description: Development files for iZprime
+ Headers, static library, and pkg-config metadata for developing
+ applications against iZprime.
+
+Package: izprime
+Section: utils
+Architecture: any
+Depends: libizprime1 (= ${binary:Version}), ${misc:Depends}
+Description: CLI for high-performance prime sieving and counting
+ Command-line interface to run iZprime tasks including prime streaming,
+ counting, primality checks, and diagnostics.

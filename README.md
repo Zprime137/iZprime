@@ -191,6 +191,7 @@ int main(void) {
 - `docs/Makefile.md`: build-system targets and options
 - `docs/tests.md`: test workflow and snapshots
 - `docs/benchmarks.md`: benchmark methodology, tables, plots
+- `docs/packages.md`: distro-native packaging plan and metadata map
 - `docs/pseudocode.pdf`: algorithm design and pseudocode
 - `docs/contribute.md`: contribution and PR checklist
 - `docs/release.md`: release workflow

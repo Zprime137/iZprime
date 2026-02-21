@@ -267,7 +267,8 @@ static int run_stream_primes_cmd(int argc, char **argv)
         .start = range.lower,
         .range = range.range_size,
         .mr_rounds = mr_rounds,
-        .filepath = (char *)(print_to_console ? "/dev/stdout" : stream_path)};
+        // NULL filepath tells SiZ_stream() to emit directly to stdout.
+        .filepath = (char *)(print_to_console ? NULL : stream_path)};
 
     STOPWATCH timer;
     sw_start(&timer);

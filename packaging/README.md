@@ -2,6 +2,14 @@
 
 This directory contains release-facing metadata and conventions for iZprime.
 
+## Repository layout
+
+- `packaging/izprime.pc.in`: pkg-config template used by `make install`.
+- `packaging/debian/`: Debian/Ubuntu package metadata (`debhelper` flow).
+- `packaging/rpm/izprime.spec`: RPM spec for Fedora/COPR-style builds.
+- `packaging/homebrew/`: Homebrew formula template and generation notes.
+- `packaging/windows/`: Windows packaging notes and winget manifest template.
+
 ## Dependency policy
 
 - Default distribution uses **dynamic linking** for third-party dependencies:
@@ -50,3 +58,10 @@ Shared library names follow common conventions:
    - `make install DESTDIR=/tmp/izprime-stage PREFIX=/usr/local`
 
 Artifacts are emitted under `dist/`.
+
+## Distribution channels
+
+- macOS: Homebrew tap (formula generated from `packaging/homebrew/izprime.rb.in`)
+- Debian/Ubuntu: `debuild` using files under `packaging/debian/`
+- Fedora/RHEL: `rpmbuild` with `packaging/rpm/izprime.spec`
+- Windows: MSYS2 build + portable ZIP + winget manifest

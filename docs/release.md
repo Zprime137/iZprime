@@ -36,6 +36,13 @@ Windows readiness (recommended for each release):
 - run at least `make doctor`, `make test-unit`, and `make test-integration`,
 - confirm fallback behavior for multi-process APIs on non-fork platforms.
 
+Native package metadata is maintained under `packaging/`:
+
+- `packaging/debian/` (Debian/Ubuntu),
+- `packaging/rpm/izprime.spec` (Fedora/RHEL),
+- `packaging/homebrew/` (Homebrew formula template),
+- `packaging/windows/` (portable + winget templates).
+
 ## Changelog and Release Notes
 
 `ChangeLog` should summarize user-visible changes.

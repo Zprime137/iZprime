@@ -1,0 +1,74 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential make pkg-config libgmp-dev libssl-dev
+
+      - name: Build and test
+        run: |
+          make clean
+          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install pkg-config gmp openssl@3
+
+      - name: Build and test
+        run: |
+          make clean
+          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+
+  windows-msys2:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            git
+            make
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-gmp
+            mingw-w64-ucrt-x86_64-openssl
+            mingw-w64-ucrt-x86_64-pkgconf
+
+      - name: Build and test
+        shell: msys2 {0}
+        run: |
+          make clean
+          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0

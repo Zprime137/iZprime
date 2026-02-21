@@ -1,0 +1,4 @@
+usr/include/*.h
+usr/lib/libizprime.a
+usr/lib/libizprime.so
+usr/lib/pkgconfig/izprime.pc
