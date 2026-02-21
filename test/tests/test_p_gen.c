@@ -289,11 +289,11 @@ static void print_benchmark_results(GenResult *results, int test_rounds)
 
     // print results
     print_centered_text("Benchmark Results", 60, '=');
-    printf("Algorithm: %s\n", results[0].algorithm_name);
-    printf("Bit Size: %d\n", results[0].bit_size);
-    printf("Cores: %d\n", results[0].cores_num);
+    printf("Algorithm          : %s\n", results[0].algorithm_name);
+    printf("Bit Size           : %d\n", results[0].bit_size);
+    printf("Cores              : %d\n", results[0].cores_num);
 
-    printf("Execution Times (seconds): [%.6f", results[0].time);
+    printf("Execution Times (s): [%.6f", results[0].time);
     for (int i = 1; i < test_rounds; i++)
     {
         printf(", %.6f", results[i].time);
@@ -304,7 +304,7 @@ static void print_benchmark_results(GenResult *results, int test_rounds)
     {
         total_time += results[i].time;
     }
-    printf("Average Time: %.6f seconds\n", total_time / test_rounds);
+    printf("Average Time (s)   : %.6f\n", total_time / test_rounds);
     print_line(60, '=');
 }
 
