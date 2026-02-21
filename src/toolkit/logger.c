@@ -8,6 +8,7 @@
 #ifdef ENABLE_LOGGING
 
 #include "logger.h"
+#include <platform.h>
 #include <stdio.h>
 #include <time.h>
 #include <stdarg.h>
@@ -105,10 +106,9 @@ void log_rotate(const char *log_file, size_t max_size)
  */
 void log_init(const char *log_file)
 {
-    struct stat st = {0};
-    if (stat(LOG_DIR, &st) == -1)
+    if (iz_platform_create_dir(LOG_DIR) != 0)
     {
-        mkdir(LOG_DIR, 0700); // Create log directory if it doesn't exist
+        perror("Failed to create log directory");
     }
 
     log_rotate(log_file, LOG_MAX_SIZE); // Rotate logs if needed
