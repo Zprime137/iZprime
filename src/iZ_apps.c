@@ -8,6 +8,22 @@
  */
 
 #include <iZ_api.h>
+#include <inttypes.h>
+
+#if IZ_PLATFORM_HAS_FORK
+static int write_all_bytes(int fd, const char *buf, size_t len)
+{
+    size_t total = 0;
+    while (total < len)
+    {
+        ssize_t written = write(fd, buf + total, len - total);
+        if (written <= 0)
+            return 0;
+        total += (size_t)written;
+    }
+    return 1;
+}
+#endif
 
 // =========================================================
 // * SiZ Range Variants
@@ -91,7 +107,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
             if (primes->array[i] > s && primes->array[i] <= e)
             {
                 total++;
-                fprintf(output, "%llu ", primes->array[i]);
+                fprintf(output, "%" PRIu64 " ", primes->array[i]);
             }
         }
 
@@ -619,7 +635,8 @@ int vy_random_prime(mpz_t p, int bit_size, int cores_num)
                 char *p_str = mpz_get_str(NULL, 10, local_p);
                 if (p_str)
                 {
-                    write(fd[1], p_str, strlen(p_str) + 1);
+                    if (!write_all_bytes(fd[1], p_str, strlen(p_str) + 1))
+                        log_warn("Failed to write prime candidate from child process in vy_random_prime");
                     free(p_str);
                 }
             }
@@ -762,7 +779,8 @@ int vx_random_prime(mpz_t p, int bit_size, int cores_num)
                 char *p_str = mpz_get_str(NULL, 10, local_p);
                 if (p_str != NULL)
                 {
-                    write(fd[1], p_str, strlen(p_str) + 1);
+                    if (!write_all_bytes(fd[1], p_str, strlen(p_str) + 1))
+                        log_warn("Failed to write prime candidate from child process in vx_random_prime");
                     free(p_str);
                 }
             }
