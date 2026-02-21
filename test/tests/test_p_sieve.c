@@ -1,4 +1,5 @@
 #include <test_api.h>
+#include <inttypes.h>
 
 // Sieve function type, takes uint64_t limit and returns a UI64_ARRAY pointer
 
@@ -168,7 +169,7 @@ static size_t measure_sieve_time(SIEVE_MODEL model, SIEVE_LIMIT limit)
     snprintf(n_str, sizeof(n_str), "%d^%d", limit.base, limit.exp);
     printf("| %-16s", n_str);
     printf("| %-16d", primes->count);
-    printf("| %-16lld", primes->array[primes->count - 1]);
+    printf("| %-16" PRIu64, primes->array[primes->count - 1]);
     printf("| %-16f\n", elapsed_seconds); // time in seconds
     fflush(stdout);
 

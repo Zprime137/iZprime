@@ -1,4 +1,5 @@
 #include <test_api.h>
+#include <inttypes.h>
 
 int TEST_IZM(int verbose)
 {
@@ -112,7 +113,7 @@ int TEST_IZM(int verbose)
             failed_tests++;
             if (verbose)
             {
-                print_test_module_result(0, current_test_idx, "iZm_solve_for_x0", "Composite targeting failed for p=%lld", p);
+                print_test_module_result(0, current_test_idx, "iZm_solve_for_x0", "Composite targeting failed for p=%" PRIu64, p);
             }
         }
     }
@@ -150,7 +151,7 @@ int TEST_IZM(int verbose)
             failed_tests++;
             if (verbose)
             {
-                print_test_module_result(0, current_test_idx, "iZm_solve_for_x0_mpz", "Composite targeting failed for p=%lld", p);
+                print_test_module_result(0, current_test_idx, "iZm_solve_for_x0_mpz", "Composite targeting failed for p=%" PRIu64, p);
             }
             break;
         }
@@ -181,7 +182,7 @@ int TEST_IZM(int verbose)
             failed_tests++;
             if (verbose)
             {
-                print_test_module_result(0, current_test_idx, "iZm_solve_for_y0", "Composite targeting failed for p=%lld", p);
+                print_test_module_result(0, current_test_idx, "iZm_solve_for_y0", "Composite targeting failed for p=%" PRIu64, p);
             }
         }
     }
