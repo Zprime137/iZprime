@@ -18,6 +18,20 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#if defined(__clang__)
+#define IZ_DIAG_PUSH _Pragma("clang diagnostic push")
+#define IZ_DIAG_POP _Pragma("clang diagnostic pop")
+#define IZ_DIAG_IGNORE_FORMAT_NONLITERAL _Pragma("clang diagnostic ignored \"-Wformat-nonliteral\"")
+#elif defined(__GNUC__)
+#define IZ_DIAG_PUSH _Pragma("GCC diagnostic push")
+#define IZ_DIAG_POP _Pragma("GCC diagnostic pop")
+#define IZ_DIAG_IGNORE_FORMAT_NONLITERAL _Pragma("GCC diagnostic ignored \"-Wformat-nonliteral\"")
+#else
+#define IZ_DIAG_PUSH
+#define IZ_DIAG_POP
+#define IZ_DIAG_IGNORE_FORMAT_NONLITERAL
+#endif
+
 // Initialize the mutex for thread-safe logging
 static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
 static LogLevel current_log_level = LOG_DEBUG; // Default log level
@@ -149,10 +163,10 @@ static void log_message_va(LogLevel level, const char *format, va_list args)
 
     char message[1024];
     // Format string comes from a variadic function parameter - suppress warning
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
+    IZ_DIAG_PUSH;
+    IZ_DIAG_IGNORE_FORMAT_NONLITERAL;
     vsnprintf(message, sizeof(message), format, args);
-#pragma clang diagnostic pop
+    IZ_DIAG_POP;
 
     char timestamp[20];
     get_current_timestamp(timestamp, sizeof(timestamp));
@@ -207,10 +221,10 @@ void log_message_extended(LogLevel level, const char *file_name, int line_number
     va_start(args, format);
     char message[1024];
     // Format string comes from a variadic function parameter - suppress warning
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
+    IZ_DIAG_PUSH;
+    IZ_DIAG_IGNORE_FORMAT_NONLITERAL;
     vsnprintf(message, sizeof(message), format, args);
-#pragma clang diagnostic pop
+    IZ_DIAG_POP;
     va_end(args);
 
     char timestamp[20];
@@ -246,10 +260,10 @@ void log_console(const char *format, ...)
     va_start(args, format);
     char message[1024];
     // Format string comes from a variadic function parameter - suppress warning
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
+    IZ_DIAG_PUSH;
+    IZ_DIAG_IGNORE_FORMAT_NONLITERAL;
     vsnprintf(message, sizeof(message), format, args);
-#pragma clang diagnostic pop
+    IZ_DIAG_POP;
     va_end(args);
 
     char timestamp[20];

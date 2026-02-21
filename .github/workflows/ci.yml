@@ -21,10 +21,10 @@ jobs:
       - name: Build and test
         run: |
           make clean
-          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
+          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
+          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
+          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
 
   macos:
     runs-on: macos-latest
@@ -40,10 +40,10 @@ jobs:
       - name: Build and test
         run: |
           make clean
-          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
+          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
+          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
+          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1
 
   windows-msys2:
     runs-on: windows-latest
@@ -68,7 +68,7 @@ jobs:
         shell: msys2 {0}
         run: |
           make clean
-          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
-          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0
+          make doctor ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1 LTO_FLAGS=
+          make cli ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1 LTO_FLAGS=
+          make test-unit ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1 LTO_FLAGS=
+          make test-integration ARCH_NATIVE=0 TUNE_NATIVE=0 BUILD_SHARED=0 WARNINGS_AS_ERRORS=1 LTO_FLAGS=

@@ -569,7 +569,7 @@ UI64_ARRAY *SiZm(uint64_t n)
         memcpy(x5->data, base_x5->data, x5->byte_size);
         memcpy(x7->data, base_x7->data, x7->byte_size);
 
-        int x_limit = (y < y_limit) ? vx : x_n % vx;         // local x limit adjusted for last segment
+        int x_limit = (y < y_limit) ? vx : (int)(x_n % (uint64_t)vx); // local x limit adjusted for last segment
         uint64_t root_limit = sqrt(6 * (yvx + x_limit)) + 1; // local root limit for current segment
 
         // * b. Mark composites of root primes in current segment

@@ -20,6 +20,7 @@ ARCH_NATIVE ?= 1
 TUNE_NATIVE ?= 1
 ENABLE_NDEBUG ?= 1
 ENABLE_STRIP_DEAD ?= 1
+WARNINGS_AS_ERRORS ?= 0
 
 SRC_DIR ?= src
 TEST_DIR ?= test
@@ -112,6 +113,9 @@ endif
 # ---------------------------------------------------------
 CPPFLAGS = -I$(INCLUDE_DIR) $(if $(filter 1,$(LOGGING)),-DENABLE_LOGGING,) -DIZ_VERSION=\"$(VERSION)\" $(THIRD_PARTY_CFLAGS)
 COMMON_FLAGS = -Wall -Wextra -Wshadow -Wformat=2 -Wpedantic -MMD -MP
+ifeq ($(WARNINGS_AS_ERRORS),1)
+COMMON_FLAGS += -Werror
+endif
 OPT_LEVEL ?= -O3
 LTO_FLAGS ?= -flto
 ARCH_FLAGS = $(if $(filter 1,$(ARCH_NATIVE)),-march=native,) $(if $(filter 1,$(TUNE_NATIVE)),-mtune=native,)
