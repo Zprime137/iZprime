@@ -1,5 +1,14 @@
 # ChangeLog
 
+## v1.0.1 (2026-02-21)
+
+### Stability and portability patch
+
+- Fixed cross-platform build warnings in library and tests (portable `uint64_t` formatting and signedness cleanup).
+- Improved POSIX pipe write handling in multi-process prime-generation routines.
+- Reworked diagnostic pragma guards to be compiler-aware (GCC/Clang).
+- CI now enforces warning-free builds with `WARNINGS_AS_ERRORS=1` on Linux/macOS/Windows (MSYS2).
+
 ## v1.0.0 (2026-02-20)
 
 ### First Release
