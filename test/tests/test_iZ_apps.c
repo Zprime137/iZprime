@@ -1,4 +1,5 @@
 #include <test_api.h>
+#include <inttypes.h>
 
 // =======================================================================
 // * Testing SiZ_stream
@@ -45,8 +46,8 @@ int TEST_SiZ_stream(int verbose)
     printf("Test 1: Streaming primes in range [%s:%s]\n", input_range.start, mpz_get_str(NULL, 10, end_num));
     if (verbose)
     {
-        printf("%-32s: %llu\n", "Expected primes count", expected_count);
-        printf("%-32s: %llu\n", "Result primes count", test_count);
+        printf("%-32s: %" PRIu64 "\n", "Expected primes count", expected_count);
+        printf("%-32s: %" PRIu64 "\n", "Result primes count", test_count);
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
         printf("%-32s: %s\n", "Output File", input_range.filepath);
     }
@@ -54,7 +55,7 @@ int TEST_SiZ_stream(int verbose)
     {
         if (test_count != expected_count)
         {
-            printf("Expected primes count: %llu, Got: %llu\n", expected_count, test_count);
+            printf("Expected primes count: %" PRIu64 ", Got: %" PRIu64 "\n", expected_count, test_count);
         }
     }
     // ===================================
@@ -80,8 +81,8 @@ int TEST_SiZ_stream(int verbose)
 
     if (verbose)
     {
-        printf("%-32s: %llu\n", "Expected primes count", expected_count);
-        printf("%-32s: %llu\n", "Result primes count", test_count);
+        printf("%-32s: %" PRIu64 "\n", "Expected primes count", expected_count);
+        printf("%-32s: %" PRIu64 "\n", "Result primes count", test_count);
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
         printf("%-32s: %s\n", "Output File", input_range.filepath);
     }
@@ -89,7 +90,7 @@ int TEST_SiZ_stream(int verbose)
     {
         if (test_count != expected_count)
         {
-            printf("Expected primes count: %llu, Got: %llu\n", expected_count, test_count);
+            printf("Expected primes count: %" PRIu64 ", Got: %" PRIu64 "\n", expected_count, test_count);
         }
     }
 
@@ -159,8 +160,8 @@ int TEST_SiZ_count(int verbose)
 
     if (verbose)
     {
-        printf("%-32s: %llu\n", "Expected prime count", expected_count);
-        printf("%-32s: %llu\n", "Result prime count", test_count);
+        printf("%-32s: %" PRIu64 "\n", "Expected prime count", expected_count);
+        printf("%-32s: %" PRIu64 "\n", "Result prime count", test_count);
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
         fflush(stdout);
     }
@@ -184,8 +185,8 @@ int TEST_SiZ_count(int verbose)
 
     if (verbose)
     {
-        printf("%-32s: %llu\n", "Expected prime count", expected_count);
-        printf("%-32s: %llu\n", "Result prime count", test_count);
+        printf("%-32s: %" PRIu64 "\n", "Expected prime count", expected_count);
+        printf("%-32s: %" PRIu64 "\n", "Result prime count", test_count);
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
         fflush(stdout);
     }
@@ -256,7 +257,7 @@ void BENCHMARK_SiZ_count(int save_results)
         elapsed_seconds = sw_elapsed_seconds(&timer);
 
         printf("%-32s: [10^%d, 10^%d + 10^9]\n", "Test Range", exp, exp);
-        printf("%-32s: %llu\n", "Primes count", test_count);
+        printf("%-32s: %" PRIu64 "\n", "Primes count", test_count);
         printf("%-32s: %f\n", "Execution time (s)", elapsed_seconds);
         print_line(60, '=');
         fflush(stdout);
@@ -291,7 +292,7 @@ void BENCHMARK_SiZ_count(int save_results)
 
             for (int i = 0; i < tests_count; i++)
             {
-                fprintf(file, "Start=10^%d, Primes Count=%llu, Execution Time (s)=%.6f\n",
+                fprintf(file, "Start=10^%d, Primes Count=%" PRIu64 ", Execution Time (s)=%.6f\n",
                         exponents[i], counts[i], times[i]);
             }
 
