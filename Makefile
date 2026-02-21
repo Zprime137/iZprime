@@ -131,6 +131,7 @@ endif
 endif
 LDFLAGS = $(THIRD_PARTY_LDFLAGS) $(DEAD_STRIP_LDFLAGS)
 LDLIBS = $(THIRD_PARTY_LDLIBS) $(THREAD_FLAGS)
+LDLIBS += -lm
 
 # ---------------------------------------------------------
 # Source sets

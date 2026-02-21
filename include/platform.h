@@ -19,15 +19,6 @@
 #define IZ_PLATFORM_POSIX 0
 #define IZ_PLATFORM_HAS_FORK 0
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
-#include <direct.h>
-
 #else
 #define IZ_PLATFORM_WINDOWS 0
 #define IZ_PLATFORM_POSIX 1
