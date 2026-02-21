@@ -272,11 +272,13 @@ static int run_stream_primes_cmd(int argc, char **argv)
     sw_start(&timer);
     uint64_t count = SiZ_stream(&input);
     sw_stop(&timer);
+    printf("\n");
 
     if (!print_to_console)
         printf("Streamed primes to: %s\n", stream_path);
+
     printf("Prime count in [%s, %s] = %" PRIu64 "\n", range.lower, range.upper, count);
-    printf("Elapsed: %.6f s\n", timer.elapsed_sec);
+    printf("Elapsed (s): %.6f\n", timer.elapsed_sec);
     return EXIT_SUCCESS;
 }
 
@@ -353,7 +355,7 @@ static int run_count_primes_cmd(int argc, char **argv)
 
     printf("Prime count in [%s, %s] = %" PRIu64 "\n", range.lower, range.upper, count);
     printf("Cores used: %d\n", MIN(cores, get_cpu_cores_count()));
-    printf("Elapsed (s): %.6f s\n", timer.elapsed_sec);
+    printf("Elapsed (s): %.6f\n", timer.elapsed_sec);
     return EXIT_SUCCESS;
 }
 
