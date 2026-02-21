@@ -139,10 +139,11 @@ CORE_SOURCES = $(filter-out $(SRC_DIR)/main.c $(SRC_DIR)/playground.c,$(wildcard
 TOOLKIT_SOURCES = $(wildcard $(SRC_DIR)/toolkit/*.c)
 LIB_SOURCES ?= $(CORE_SOURCES) $(TOOLKIT_SOURCES)
 CLI_SOURCES = $(wildcard $(CLI_ENTRY))
+CLI_MODULE_SOURCES = $(wildcard $(SRC_DIR)/cli/*.c)
 HAS_CLI = $(if $(strip $(CLI_SOURCES)),1,0)
 
 LIB_OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_SRC_DIR)/%.o,$(LIB_SOURCES))
-CLI_OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_SRC_DIR)/%.o,$(CLI_SOURCES))
+CLI_OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_SRC_DIR)/%.o,$(CLI_SOURCES) $(CLI_MODULE_SOURCES))
 
 EXAMPLES_DIR = examples
 EXAMPLE_SOURCES = $(wildcard $(EXAMPLES_DIR)/*.c)

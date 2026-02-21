@@ -208,7 +208,8 @@ make userManual
 
 ```text
 include/         # public headers + toolkit interfaces
-src/             # implementations (algorithms + toolkit + CLI)
+src/             # implementations (algorithms + app layers)
+src/cli/         # CLI command dispatch and handlers
 examples/        # sample programs
 test/            # unit/integration/benchmark runner
 docs/            # user-facing project documentation
