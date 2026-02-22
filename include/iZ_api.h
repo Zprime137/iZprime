@@ -127,11 +127,12 @@ typedef struct INPUT_SIEVE_RANGE
     uint64_t range; ///< Interval size (number of integers to cover).
     int mr_rounds;  ///< Miller–Rabin rounds for large primality checks.
     char *filepath; ///< Output path for streaming primes (NULL to disable output).
+    int stream_gaps; ///< Non-zero streams prime gaps instead of absolute primes.
 } INPUT_SIEVE_RANGE;
 
 /**
- * @brief Stream primes in a range to `filepath` (and return the count).
- * @param range Range configuration (must include `filepath`).
+ * @brief Stream primes (or prime gaps) in a range to `filepath` (and return the count).
+ * @param range Range configuration.
  * @return Prime count in the interval, or 0 on error.
  */
 uint64_t SiZ_stream(INPUT_SIEVE_RANGE *range);

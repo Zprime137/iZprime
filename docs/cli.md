@@ -15,9 +15,10 @@ Commands that accept numbers support:
 
 - decimal integers: `1000000`
 - grouped decimals: `1,000,000`
+- arithmetic expressions with `+ - * /`
 - powers: `10^6`
 - scientific shorthand: `1e6`, `10e100`
-- additive expressions: `10e100 + 10e9`
+- parenthesized expressions: `(10^6 + 5) * 7`
 
 ## Commands
 
@@ -26,13 +27,14 @@ Commands that accept numbers support:
 Streams primes in an inclusive range using `SiZ_stream`.
 
 ```bash
-izprime stream_primes --range "[LOWER, UPPER]" [--print | --stream-to FILE] [--mr-rounds N]
+izprime stream_primes --range "[LOWER, UPPER]" [--print | --stream-to FILE] [--print-gaps] [--mr-rounds N]
 ```
 
 Examples:
 
 ```bash
 izprime stream_primes --range "[0, 10^5]" --print
+izprime stream_primes --range "[0, 10^5]" --print-gaps
 izprime stream_primes --range "[1,000,000, 1,001,000]" --stream-to output/range.txt
 ```
 

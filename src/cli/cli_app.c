@@ -140,11 +140,12 @@ static void print_general_help(const char *prog)
 
 static void print_stream_help(const char *prog)
 {
-    printf("Usage: %s stream_primes --range \"[LOWER, UPPER]\" [--print | --stream-to FILE] [--mr-rounds N]\n", prog);
+    printf("Usage: %s stream_primes --range \"[LOWER, UPPER]\" [--print | --stream-to FILE] [--print-gaps] [--mr-rounds N]\n", prog);
     printf("Notes:\n");
     printf("  - Range is inclusive and accepts large-number expressions.\n");
-    printf("  - Supported numeric forms: 10^6, 1e6, 1,000,000, 10e100 + 10e9\n");
+    printf("  - Supported numeric operators: + - * / ^ e and parentheses.\n");
     printf("  - If no output option is set, output defaults to output/stream_<timestamp>.txt\n");
+    printf("  - --print-gaps emits prime gaps from segment base (implies --print).\n");
 }
 
 static void print_count_help(const char *prog)
@@ -192,6 +193,7 @@ static int run_stream_primes_cmd(int argc, char **argv)
     CLI_RANGE range = {0};
     int mr_rounds = 25;
     int print_to_console = 0;
+    int print_gaps = 0;
     const char *stream_path = NULL;
 
     for (int i = 2; i < argc; ++i)
@@ -213,6 +215,12 @@ static int run_stream_primes_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--print") == 0)
         {
+            print_to_console = 1;
+            continue;
+        }
+        if (strcmp(argv[i], "--print-gaps") == 0)
+        {
+            print_gaps = 1;
             print_to_console = 1;
             continue;
         }
@@ -250,6 +258,11 @@ static int run_stream_primes_cmd(int argc, char **argv)
         fprintf(stderr, "Use either --print or --stream-to, not both.\n");
         return EXIT_FAILURE;
     }
+    if (print_gaps && stream_path != NULL)
+    {
+        fprintf(stderr, "--print-gaps cannot be combined with --stream-to.\n");
+        return EXIT_FAILURE;
+    }
 
     create_dir(DIR_output);
     char default_path[256];
@@ -267,6 +280,7 @@ static int run_stream_primes_cmd(int argc, char **argv)
         .start = range.lower,
         .range = range.range_size,
         .mr_rounds = mr_rounds,
+        .stream_gaps = print_gaps,
         // NULL filepath tells SiZ_stream() to emit directly to stdout.
         .filepath = (char *)(print_to_console ? NULL : stream_path)};
 
@@ -347,6 +361,7 @@ static int run_count_primes_cmd(int argc, char **argv)
         .start = range.lower,
         .range = range.range_size,
         .mr_rounds = mr_rounds,
+        .stream_gaps = 0,
         .filepath = NULL,
     };
 

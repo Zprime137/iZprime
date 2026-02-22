@@ -141,95 +141,197 @@ static int parse_integer_token_mpz(mpz_t out, const char *token)
     return ok;
 }
 
-static int parse_exponent_u64(const char *token, unsigned long *exp_out)
+typedef struct
 {
-    mpz_t exp_mpz;
-    mpz_init(exp_mpz);
-    int ok = parse_integer_token_mpz(exp_mpz, token);
-    if (!ok || !mpz_fits_ulong_p(exp_mpz))
+    const char *cursor;
+} MPZ_EXPR_PARSER;
+
+static void parser_skip_spaces(MPZ_EXPR_PARSER *parser)
+{
+    parser->cursor = skip_spaces(parser->cursor);
+}
+
+static int parse_expr_mpz_impl(MPZ_EXPR_PARSER *parser, mpz_t out);
+
+static int parse_primary_mpz(MPZ_EXPR_PARSER *parser, mpz_t out)
+{
+    parser_skip_spaces(parser);
+    if (*parser->cursor == '(')
     {
-        mpz_clear(exp_mpz);
+        parser->cursor++;
+        if (!parse_expr_mpz_impl(parser, out))
+            return 0;
+        parser_skip_spaces(parser);
+        if (*parser->cursor != ')')
+            return 0;
+        parser->cursor++;
+        return 1;
+    }
+
+    const char *start = parser->cursor;
+    while (*parser->cursor)
+    {
+        char c = *parser->cursor;
+        if (!(isdigit((unsigned char)c) || c == ',' || c == '_'))
+            break;
+        parser->cursor++;
+    }
+    if (parser->cursor == start)
+        return 0;
+
+    size_t len = (size_t)(parser->cursor - start);
+    char *token = malloc(len + 1);
+    if (!token)
+        return 0;
+    memcpy(token, start, len);
+    token[len] = '\0';
+
+    int ok = parse_integer_token_mpz(out, token);
+    free(token);
+    return ok;
+}
+
+static int parse_unary_mpz(MPZ_EXPR_PARSER *parser, mpz_t out)
+{
+    parser_skip_spaces(parser);
+    if (*parser->cursor == '+')
+    {
+        parser->cursor++;
+        return parse_unary_mpz(parser, out);
+    }
+    if (*parser->cursor == '-')
+    {
+        parser->cursor++;
+        if (!parse_unary_mpz(parser, out))
+            return 0;
+        mpz_neg(out, out);
+        return 1;
+    }
+    return parse_primary_mpz(parser, out);
+}
+
+static int parse_power_mpz(MPZ_EXPR_PARSER *parser, mpz_t out)
+{
+    mpz_t base, exp_value, pow10;
+    mpz_inits(base, exp_value, pow10, NULL);
+
+    if (!parse_unary_mpz(parser, base))
+    {
+        mpz_clears(base, exp_value, pow10, NULL);
         return 0;
     }
-    *exp_out = mpz_get_ui(exp_mpz);
-    mpz_clear(exp_mpz);
+
+    parser_skip_spaces(parser);
+    char op = *parser->cursor;
+    if (op == '^' || op == 'e' || op == 'E')
+    {
+        parser->cursor++;
+        if (!parse_power_mpz(parser, exp_value))
+        {
+            mpz_clears(base, exp_value, pow10, NULL);
+            return 0;
+        }
+
+        if (mpz_sgn(exp_value) < 0 || !mpz_fits_ulong_p(exp_value))
+        {
+            mpz_clears(base, exp_value, pow10, NULL);
+            return 0;
+        }
+
+        unsigned long exp = mpz_get_ui(exp_value);
+        if (op == '^')
+        {
+            mpz_pow_ui(base, base, exp);
+        }
+        else
+        {
+            mpz_ui_pow_ui(pow10, 10, exp);
+            mpz_mul(base, base, pow10);
+        }
+    }
+
+    mpz_set(out, base);
+    mpz_clears(base, exp_value, pow10, NULL);
     return 1;
 }
 
-static int parse_numeric_term_mpz(mpz_t out, const char *term)
+static int parse_term_mpz(MPZ_EXPR_PARSER *parser, mpz_t out)
 {
-    char *trimmed = dup_trimmed(term);
-    if (trimmed == NULL || trimmed[0] == '\0')
+    mpz_t rhs;
+    mpz_init(rhs);
+
+    if (!parse_power_mpz(parser, out))
     {
-        free(trimmed);
+        mpz_clear(rhs);
         return 0;
     }
 
-    char *pow_op = strchr(trimmed, '^');
-    char *sci_op = strchr(trimmed, 'e');
-    if (!sci_op)
-        sci_op = strchr(trimmed, 'E');
-
-    if (pow_op && sci_op)
+    while (1)
     {
-        free(trimmed);
+        parser_skip_spaces(parser);
+        char op = *parser->cursor;
+        if (op != '*' && op != '/')
+            break;
+
+        parser->cursor++;
+        if (!parse_power_mpz(parser, rhs))
+        {
+            mpz_clear(rhs);
+            return 0;
+        }
+
+        if (op == '*')
+        {
+            mpz_mul(out, out, rhs);
+        }
+        else
+        {
+            if (mpz_sgn(rhs) == 0)
+            {
+                mpz_clear(rhs);
+                return 0;
+            }
+            mpz_tdiv_q(out, out, rhs);
+        }
+    }
+
+    mpz_clear(rhs);
+    return 1;
+}
+
+static int parse_expr_mpz_impl(MPZ_EXPR_PARSER *parser, mpz_t out)
+{
+    mpz_t rhs;
+    mpz_init(rhs);
+
+    if (!parse_term_mpz(parser, out))
+    {
+        mpz_clear(rhs);
         return 0;
     }
 
-    if (pow_op != NULL)
+    while (1)
     {
-        if (strchr(pow_op + 1, '^') != NULL || strchr(pow_op + 1, 'e') != NULL || strchr(pow_op + 1, 'E') != NULL)
+        parser_skip_spaces(parser);
+        char op = *parser->cursor;
+        if (op != '+' && op != '-')
+            break;
+
+        parser->cursor++;
+        if (!parse_term_mpz(parser, rhs))
         {
-            free(trimmed);
+            mpz_clear(rhs);
             return 0;
         }
 
-        *pow_op = '\0';
-        const char *base_str = trimmed;
-        const char *exp_str = pow_op + 1;
-
-        mpz_t base;
-        mpz_init(base);
-        unsigned long exp = 0;
-        int ok = parse_integer_token_mpz(base, base_str) && parse_exponent_u64(exp_str, &exp);
-        if (ok)
-            mpz_pow_ui(out, base, exp);
-
-        mpz_clear(base);
-        free(trimmed);
-        return ok;
+        if (op == '+')
+            mpz_add(out, out, rhs);
+        else
+            mpz_sub(out, out, rhs);
     }
 
-    if (sci_op != NULL)
-    {
-        if (strchr(sci_op + 1, 'e') != NULL || strchr(sci_op + 1, 'E') != NULL || strchr(sci_op + 1, '^') != NULL)
-        {
-            free(trimmed);
-            return 0;
-        }
-
-        *sci_op = '\0';
-        const char *base_str = trimmed;
-        const char *exp_str = sci_op + 1;
-
-        mpz_t base, pow10;
-        mpz_inits(base, pow10, NULL);
-        unsigned long exp = 0;
-        int ok = parse_integer_token_mpz(base, base_str) && parse_exponent_u64(exp_str, &exp);
-        if (ok)
-        {
-            mpz_ui_pow_ui(pow10, 10, exp);
-            mpz_mul(out, base, pow10);
-        }
-
-        mpz_clears(base, pow10, NULL);
-        free(trimmed);
-        return ok;
-    }
-
-    int ok = parse_integer_token_mpz(out, trimmed);
-    free(trimmed);
-    return ok;
+    mpz_clear(rhs);
+    return 1;
 }
 
 static int parse_range_parts(const char *left_expr, const char *right_expr, mpz_t lower, mpz_t upper)
@@ -274,41 +376,12 @@ int parse_numeric_expr_mpz(mpz_t out, const char *expr)
     if (expr == NULL)
         return 0;
 
-    size_t expr_len = strlen(expr);
-    char *copy = malloc(expr_len + 1);
-    if (copy == NULL)
+    MPZ_EXPR_PARSER parser = {.cursor = expr};
+    if (!parse_expr_mpz_impl(&parser, out))
         return 0;
-    memcpy(copy, expr, expr_len + 1);
 
-    mpz_set_ui(out, 0);
-    int has_terms = 0;
-
-    char *cursor = copy;
-    while (cursor != NULL)
-    {
-        char *plus = strchr(cursor, '+');
-        if (plus != NULL)
-            *plus = '\0';
-
-        mpz_t term_value;
-        mpz_init(term_value);
-        int ok = parse_numeric_term_mpz(term_value, cursor);
-        if (!ok)
-        {
-            mpz_clear(term_value);
-            free(copy);
-            return 0;
-        }
-
-        mpz_add(out, out, term_value);
-        mpz_clear(term_value);
-        has_terms = 1;
-
-        cursor = (plus != NULL) ? (plus + 1) : NULL;
-    }
-
-    free(copy);
-    return has_terms;
+    parser_skip_spaces(&parser);
+    return *parser.cursor == '\0';
 }
 
 int parse_numeric_expr_u64(const char *expr, uint64_t *out)

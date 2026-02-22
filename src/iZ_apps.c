@@ -44,7 +44,7 @@ static int write_all_bytes(int fd, const char *buf, size_t len)
  *
  * @param input_range Pointer to an INPUT_SIEVE_RANGE structure describing the
  *        start value (as a decimal string), the range length, the optional
- *        output filepath, and Miller–Rabin configuration.
+ *        output filepath, gap-stream mode, and Miller–Rabin configuration.
  * @return The total number of primes found in [Zs, Ze] on success, or 0 on
  *         invalid input, allocation failure, or I/O error.
  */
@@ -87,7 +87,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
     int start_x = mpz_fdiv_ui(info.Xs, info.vx);
     int end_x = mpz_fdiv_ui(info.Xe, info.vx);
 
-    // if Ys = 0, use SiZm for the first segment
+    // If Ys = 0, use SiZm on the first segment (covers small fixed primes too).
     if (mpz_cmp_ui(current_y, 0) == 0)
     {
         uint64_t limit = mpz_cmp_ui(info.Ye, 0) > 0 ? info.vx : end_x;
@@ -100,6 +100,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
         uint64_t s = mpz_get_ui(info.Zs);
         uint64_t e = mpz_get_ui(info.Ze);
+        uint64_t last_gap_base = 1;
 
         for (int i = 0; i < primes->count; i++)
         {
@@ -107,7 +108,16 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
             if (primes->array[i] > s && primes->array[i] <= e)
             {
                 total++;
-                fprintf(output, "%" PRIu64 " ", primes->array[i]);
+                if (input_range->stream_gaps)
+                {
+                    uint64_t gap = primes->array[i] - last_gap_base;
+                    fprintf(output, "%" PRIu64 " ", gap);
+                    last_gap_base = primes->array[i];
+                }
+                else
+                {
+                    fprintf(output, "%" PRIu64 " ", primes->array[i]);
+                }
             }
         }
 
@@ -153,7 +163,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
             goto stream_cleanup;
         }
 
-        vx_stream(vx_obj, output);
+        vx_stream(vx_obj, output, input_range->stream_gaps);
         total += vx_obj->p_count; // accumulate prime count
 
         vx_free(&vx_obj);

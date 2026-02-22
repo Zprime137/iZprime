@@ -862,16 +862,22 @@ void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps)
  * @brief Stream segment primes to an output stream in traversal order.
  * @param vx_obj Segment object.
  * @param output Destination stream (stdout or file).
+ * @param stream_gaps If non-zero, output prime gaps instead of primes.
  */
-void vx_stream(VX_SEG *vx_obj, FILE *output)
+void vx_stream(VX_SEG *vx_obj, FILE *output, int stream_gaps)
 {
     assert(vx_obj && "vx_obj is NULL in vx_stream");
     assert(output && "output stream is NULL in vx_stream");
 
-    // Initialize GMP reusable variables p, x_p
-    mpz_t p, x_p;
+    // Initialize GMP reusable variables.
+    mpz_t last_p, gap, p, x_p;
+    mpz_init(last_p);
+    mpz_init(gap);
     mpz_init(p);
     mpz_init(x_p);
+
+    // Prime gaps are reported from this segment base.
+    iZ_mpz(last_p, vx_obj->yvx, 1);
 
     int r = vx_obj->mr_rounds;
 
@@ -898,7 +904,16 @@ void vx_stream(VX_SEG *vx_obj, FILE *output)
                 {
                     vx_obj->p_count++; // otherwise already counted in det_sieve
                 }
-                gmp_fprintf(output, "%Zd ", p);
+                if (stream_gaps)
+                {
+                    mpz_sub(gap, p, last_p);
+                    gmp_fprintf(output, "%Zd ", gap);
+                    mpz_set(last_p, p);
+                }
+                else
+                {
+                    gmp_fprintf(output, "%Zd ", p);
+                }
             }
             else
             {
@@ -925,7 +940,16 @@ void vx_stream(VX_SEG *vx_obj, FILE *output)
                 {
                     vx_obj->p_count++;
                 }
-                gmp_fprintf(output, "%Zd ", p);
+                if (stream_gaps)
+                {
+                    mpz_sub(gap, p, last_p);
+                    gmp_fprintf(output, "%Zd ", gap);
+                    mpz_set(last_p, p);
+                }
+                else
+                {
+                    gmp_fprintf(output, "%Zd ", p);
+                }
             }
             else
             {
@@ -934,7 +958,7 @@ void vx_stream(VX_SEG *vx_obj, FILE *output)
         }
     }
 
-    mpz_clears(p, x_p, NULL);
+    mpz_clears(last_p, gap, p, x_p, NULL);
 }
 
 // ==================================================

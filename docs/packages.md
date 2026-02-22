@@ -34,6 +34,7 @@ This document tracks distro-native packaging targets for iZprime.
 ## CI Gates
 
 - Linux/macOS/Windows build and test matrix in `.github/workflows/ci.yml`.
+- Homebrew tap auto-update on release tags in `.github/workflows/update-homebrew-formula.yml`.
 - Minimum required checks per platform:
   - `make doctor`
   - `make cli`

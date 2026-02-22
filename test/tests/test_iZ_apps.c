@@ -28,6 +28,7 @@ int TEST_SiZ_stream(int verbose)
         .start = start_str,
         .range = test_range,
         .mr_rounds = MR_ROUNDS,
+        .stream_gaps = 0,
         .filepath = "./output/SiZ_stream_test1.txt",
     };
 
@@ -140,6 +141,7 @@ int TEST_SiZ_count(int verbose)
         .start = "0",
         .range = interval,
         .mr_rounds = MR_ROUNDS,
+        .stream_gaps = 0,
         .filepath = NULL,
     };
 
@@ -225,6 +227,7 @@ void BENCHMARK_SiZ_count(int save_results)
         .start = "0",
         .range = 1000000000ULL,
         .mr_rounds = MR_ROUNDS,
+        .stream_gaps = 0,
         .filepath = NULL,
     };
 

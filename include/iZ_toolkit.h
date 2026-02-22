@@ -235,8 +235,9 @@ void vx_full_sieve(VX_SEG *vx_obj, int collect_p_gaps);
  * @brief Stream segment primes to an output stream.
  * @param vx_obj Segment object.
  * @param output Writable output stream (e.g. stdout or a file).
+ * @param stream_gaps Non-zero to stream prime gaps instead of absolute primes.
  */
-void vx_stream(VX_SEG *vx_obj, FILE *output);
+void vx_stream(VX_SEG *vx_obj, FILE *output, int stream_gaps);
 /** @} */
 
 /**

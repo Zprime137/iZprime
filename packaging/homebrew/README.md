@@ -2,12 +2,22 @@
 
 This directory contains a Homebrew formula template.
 
+## Automated update from release tags
+
+The repository workflow `.github/workflows/update-homebrew-formula.yml` updates
+the tap formula automatically whenever a release is published.
+
+Required repository secret in `Zprime137/iZprime`:
+
+- `HOMEBREW_TAP_TOKEN`: PAT with write access to `Zprime137/homebrew-izprime`.
+
 ## Generate formula for a release
 
 1. Compute SHA256 of the release asset:
 
 ```bash
-shasum -a 256 dist/izprime-<version>.tar.gz
+curl -L https://github.com/Zprime137/iZprime/archive/refs/tags/v<version>.tar.gz -o /tmp/izprime.tar.gz
+shasum -a 256 /tmp/izprime.tar.gz
 ```
 
 2. Replace placeholders in `izprime.rb.in`:

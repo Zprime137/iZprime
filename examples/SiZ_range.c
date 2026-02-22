@@ -42,6 +42,7 @@ static void run_SiZ_stream(const char *start_str, uint64_t range, const char *fi
         .start = (char *)start_str,
         .range = range,
         .mr_rounds = MR_ROUNDS,
+        .stream_gaps = 0,
         .filepath = (char *)filepath,
     };
 
@@ -70,6 +71,7 @@ static void run_SiZ_count(const char *start_str, uint64_t range)
         .start = (char *)start_str,
         .range = range,
         .mr_rounds = MR_ROUNDS,
+        .stream_gaps = 0,
         .filepath = NULL,
     };
     int cores_num = get_cpu_cores_count();

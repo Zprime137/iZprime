@@ -94,7 +94,52 @@ int TEST_UTILS(int verbose)
     }
     mpz_clears(parsed_mpz, expected_mpz, addend_mpz, NULL);
 
-    // Test 6: inclusive range parser with grouped decimals
+    // Test 6: mixed operators and parentheses parser
+    current_test_idx++;
+    if (parse_numeric_expr_u64("(10^3 + 25) * 4", &u64_value) && u64_value == 4100ULL)
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "parse_numeric_expr_u64", "(10^3 + 25) * 4 -> 4100");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "parse_numeric_expr_u64", "Failed mixed operators parse");
+    }
+
+    // Test 7: division with parenthesized denominator
+    current_test_idx++;
+    if (parse_numeric_expr_u64("10^6 / (10^2 * 5)", &u64_value) && u64_value == 2000ULL)
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "parse_numeric_expr_u64", "10^6 / (10^2 * 5) -> 2000");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "parse_numeric_expr_u64", "Failed division parse");
+    }
+
+    // Test 8: scientific notation with expression exponent
+    current_test_idx++;
+    if (parse_numeric_expr_u64("1e(2 + 1)", &u64_value) && u64_value == 1000ULL)
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "parse_numeric_expr_u64", "1e(2 + 1) -> 1000");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "parse_numeric_expr_u64", "Failed scientific exponent expression parse");
+    }
+
+    // Test 9: inclusive range parser with grouped decimals
     current_test_idx++;
     mpz_t lower, upper;
     mpz_inits(lower, upper, NULL);
@@ -113,7 +158,7 @@ int TEST_UTILS(int verbose)
     }
     mpz_clears(lower, upper, NULL);
 
-    // Test 7: invalid grouped decimal should fail
+    // Test 10: invalid grouped decimal should fail
     current_test_idx++;
     if (!parse_numeric_expr_u64("1,00,000", &u64_value))
     {
@@ -128,7 +173,22 @@ int TEST_UTILS(int verbose)
             print_test_module_result(0, current_test_idx, "parse_numeric_expr_u64", "Accepted invalid grouped decimal");
     }
 
-    // Test 8: invalid range expression should fail
+    // Test 11: divide-by-zero expression should fail
+    current_test_idx++;
+    if (!parse_numeric_expr_u64("10^6 / 0", &u64_value))
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "parse_numeric_expr_u64", "Rejects divide-by-zero expression");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "parse_numeric_expr_u64", "Accepted divide-by-zero expression");
+    }
+
+    // Test 12: invalid range expression should fail
     current_test_idx++;
     mpz_inits(lower, upper, NULL);
     if (!parse_inclusive_range_mpz("range[10^6]", lower, upper))

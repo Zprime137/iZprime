@@ -410,7 +410,7 @@ int TEST_VX_SEG(int verbose)
     if (stream_file)
     {
         VX_SEG *vx_s = vx_init(iZm, 1, vx, "1000000000000000", 25);
-        vx_stream(vx_s, stream_file);
+        vx_stream(vx_s, stream_file, 0);
         fclose(stream_file);
         vx_free(&vx_s);
         passed_tests++;

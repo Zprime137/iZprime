@@ -69,9 +69,9 @@ int is_numeric_str(const char *str);
  *
  * Supported term formats:
  * - plain decimal integer (`1000000`, `1,000,000`)
- * - power notation (`10^6`)
- * - scientific shorthand (`1e6`, `10e100`)
- * - additive expressions (`10e100 + 10e9`)
+ * - arithmetic operators (`+`, `-`, `*`, `/`)
+ * - power/scientific operators (`^`, `e`, `E`)
+ * - parenthesized sub-expressions (`(10^6 + 5) * 3`)
  *
  * @param out Output mpz value.
  * @param expr Input expression string.
