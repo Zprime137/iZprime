@@ -4,255 +4,173 @@
 [![Release](https://img.shields.io/github/v/release/Zprime137/iZprime)](https://github.com/Zprime137/iZprime/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-`iZprime` is a C library and CLI for prime computation at two levels:
+`iZprime` is a modular C library + CLI for two complementary goals:
 
-1. **Algorithm design level**: clean, single-threaded sieve implementations for study, comparison, and extension.
-2. **Practical large-range level**: range counting/streaming and prime search workflows that scale to **arbitrary bounds** (via GMP-backed big integers), not just `2^64`.
+1. Practical prime workflows (counting, streaming, searching) over very large numeric ranges.
+2. Research-friendly sieve implementations with clear internals for extension and experimentation.
 
-If you want a project where you can both *study sieve design* and *run real large-number prime tasks*, iZprime is built for exactly that.
-
----
-
-## Why iZprime
-
-- Two-track architecture: clean algorithm implementations and pragmatic large-range workflows.
-- Arbitrary-bound range support through GMP-backed parsing and arithmetic.
-- Reusable toolkit primitives for rapid extension instead of one-off prototypes.
-- Strong CI gate across Linux, macOS, and Windows (MSYS2), with warning-clean builds.
-- Full documentation path from pseudocode to implementation for serious review.
-
----
+Most C sieve libraries are optimized around finite machine bounds (for example `<= 2^64`).
+`iZprime` keeps fast bounded sieves, but its application layer is designed for arbitrary-range workflows using expression parsing + GMP-backed arithmetic.
 
 ## Quick Start
 
-### 1) Install dependencies
+### Install
 
-#### macOS (Homebrew)
+Homebrew (tap):
+
+```bash
+brew tap Zprime137/izprime
+brew install izprime
+```
+
+or one-shot:
+
+```bash
+brew install Zprime137/izprime/izprime
+```
+
+Build from source (macOS example):
 
 ```bash
 brew install gcc make pkg-config gmp openssl@3 doxygen
+make clean
+make cli
+./build/bin/izprime help
 ```
 
-#### Ubuntu/Debian
+Ubuntu/Debian build deps:
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y build-essential make pkg-config libgmp-dev libssl-dev doxygen
 ```
 
-#### Windows (MSYS2 UCRT64, experimental)
-
-```bash
-pacman -S --needed mingw-w64-ucrt-x86_64-toolchain \
-  mingw-w64-ucrt-x86_64-make \
-  mingw-w64-ucrt-x86_64-gmp \
-  mingw-w64-ucrt-x86_64-openssl \
-  mingw-w64-ucrt-x86_64-pkgconf
-```
-
-### 2) Build and install
-
-```bash
-make clean
-make cli
-sudo make install PREFIX=/usr/local
-```
-
-This installs:
-
-- CLI: `izprime`
-- headers: `include/*.h`
-- library: `libizprime` (static, and shared when enabled)
-- pkg-config metadata: `izprime.pc`
-
-If you prefer local execution without install:
-
-```bash
-./build/bin/izprime help
-```
-
-### 3) Use it immediately
+### Use
 
 ```bash
 izprime doctor
-izprime stream_primes --range "[0, 10^5]" --print
-izprime count_primes --range "[0, 10^9]" --cores-number 8
-izprime next_prime --n "10^12 + 39"
-izprime is_prime --n "10^100 + 123456789" --rounds 40
+izprime stream_primes --range "[0, 10^6]" --print
+izprime stream_primes --range "[10^12, 10^12 + 10^6]" --stream-to output/primes.txt
+izprime stream_primes --range "[0, 1000]" --print-gaps
+izprime count_primes --range "[10^100, 10^100 + 10^9]" --cores-number 8
+izprime next_prime --n "10^100 + 123456789"
+izprime is_prime --n "(10^61 + 1) * 3 + 2" --rounds 40
 ```
 
-Numeric input supports: `10^6`, `1e6`, `1,000,000`, and additive expressions like `10^100 + 10^9`.
+Numeric inputs support grouped integers and arithmetic expressions with `+ - * / ^ e` and parentheses.
 
----
+## Project Identity
 
-## Why iZprime Is Not Limited to 64-bit Bounds
+`iZprime` intentionally separates two tracks:
 
-The algorithmic sieve APIs in `prime_sieve.c` work on classic finite limits (`uint64_t`) and return explicit prime lists. That is intentional for algorithm study.
+- `src/prime_sieve.c`: algorithm-focused reference implementations.
+  - single-threaded model APIs,
+  - input: `n`, output: full prime list,
+  - ideal for studying sieve design decisions and low-level optimization techniques.
 
-The practical APIs in `iZ_apps.c` are different:
+- `src/iZ_apps.c`: pragmatic large-range workflows.
+  - `SiZ_stream` and `SiZ_count` for real-world range enumeration/counting,
+  - deterministic sieving + primality testing pipeline,
+  - designed for ranges beyond native integer limits in practice.
 
-- range endpoints are parsed from expressions into GMP integers,
-- counting/streaming workflows combine deterministic sieving with primality testing,
-- operations are designed for ranges like `10^100 + k`.
+This split is core to the project: one side optimizes understanding and reproducibility, the other optimizes operational utility.
 
-So while some APIs are `uint64_t` by design, **the library as a system is built for arbitrary-range workflows**.
+## About the Library
 
----
+### Algorithms (`src/prime_sieve.c`)
 
-## Developer Guide (Extending the Library)
-
-### Architecture at a glance
-
-- `src/prime_sieve.c`: **algorithmic track**
-  - classical and SiZ-family sieve implementations,
-  - single-threaded,
-  - takes `n`, returns `UI64_ARRAY *`.
-
-- `src/iZ_apps.c`: **pragmatic track**
-  - `SiZ_stream`, `SiZ_count`, `next/is_prime/random-prime` workflows,
-  - range operations over arbitrary bounds,
-  - combines deterministic sieve logic with primality testing.
-
-This separation is deliberate: it keeps algorithm design code readable while keeping production workflows modular.
-
-### Starter toolkit provided by iZprime
-
-You can reuse these instead of re-implementing infrastructure:
-
-- `BITMAP` (`include/bitmap.h`): packed bits, low-level marking/check operations.
-- `UI16/32/64_ARRAY` (`include/int_arrays.h`): dynamic typed arrays and helpers.
-- `iZ toolkit` (`include/iZ_toolkit.h`):
-  - wheel mappings (`iZ`, `iZ_mpz`),
-  - wheel/segment construction,
-  - solver helpers (`iZm_solve_for_x0`, `iZm_solve_for_x0_mpz`, `iZm_solve_for_y0`),
-  - segment lifecycle (`vx_init`, `vx_full_sieve`, `vx_stream`, `vx_free`).
-
-### Memory ownership convention
-
-APIs returning `UI64_ARRAY *` return heap-owned buffers.
-
-```c
-UI64_ARRAY *arr = SiZm(1000000);
-/* ... */
-ui64_free(&arr);
-```
-
-### Public API entry points
-
-Primary header: `include/iZ_api.h`
-
-Main groups:
-
-- classic sieves: `SoE`, `SSoE`, `SoEu`, `SoS`, `SoA`
+- Classic: `SoE`, `SSoE`, `SoEu`, `SoS`, `SoA`
 - SiZ family: `SiZ`, `SiZm`, `SiZm_vy`
-- range operations: `SiZ_stream`, `SiZ_count`
-- prime generation/search: `vy_random_prime`, `vx_random_prime`, `iZ_next_prime`
 
----
+These are clean, benchmarkable baselines for sieve algorithm research and implementation comparison.
 
-## Study the Algorithms (Pseudocode + Code)
+### Pragmatic APIs (`src/iZ_apps.c`)
 
-For algorithm design review, start with:
+- `SiZ_stream`: stream primes (or gaps) in a range and return count
+- `SiZ_count`: count primes in a range (multi-process where supported)
+- `iZ_next_prime`, `vx_random_prime`, `vy_random_prime`
 
-- `docs/pseudocode.pdf`
+Primary public entry point: `include/iZ_api.h`.
 
-Then map it to implementation:
+## Developer Guide (Extending iZprime)
 
-- `src/prime_sieve.c` for sieve algorithm mechanics,
-- `src/toolkit/iZ_toolkit.c` for wheel/segment internals,
-- `src/iZ_apps.c` for large-range operational pipelines.
+### Starter toolkit you can reuse
 
-If you are reviewing for methodology or TOMS-style clarity, this path gives the cleanest flow from specification to implementation.
+- `BITMAP` (`include/bitmap.h`): compact candidate representation and bit ops.
+- `UI16/32/64_ARRAY` (`include/int_arrays.h`): dynamic typed arrays.
+- `iZ toolkit` (`include/iZ_toolkit.h`):
+  - index mappings (`iZ`, `iZ_mpz`),
+  - wheel/VX construction and selection,
+  - modular hit solvers,
+  - VX segment lifecycle (`vx_init`, `vx_full_sieve`, `vx_stream`, `vx_free`).
 
----
+### Typical extension path
 
-## Build, Test, Benchmark
+1. Prototype in `src/playground.c` or a focused file under `src/`.
+2. Reuse toolkit primitives instead of duplicating infra.
+3. Add/adjust API only after behavior is stable.
+4. Add unit + integration tests.
+5. Benchmark against existing implementations.
 
-### Build modes
+### Build, test, benchmark
 
 ```bash
-make
-make debug
-make release
-make clean
 make help
-```
-
-### Tests
-
-```bash
-make test-all
+make cli
 make test-unit
 make test-integration
-make test-all verbose
-```
-
-### Benchmarks
-
-```bash
 make benchmark-p_sieve
 make benchmark-p_gen
 make benchmark-SiZ_count
 ```
 
-Save results and auto-plot:
+With result capture/plot:
 
 ```bash
 make benchmark-p_sieve save-results plot
 make benchmark-p_gen save-results plot
 ```
 
----
-
 ## Project Layout
 
 ```text
-include/         public headers + toolkit interfaces
-src/             algorithm implementations + application layer
-src/cli/         CLI dispatch and subcommands
-examples/        example programs
-test/            unit/integration/benchmark runners
-docs/            manuals, pseudocode, tests, benchmarks
-mk/              modular Makefile fragments
-packaging/       packaging and distribution metadata
-py_tools/        benchmark plotting utilities
+include/         public headers and reusable toolkit interfaces
+src/             algorithms, applications, and core implementations
+src/cli/         CLI dispatcher and subcommands
+examples/        direct API usage examples
+test/            unit/integration tests and benchmark drivers
+docs/            manuals, benchmarks, tests, and pseudocode
+mk/              modular make fragments
+packaging/       package metadata and release templates
+py_tools/        plotting utilities for benchmark outputs
 ```
 
----
+## Documentation
 
-## Documentation Index
+- `docs/pseudocode.pdf`: algorithm pseudocode and design rationale
+- `docs/benchmarks.md`: benchmark methodology and result tables/plots
+- `docs/tests.md`: test targets and expected pass output
+- `docs/cli.md`: full CLI options
+- `docs/Makefile.md`: build system details
+- `docs/contribute.md`: contribution workflow
 
-- `docs/cli.md` - CLI commands and examples
-- `docs/Makefile.md` - build targets/options
-- `docs/tests.md` - test targets and expected output
-- `docs/benchmarks.md` - benchmark methodology/results
-- `docs/packages.md` - distro packaging plan
-- `docs/release.md` - release workflow
-- `docs/contribute.md` - contribution checklist
-- `docs/pseudocode.pdf` - algorithm pseudocode and design notes
-
-Generate the PDF manual:
+Generate user manual PDF:
 
 ```bash
 make userManual
 ```
 
-Output: `docs/userManual.pdf`
+## Contribution
 
----
+Feedback, performance reports, bug reports, and PRs are welcome.
 
-## Review and Feedback
-
-If you are reviewing iZprime for algorithm quality, correctness, or systems design, start from:
+If you are reviewing the project deeply, the best reading order is:
 
 1. `docs/pseudocode.pdf`
 2. `src/prime_sieve.c`
-3. `src/iZ_apps.c`
-4. `docs/benchmarks.md` and `docs/tests.md`
-
-Issues, critical feedback, and contribution PRs are all welcome.
-
----
+3. `src/toolkit/iZ_toolkit.c`
+4. `src/iZ_apps.c`
+5. `docs/benchmarks.md` + `docs/tests.md`
 
 ## License
 
