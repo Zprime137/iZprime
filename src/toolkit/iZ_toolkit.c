@@ -141,7 +141,7 @@ void get_root_primes(UI64_ARRAY *primes, uint64_t limit)
 
 /**
  * @ingroup iz_toolkit
- * @brief Check the primality of a number using GMP's probabilistic test.
+ * @brief Test the primality of a number using GMP's probabilistic test.
  * @param n Number to check.
  * @param rounds Number of Miller-Rabin rounds.
  * @return Non-zero if probably prime, 0 if composite.
@@ -150,7 +150,7 @@ void get_root_primes(UI64_ARRAY *primes, uint64_t limit)
  * wrapping GMP's `mpz_probab_prime_p` function, allowing for changes to
  * the underlying primality testing method in the future without affecting the API.
  */
-int check_primality(mpz_t n, int rounds)
+int test_primality(mpz_t n, int rounds)
 {
     // GMP's mpz_probab_prime_p returns:
     // 0 if n is composite,
@@ -656,7 +656,7 @@ static void vx_prob_sieve(VX_SEG *vx_obj)
             // Compute x_p = yvx + x
             mpz_add_ui(x_p, vx_obj->yvx, x);
             iZ_mpz(p, x_p, -1); // Compute p = iZ(x_p, -1)
-            int is_prime = check_primality(p, r);
+            int is_prime = test_primality(p, r);
             vx_obj->p_test_ops++;
 
             // if is_prime, increment count, else clear composite from x5
@@ -675,7 +675,7 @@ static void vx_prob_sieve(VX_SEG *vx_obj)
         {
             mpz_add_ui(x_p, vx_obj->yvx, x);
             iZ_mpz(p, x_p, 1); // Compute p = iZ(x_p, 1)
-            int is_prime = check_primality(p, r);
+            int is_prime = test_primality(p, r);
             vx_obj->p_test_ops++;
 
             if (is_prime)
@@ -895,7 +895,7 @@ void vx_stream(VX_SEG *vx_obj, FILE *output, int stream_gaps)
             if (vx_obj->is_large_limit)
             {
                 vx_obj->p_test_ops++;
-                is_prime = check_primality(p, r);
+                is_prime = test_primality(p, r);
             }
 
             if (is_prime)
@@ -931,7 +931,7 @@ void vx_stream(VX_SEG *vx_obj, FILE *output, int stream_gaps)
             if (vx_obj->is_large_limit)
             {
                 vx_obj->p_test_ops++;
-                is_prime = check_primality(p, r);
+                is_prime = test_primality(p, r);
             }
 
             if (is_prime)
@@ -1010,6 +1010,7 @@ IZM_RANGE_INFO range_info_init(INPUT_SIEVE_RANGE *input_range, int vx)
 
     return info;
 }
+
 void range_info_free(IZM_RANGE_INFO *info)
 {
     if (info == NULL)
@@ -1094,7 +1095,7 @@ int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size)
                 mpz_add_ui(x_z, yvx, x);
                 iZ_mpz(z, x_z, m_id);
                 // check if z is prime
-                found = check_primality(z, MR_ROUNDS);
+                found = test_primality(z, MR_ROUNDS);
 
                 // if z is prime, set p = z
                 if (found)
@@ -1185,7 +1186,7 @@ int vy_search_prime(mpz_t p, int m_id, mpz_t vx)
         mpz_add(z, z, g);
 
         // check if z is prime
-        found = check_primality(z, MR_ROUNDS);
+        found = test_primality(z, MR_ROUNDS);
 
         // if z is prime, set p = z
         if (found)

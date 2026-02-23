@@ -61,7 +61,7 @@ void get_root_primes(UI64_ARRAY *primes, uint64_t limit);
  * @param rounds Number of Miller-Rabin rounds.
  * @return Non-zero if probably prime, 0 if composite.
  */
-int check_primality(mpz_t n, int rounds);
+int test_primality(mpz_t n, int rounds);
 /** @} */
 
 /** @name Standard VX Sizes (primorial products excluding 2,3) */

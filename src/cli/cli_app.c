@@ -129,7 +129,7 @@ static void print_general_help(const char *prog)
     printf("  stream_primes  Stream primes over a range (uses SiZ_stream)\n");
     printf("  count_primes   Count primes over a range (uses SiZ_count)\n");
     printf("  next_prime     Find the next prime after n (uses iZ_next_prime)\n");
-    printf("  is_prime       Check primality for n (uses check_primality)\n");
+    printf("  is_prime       Check primality for n (uses test_primality)\n");
     printf("  test           Run API-level consistency tests\n");
     printf("  benchmark      Benchmark sieve models\n");
     printf("  doctor         Check runtime environment and dependencies\n");
@@ -716,7 +716,7 @@ static int run_is_prime_cmd(int argc, char **argv)
 
     STOPWATCH timer;
     sw_start(&timer);
-    int result = check_primality(n, rounds);
+    int result = test_primality(n, rounds);
     sw_stop(&timer);
 
     if (result > 0)
