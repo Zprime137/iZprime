@@ -878,6 +878,10 @@ void vx_stream(VX_SEG *vx_obj, FILE *output, int stream_gaps)
 
     // Prime gaps are reported from this segment base.
     iZ_mpz(last_p, vx_obj->yvx, 1);
+    if (stream_gaps)
+    {
+        gmp_fprintf(output, "First prime gap computed from: %Zd\n", last_p);
+    }
 
     int r = vx_obj->mr_rounds;
 

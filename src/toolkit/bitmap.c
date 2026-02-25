@@ -203,9 +203,10 @@ void bitmap_clear_all(BITMAP *bitmap)
  * @note No operation if bitmap is NULL, step is 0, or start_idx > limit
  * @note Includes overflow prevention: stops if next index would overflow
  *
- * @example
+ * @code{.c}
  * // For Sieve of Eratosthenes: mark multiples of 3 starting from 9
  * bitmap_clear_steps(bitmap, 3, 9, 1000);  // Clears 9, 12, 15, 18, ...
+ * @endcode
  */
 void bitmap_clear_steps(BITMAP *bitmap, uint64_t step, uint64_t start_idx, uint64_t limit)
 {

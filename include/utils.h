@@ -12,6 +12,7 @@
 // Standard library includes
 #include <stdlib.h>   // For malloc, free, etc.
 #include <stdint.h>   // For fixed-width integer types like uint64_t
+#include <inttypes.h> // For PRIu64 and other format macros
 #include <stddef.h>   // For size_t
 #include <string.h>   // For string manipulation functions like snprintf
 #include <assert.h>   // For assertions

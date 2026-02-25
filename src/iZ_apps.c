@@ -8,7 +8,6 @@
  */
 
 #include <iZ_api.h>
-#include <inttypes.h>
 
 #if IZ_PLATFORM_HAS_FORK
 static int write_all_bytes(int fd, const char *buf, size_t len)
@@ -67,7 +66,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
     uint64_t total = 0; // output: total prime count
 
-    int vx = VX6; // Use VX6 segment size (1,616,615 bits) for optimal results
+    int vx = VX6; // Use VX6 segment size for optimal results
     // Miller-Rabin rounds, bounded [5, 50]
     int mr_rounds = MIN(MAX(input_range->mr_rounds, 5), 50);
 
@@ -213,7 +212,9 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
            "Invalid INPUT_SIEVE_RANGE passed to SiZ_count.");
 
     uint64_t total = 0;
-    int vx = compute_l2_vx(pow(10, 9)); // Use a segment width that balances workload and overhead for 10^9 range
+    int vx = VX6; // Use VX6 segment size for optimal results
+    // Miller-Rabin rounds, bounded [5, 50]
+    int mr_rounds = MIN(MAX(input_range->mr_rounds, 5), 50);
     cores_num = MAX(1, MIN(cores_num, get_cpu_cores_count()));
 #if !IZ_PLATFORM_HAS_FORK
     if (cores_num > 1)
@@ -334,7 +335,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
                 goto count_cleanup;
             }
 
-            VX_SEG *vx_obj = vx_init(iZm, seg_start_x, seg_end_x, y_str, input_range->mr_rounds);
+            VX_SEG *vx_obj = vx_init(iZm, seg_start_x, seg_end_x, y_str, mr_rounds);
             free(y_str);
             if (!vx_obj)
             {
@@ -461,7 +462,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
                         exit(1);
                     }
 
-                    VX_SEG *vx_obj = vx_init(iZm_local, seg_start_x, seg_end_x, y_str, input_range->mr_rounds);
+                    VX_SEG *vx_obj = vx_init(iZm_local, seg_start_x, seg_end_x, y_str, mr_rounds);
                     free(y_str);
                     if (!vx_obj)
                     {

@@ -45,19 +45,23 @@ Alias: `sieve`.
 Counts primes in an inclusive range using `SiZ_count`.
 
 ```bash
-izprime count_primes --range "[LOWER, UPPER]" [--cores-number N] [--mr-rounds N]
+izprime count_primes --range "[LOWER, UPPER]" [--cores N|max] [--mr-rounds N]
 ```
 
 Examples:
 
 ```bash
-izprime count_primes --range "[0, 10^9]" --cores-number 8
-izprime count_primes --range "10^100 + 10^9, 10^100 + 10^9 + 10^9" --cores-number 4
+izprime count_primes --range "[0, 10^9]" --cores 8
+izprime count_primes --range "10^100 + 10^9, 10^100 + 10^9 + 10^9" --cores max
 ```
 
 Alias: `count`.
 
-Note: on platforms without `fork`, `--cores-number` is accepted but execution falls back to single-process mode.
+Notes:
+
+- `--cores` accepts an integer value (`>= 1`) or the literal `max`.
+- `--cores-number` is still accepted as a backward-compatible alias.
+- On platforms without `fork`, multi-process mode is unavailable and execution falls back to single-process mode.
 
 ## `next_prime`
 
@@ -73,9 +77,25 @@ Example:
 izprime next_prime --n "10^12 + 39"
 ```
 
+## `prev_prime`
+
+Finds the previous prime before `n` using `iZ_next_prime` in reverse mode.
+
+```bash
+izprime prev_prime --n VALUE
+```
+
+Example:
+
+```bash
+izprime prev_prime --n "10^12 + 39"
+```
+
+Alias: `prev`.
+
 ## `is_prime`
 
-Checks primality of `n` using `check_primality`.
+Checks primality of `n` using `test_primality`.
 
 ```bash
 izprime is_prime --n VALUE [--rounds N]

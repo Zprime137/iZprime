@@ -40,6 +40,8 @@ typedef struct
     CLI_HANDLER handler;
 } CLI_COMMAND;
 
+static int run_directional_prime_cmd(int argc, char **argv, int forward);
+
 static int parse_expr_u64(const char *value, uint64_t *out)
 {
     return parse_numeric_expr_u64(value, out);
@@ -51,6 +53,23 @@ static int parse_expr_int(const char *value, int *out)
     if (!parse_numeric_expr_u64(value, &parsed) || parsed > INT_MAX)
         return 0;
     *out = (int)parsed;
+    return 1;
+}
+
+static int parse_cores_value(const char *value, int *out)
+{
+    if (value == NULL || out == NULL)
+        return 0;
+
+    if (strcmp(value, "max") == 0)
+    {
+        *out = get_cpu_cores_count();
+        return 1;
+    }
+
+    if (!parse_expr_int(value, out) || *out < 1)
+        return 0;
+
     return 1;
 }
 
@@ -129,12 +148,13 @@ static void print_general_help(const char *prog)
     printf("  stream_primes  Stream primes over a range (uses SiZ_stream)\n");
     printf("  count_primes   Count primes over a range (uses SiZ_count)\n");
     printf("  next_prime     Find the next prime after n (uses iZ_next_prime)\n");
+    printf("  prev_prime     Find the previous prime before n (uses iZ_next_prime)\n");
     printf("  is_prime       Check primality for n (uses test_primality)\n");
     printf("  test           Run API-level consistency tests\n");
     printf("  benchmark      Benchmark sieve models\n");
     printf("  doctor         Check runtime environment and dependencies\n");
     printf("  help           Show this message\n\n");
-    printf("Aliases: sieve -> stream_primes, count -> count_primes\n");
+    printf("Aliases: sieve -> stream_primes, count -> count_primes, prev -> prev_prime\n");
     printf("Use '%s <command> --help' for command-specific options.\n", prog);
 }
 
@@ -150,15 +170,24 @@ static void print_stream_help(const char *prog)
 
 static void print_count_help(const char *prog)
 {
-    printf("Usage: %s count_primes --range \"[LOWER, UPPER]\" [--cores-number N] [--mr-rounds N]\n", prog);
+    printf("Usage: %s count_primes --range \"[LOWER, UPPER]\" [--cores N|max] [--mr-rounds N]\n", prog);
     printf("Notes:\n");
     printf("  - Range is inclusive and accepts large-number expressions.\n");
-    printf("  - --cores-number is clamped to available CPU cores.\n");
+    printf("  - --cores accepts an integer >= 1 or the literal 'max'.\n");
+    printf("  - core count is clamped to available CPU cores.\n");
+    printf("  - --cores-number is accepted as a backward-compatible alias.\n");
 }
 
 static void print_next_prime_help(const char *prog)
 {
     printf("Usage: %s next_prime --n VALUE\n", prog);
+    printf("Notes:\n");
+    printf("  - VALUE accepts the same numeric expression syntax as range bounds.\n");
+}
+
+static void print_prev_prime_help(const char *prog)
+{
+    printf("Usage: %s prev_prime --n VALUE\n", prog);
     printf("Notes:\n");
     printf("  - VALUE accepts the same numeric expression syntax as range bounds.\n");
 }
@@ -322,11 +351,11 @@ static int run_count_primes_cmd(int argc, char **argv)
             has_range = 1;
             continue;
         }
-        if (strcmp(argv[i], "--cores-number") == 0 || strcmp(argv[i], "--cores") == 0)
+        if (strcmp(argv[i], "--cores") == 0 || strcmp(argv[i], "--cores-number") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_int(argv[++i], &cores) || cores < 1)
+            if (i + 1 >= argc || !parse_cores_value(argv[++i], &cores))
             {
-                fprintf(stderr, "Invalid --cores-number value.\n");
+                fprintf(stderr, "Invalid --cores value. Use an integer >= 1 or 'max'.\n");
                 return EXIT_FAILURE;
             }
             continue;
@@ -595,13 +624,21 @@ static int run_benchmark_cmd(int argc, char **argv)
 
 static int run_next_prime_cmd(int argc, char **argv)
 {
+    return run_directional_prime_cmd(argc, argv, 1);
+}
+
+static int run_directional_prime_cmd(int argc, char **argv, int forward)
+{
     const char *value_expr = NULL;
 
     for (int i = 2; i < argc; ++i)
     {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
         {
-            print_next_prime_help(argv[0]);
+            if (forward)
+                print_next_prime_help(argv[0]);
+            else
+                print_prev_prime_help(argv[0]);
             return EXIT_SUCCESS;
         }
         if (strcmp(argv[i], "--n") == 0)
@@ -641,21 +678,29 @@ static int run_next_prime_cmd(int argc, char **argv)
 
     STOPWATCH timer;
     sw_start(&timer);
-    int found = iZ_next_prime(prime, base, 1);
+    int found = iZ_next_prime(prime, base, forward);
     sw_stop(&timer);
 
     if (!found)
     {
-        fprintf(stderr, "Failed to find the next prime.\n");
+        fprintf(stderr, "Failed to find the %s prime.\n", forward ? "next" : "previous");
         mpz_clears(base, prime, NULL);
         return EXIT_FAILURE;
     }
 
-    gmp_printf("Next prime after %Zd is %Zd\n", base, prime);
+    if (forward)
+        gmp_printf("Next prime after %Zd is %Zd\n", base, prime);
+    else
+        gmp_printf("Previous prime before %Zd is %Zd\n", base, prime);
     printf("Elapsed (s): %.6f s\n", timer.elapsed_sec);
 
     mpz_clears(base, prime, NULL);
     return EXIT_SUCCESS;
+}
+
+static int run_prev_prime_cmd(int argc, char **argv)
+{
+    return run_directional_prime_cmd(argc, argv, 0);
 }
 
 static int run_is_prime_cmd(int argc, char **argv)
@@ -774,6 +819,8 @@ static const CLI_COMMAND k_commands[] = {
     {"count_primes", run_count_primes_cmd},
     {"count", run_count_primes_cmd},
     {"next_prime", run_next_prime_cmd},
+    {"prev_prime", run_prev_prime_cmd},
+    {"prev", run_prev_prime_cmd},
     {"is_prime", run_is_prime_cmd},
     {"test", run_test_cmd},
     {"benchmark", run_benchmark_cmd},
