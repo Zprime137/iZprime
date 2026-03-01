@@ -43,6 +43,7 @@ SAVE_RESULTS := 1
 endif
 
 TEST_RUNNER = $(OBJ_DIR)/$(NEW_TEST_DIR)/test_runner
+CLI_APP_OBJ = $(OBJ_DIR)/src/cli/cli_app.o
 TEST_ARGS_COMMON = $(if $(filter 1,$(VERBOSE)),--verbose,) \
 			   $(if $(filter 1,$(SAVE_RESULTS)),--save-results,) \
 			   $(TEST_ARGS)
@@ -90,10 +91,10 @@ $(CLI_FLAG_TARGETS):
 	@:
 
 # Build test runner once and reuse for all test/benchmark targets
-$(TEST_RUNNER): directories $(STATIC_LIB) $(NEW_TEST_OBJECTS)
+$(TEST_RUNNER): directories $(STATIC_LIB) $(NEW_TEST_OBJECTS) $(CLI_APP_OBJ)
 	@mkdir -p $(OBJ_DIR)/$(NEW_TEST_DIR)
 	@echo "Building test runner..."
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_OBJECTS) $(STATIC_LIB) $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(TEST_RUNNER) $(NEW_TEST_OBJECTS) $(CLI_APP_OBJ) $(STATIC_LIB) $(LDFLAGS) $(LDLIBS)
 
 # Build and run new test framework
 test-all: $(TEST_RUNNER)
@@ -107,6 +108,12 @@ test-unit: $(TEST_RUNNER)
 test-integration: $(TEST_RUNNER)
 	@echo "Running integration tests..."
 	$(call RUN_TEST,--integration)
+
+test-cli: $(TEST_RUNNER)
+	@echo "Running CLI smoke tests..."
+	$(call RUN_TEST,--cli)
+
+test_cli: test-cli
 
 # Dedicated benchmark drivers
 benchmark-p_sieve: $(TEST_RUNNER)
@@ -136,4 +143,4 @@ test: directories $(STATIC_LIB) $(LEGACY_TEST_OBJECTS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $(OBJ_TEST_DIR)/test_runner $(LEGACY_TEST_OBJECTS) $(STATIC_LIB) $(LDFLAGS) $(LDLIBS)
 	./$(OBJ_TEST_DIR)/test_runner
 
-PHONY_TARGETS += test test-all test-unit test-integration benchmark-p_sieve benchmark-p_gen benchmark-SiZ_count benchmark-p-sieve benchmark-p-gen benchmark-siz-count benchmark-SiZ-count $(CLI_FLAG_TARGETS)
+PHONY_TARGETS += test test-all test-unit test-integration test-cli test_cli benchmark-p_sieve benchmark-p_gen benchmark-SiZ_count benchmark-p-sieve benchmark-p-gen benchmark-siz-count benchmark-SiZ-count $(CLI_FLAG_TARGETS)

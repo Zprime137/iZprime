@@ -20,10 +20,20 @@
 #define N_LIMIT (1000000000000ULL)
 
 /** @brief Assert that input n is within the valid range for sieve functions. */
-#define ASSERT_LIMIT(n) assert((n) > 10 && (n) <= N_LIMIT && "Input must be in the range (10, 10^12).")
+#define ASSERT_LIMIT(n) assert((n) <= N_LIMIT && "Input must be in the range <= 10^12.")
 
 /** @brief Pi(n) is an approximation of the number of primes up to n, used for initial array sizing. */
 #define Pi(n) ((n / log(n)))
+
+// a small array of the first few primes (<= 100) to use as base for sieving, and to avoid small edge cases in the algorithms.
+static const uint64_t base_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97};
+static const int base_primes_count = sizeof(base_primes) / sizeof(base_primes[0]);
+
+static void push_small_primes(UI64_ARRAY *primes, uint64_t n)
+{
+    for (int i = 0; i < base_primes_count && base_primes[i] <= n; i++)
+        ui64_push(primes, base_primes[i]);
+}
 
 // =========================================================
 // * Classic Sieve Algorithms
@@ -67,7 +77,7 @@ static void process_N_bitmap(UI64_ARRAY *primes, BITMAP *sieve_bitmap, uint64_t 
  * @param n The upper limit to find primes.
  * @return
  *      - A pointer to a UI64_ARRAY structure containing the list of prime numbers up to n,
- *      - NULL if memory allocation fails or if n is less than 10.
+ *      - NULL if memory allocation fails.
  */
 UI64_ARRAY *SoE(uint64_t n)
 {
@@ -76,6 +86,13 @@ UI64_ARRAY *SoE(uint64_t n)
     // Initialize the primes object with an estimated capacity
     UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
     assert(primes && "Memory allocation failed for primes array.");
+
+    if (n <= 100)
+    {
+        push_small_primes(primes, n);
+        ui64_resize_to_fit(primes); // Trim excess memory in primes array
+        return primes;
+    }
 
     // Create a bitmap to mark prime numbers
     BITMAP *sieve = bitmap_init(n + 1, 1);
@@ -109,11 +126,16 @@ UI64_ARRAY *SoE(uint64_t n)
  * @param n The upper limit to find primes.
  * @return
  *      - A pointer to the UI64_ARRAY structure containing the list of primes up to n,
- *      - NULL if memory allocation fails or if n is less than 1000.
+ *      - NULL if memory allocation fails.
  */
 UI64_ARRAY *SSoE(uint64_t n)
 {
     ASSERT_LIMIT(n); // Validate input limit
+
+    if (n <= 10000)
+    {
+        return SoE(n); // For small n, the overhead of segmentation is not worth it
+    }
 
     // Initialize UI64_ARRAY with an estimated capacity
     UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
@@ -184,6 +206,181 @@ UI64_ARRAY *SSoE(uint64_t n)
 
 /**
  * @ingroup iz_api
+ * @brief Sieve of Sundaram: Generates a list of prime numbers up to a given limit using the Sieve of Sundaram algorithm.
+ *
+ * Description:
+ * This function implements the Sieve of Sundaram algorithm to find all prime numbers
+ * up to a specified limit `n`. The Sieve of Sundaram works by eliminating numbers
+ * of the form `i + j + 2ij` from a list of integers from 1 to `k = (n-1)/2`.
+ * If an integer `x` in this range is not eliminated, then `2x+1` is a prime number.
+ * The prime number 2 is handled as a special case, as the sieve only generates odd primes.
+ *
+ * @param n The upper limit (inclusive) up to which prime numbers are to be found.
+ * @return
+ *      - UI64_ARRAY* A pointer to the UI64_ARRAY structure containing the list of primes up to n.
+ *      - NULL if memory allocation fails.
+ */
+UI64_ARRAY *SoS(uint64_t n)
+{
+    ASSERT_LIMIT(n); // Validate input limit
+
+    // Calculate k as the odd numbers up to n.
+    uint64_t k = n / 2 + 1;
+
+    // Initialize the primes object with an estimated capacity
+    UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
+    assert(primes && "Memory allocation failed for primes array.");
+
+    if (n <= 100)
+    {
+        push_small_primes(primes, n);
+        ui64_resize_to_fit(primes); // Trim excess memory in primes array
+        return primes;
+    }
+
+    ui64_push(primes, 2);
+
+    // Create a bitmap with size k+1.
+    BITMAP *sieve = bitmap_init(k + 8, 1);
+    if (sieve == NULL)
+    {
+        ui64_free(&primes);
+        return NULL;
+    }
+
+    uint64_t n_sqrt = sqrt(n) + 1;
+
+    // iterate through odd numbers
+    for (uint64_t i = 1; i < k; ++i)
+    {
+        if (bitmap_get_bit(sieve, i))
+        {
+            uint64_t p = 2 * i + 1;
+            ui64_push(primes, p);
+            if (p < n_sqrt)
+            {
+                // First composite mark xp in the bitmap is given by:
+                // xp = 2 * i^2 + 2 * i = p * i + i, corresponding to p^2 in the odd set
+                uint64_t xp = p * i + i;
+                // Mark composites of p additively in the bitmap using step size p
+                bitmap_clear_steps_simd(sieve, p, xp, k);
+            }
+        }
+    }
+
+    // Cleanup
+    bitmap_free(&sieve);
+
+    // Guard against overshoot from index-space upper bounds.
+    while (primes->count > 0 && primes->array[primes->count - 1] > n)
+        ui64_pop(primes);
+
+    // Resize primes array to fit the exact number of primes found
+    ui64_resize_to_fit(primes);
+
+    return primes;
+}
+
+/**
+ * @ingroup iz_api
+ * @brief Segmented Sieve of Sundaram: Generates a list of prime numbers up to a given limit using the Sieve of Sundaram algorithm.
+ *
+ * Description:
+ * This function implements the Sieve of Sundaram algorithm to find all prime numbers
+ * up to a specified limit `n`. The Sieve of Sundaram works by combining the Sundaram's basic wheel with
+ * another cache-friendly segmentation wheel (vx) that serves as a pre-sieved base from primes that divides 3vx.
+ * For each segment, it uses the Xp-identity to mark composites in the sieve bitmap, then collects the primes from the segment.
+ *
+ * @param n The upper limit (inclusive) up to which prime numbers are to be found.
+ * @return
+ *      - UI64_ARRAY* A pointer to the UI64_ARRAY structure containing the list of primes up to n.
+ *      - NULL if memory allocation fails.
+ */
+UI64_ARRAY *SSoS(uint64_t n)
+{
+    ASSERT_LIMIT(n); // Validate input limit
+
+    // if n < 10000, return SoS(n), doesn't worth segmenting
+    if (n < 10000)
+        return SoS(n);
+
+    // Initialize the primes object with an estimated capacity
+    UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
+    assert(primes && "Memory allocation failed for primes array.");
+
+    // Calculate k = n/2 + 1 as the odd numbers up to n.
+    uint64_t x_n = n / 2 + 1;
+    // Compute vx wheel size that fits in L2 cache
+    int vx = 3 * compute_l2_vx(n);
+    BITMAP *base = bitmap_init(vx + 8, 1);
+    BITMAP *sieve = bitmap_init(vx + 8, 1);
+    if (sieve == NULL || base == NULL)
+    {
+        ui64_free(&primes);
+        return NULL;
+    }
+    get_root_primes(primes, 2 * vx);
+
+    // construct base bitmap for vx
+    int k = 1; // flag to track the pre-sieved primes
+    while (vx % base_primes[k] == 0)
+    {
+        int p = base_primes[k++];
+        int xp = p / 2;             // index of p in the odd set
+        bitmap_clear_bit(base, xp); // mark p as prime in base bitmap
+        bitmap_clear_steps_simd(base, p, p * xp + xp, vx + 1);
+    }
+
+    int y_limit = x_n / vx; // number of full segments to process
+    uint64_t yvx = vx;
+
+    for (int y = 1; y <= y_limit; y++)
+    {
+        memcpy(sieve->data, base->data, sieve->byte_size); // reset sieve bitmap to base for the new segment
+
+        int x_limit = (y < y_limit) ? vx : (int)(x_n % (uint64_t)vx); // local x limit adjusted for last segment
+        uint64_t root_limit = sqrt(2 * (yvx + x_limit)) + 1;          // local root limit for current segment
+
+        // Mark composites of root primes in the current segment using root primes,
+        // starting from the first non-pre-sieved prime
+        for (int i = k; i < primes->count; i++)
+        {
+            uint64_t p = primes->array[i];
+            if (p > root_limit)
+                break;
+
+            uint64_t xp = p / 2;
+            int x0 = p - (vx * y - xp) % p;
+            bitmap_clear_steps_simd(sieve, p, x0, x_limit + 1);
+        }
+
+        for (int x = k / 2; x <= x_limit; x++)
+        {
+            if (bitmap_get_bit(sieve, x))
+            {
+                uint64_t p = 2 * (yvx + x) + 1;
+                ui64_push(primes, p);
+            }
+        }
+        yvx += vx;
+    }
+
+    // Cleanup
+    bitmap_free(&base);
+    bitmap_free(&sieve);
+
+    // Guard against overshoot from segment tail generation.
+    while (primes->count > 0 && primes->array[primes->count - 1] > n)
+        ui64_pop(primes);
+
+    // Resize primes array to fit the exact number of primes found
+    ui64_resize_to_fit(primes);
+
+    return primes;
+}
+
+/**
+ * @ingroup iz_api
  * @brief Sieve of Euler: Generates a list of prime numbers up to a given limit using the Euler Sieve algorithm.
  *
  * Description:
@@ -195,7 +392,7 @@ UI64_ARRAY *SSoE(uint64_t n)
  * @param n The upper limit up to which prime numbers are to be found.
  * @return
  *      - UI64_ARRAY* A pointer to the UI64_ARRAY structure containing the list of primes up to n.
- *      - NULL if memory allocation fails or if n is less than 10.
+ *      - NULL if memory allocation fails.
  */
 UI64_ARRAY *SoEu(uint64_t n)
 {
@@ -204,6 +401,12 @@ UI64_ARRAY *SoEu(uint64_t n)
     // initialization
     UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
     assert(primes && "Memory allocation failed for primes array.");
+
+    if (n <= 100)
+    {
+        push_small_primes(primes, n);
+        return primes;
+    }
 
     BITMAP *sieve = bitmap_init(n + 1, 1);
     if (sieve == NULL)
@@ -247,72 +450,6 @@ UI64_ARRAY *SoEu(uint64_t n)
 
 /**
  * @ingroup iz_api
- * @brief Sieve of Sundaram: Generates a list of prime numbers up to a given limit using the Sieve of Sundaram algorithm.
- *
- * Description:
- * This function implements the Sieve of Sundaram algorithm to find all prime numbers
- * up to a specified limit `n`. The Sieve of Sundaram works by eliminating numbers
- * of the form `i + j + 2ij` from a list of integers from 1 to `k = (n-1)/2`.
- * If an integer `x` in this range is not eliminated, then `2x+1` is a prime number.
- * The prime number 2 is handled as a special case, as the sieve only generates odd primes.
- *
- * @param n The upper limit (inclusive) up to which prime numbers are to be found.
- * @return
- *      - UI64_ARRAY* A pointer to the UI64_ARRAY structure containing the list of primes up to n.
- *      - NULL if memory allocation fails or if n is less than 10.
- */
-UI64_ARRAY *SoS(uint64_t n)
-{
-    ASSERT_LIMIT(n); // Validate input limit
-
-    // Calculate k as the odd numbers up to n.
-    uint64_t k = (n - 1) / 2 + 1;
-
-    // Initialize the primes object with an estimated capacity
-    UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
-    assert(primes && "Memory allocation failed for primes array.");
-
-    ui64_push(primes, 2);
-
-    // Create a bitmap with size k+1.
-    BITMAP *sieve = bitmap_init(k + 8, 1);
-    if (sieve == NULL)
-    {
-        ui64_free(&primes);
-        return NULL;
-    }
-
-    uint64_t n_sqrt = sqrt(n) + 1;
-
-    // iterate through odd numbers
-    for (uint64_t i = 1; i < k; ++i)
-    {
-        if (bitmap_get_bit(sieve, i))
-        {
-            uint64_t p = 2 * i + 1;
-            ui64_push(primes, p);
-            if (p < n_sqrt)
-            {
-                // First composite mark xp in the bitmap is given by:
-                // xp = 2 * i^2 + 2 * i = p * i + i, corresponding to p^2 in the odd set
-                uint64_t xp = p * i + i;
-                // Mark composites of p additively in the bitmap using step size p
-                bitmap_clear_steps_simd(sieve, p, xp, k);
-            }
-        }
-    }
-
-    // Cleanup
-    bitmap_free(&sieve);
-
-    // Resize primes array to fit the exact number of primes found
-    ui64_resize_to_fit(primes);
-
-    return primes;
-}
-
-/**
- * @ingroup iz_api
  * @brief Sieve of Atkin: Generates a list of prime numbers up to a given limit using the Sieve of Atkin algorithm.
  *
  * Description:
@@ -323,7 +460,7 @@ UI64_ARRAY *SoS(uint64_t n)
  * @param n The upper limit (inclusive) up to which prime numbers are to be found.
  * @return
  *      - UI64_ARRAY* A pointer to the UI64_ARRAY structure containing the list of primes up to n.
- *      - NULL if memory allocation fails or if n is less than 10.
+ *      - NULL if memory allocation fails.
  */
 UI64_ARRAY *SoA(uint64_t n)
 {
@@ -331,6 +468,12 @@ UI64_ARRAY *SoA(uint64_t n)
 
     UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
     assert(primes && "Memory allocation failed for primes array.");
+
+    if (n <= 100)
+    {
+        push_small_primes(primes, n);
+        return primes;
+    }
 
     // Create a bitmap to mark potential primes
     BITMAP *sieve = bitmap_init(n + 1, 0);
@@ -436,8 +579,7 @@ UI64_ARRAY *SoA(uint64_t n)
  * primes of the form 6x ± 1, which are mapped back to their integer values
  * and appended to the output array alongside the primes 2 and 3.
  *
- * @param n Upper bound (inclusive) for prime generation. Must satisfy
- *          10 < n <= pow(10, 12).
+ * @param n Upper bound (inclusive) for prime generation (n <= 10^12).
  * @return Pointer to a UI64_ARRAY containing all primes <= n on success,
  *         or NULL if allocation fails.
  */
@@ -448,6 +590,13 @@ UI64_ARRAY *SiZ(uint64_t n)
     // Initialize primes object with enough initial estimation
     UI64_ARRAY *primes = ui64_init(Pi(n) * 1.4); // 40% over-estimation to avoid reallocs
     assert(primes && "Memory allocation failed for primes array.");
+
+    if (n <= 100)
+    {
+        push_small_primes(primes, n);
+        ui64_resize_to_fit(primes); // Trim excess memory in primes array
+        return primes;
+    }
 
     // Add 2, 3 to primes
     ui64_push(primes, 2);
@@ -474,8 +623,8 @@ UI64_ARRAY *SiZ(uint64_t n)
     bitmap_free(&x5);
     bitmap_free(&x7);
 
-    // Handle edge case: if last prime > n, remove it
-    if (primes->array[primes->count - 1] > n)
+    // Guard against overshoot near the final iZ lane.
+    while (primes->count > 0 && primes->array[primes->count - 1] > n)
         ui64_pop(primes);
 
     // Trim unused memory in primes object
@@ -508,8 +657,7 @@ UI64_ARRAY *SiZ(uint64_t n)
  * (aside from the output) and significantly reduced constant factors, making
  * it well-suited for enumerating primes up to large bounds.
  *
- * @param n Upper bound (inclusive) for prime generation. Must satisfy
- *          10 < n <= pow(10, 12).
+ * @param n Upper bound (inclusive) for prime generation (n <= 10^12).
  * @return Pointer to a UI64_ARRAY containing all primes <= n on success,
  *         or NULL on allocation or initialization failure.
  */
@@ -540,7 +688,6 @@ UI64_ARRAY *SiZm(uint64_t n)
     iZm_construct_vx_base(vx, base_x5, base_x7);
 
     // Add the pre-sieved k primes to primes array
-    const uint64_t base_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
     int k = 0;
     while ((6 * vx) % base_primes[k] == 0)
         ui64_push(primes, base_primes[k++]);
@@ -570,7 +717,7 @@ UI64_ARRAY *SiZm(uint64_t n)
         memcpy(x7->data, base_x7->data, x7->byte_size);
 
         int x_limit = (y < y_limit) ? vx : (int)(x_n % (uint64_t)vx); // local x limit adjusted for last segment
-        uint64_t root_limit = sqrt(6 * (yvx + x_limit)) + 1; // local root limit for current segment
+        uint64_t root_limit = sqrt(6 * (yvx + x_limit)) + 1;          // local root limit for current segment
 
         // * b. Mark composites of root primes in current segment
         for (int i = k; i < primes->count; i++)
@@ -603,8 +750,8 @@ UI64_ARRAY *SiZm(uint64_t n)
     bitmap_free(&base_x5);
     bitmap_free(&base_x7);
 
-    // Handle edge case: if last prime > n, remove it
-    if (primes->array[primes->count - 1] > n)
+    // Guard against overshoot near the final iZ lane.
+    while (primes->count > 0 && primes->array[primes->count - 1] > n)
         ui64_pop(primes);
 
     ui64_resize_to_fit(primes); // Trim excess memory in primes array

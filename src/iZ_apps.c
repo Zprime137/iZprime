@@ -24,6 +24,22 @@ static int write_all_bytes(int fd, const char *buf, size_t len)
 }
 #endif
 
+// Global iZm instance for VX6 segments, initialized once and reused by range APIs.
+static IZM *iZmX = NULL;
+
+// Constructor to initialize iZmX at program startup
+__attribute__((constructor)) static void init_iZmX(void)
+{
+    int vx = VX6; // 1616615, suitable for up to 10^12 on typical hardware,
+    // for larger limits on capable hardware consider VX7 or VX8
+    iZmX = iZm_init(vx);
+    if (!iZmX)
+    {
+        log_error("Failed to initialize iZmX in constructor.");
+        exit(EXIT_FAILURE);
+    }
+}
+
 // =========================================================
 // * SiZ Range Variants
 // =========================================================
@@ -66,7 +82,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
 
     uint64_t total = 0; // output: total prime count
 
-    int vx = VX6; // Use VX6 segment size for optimal results
+    int vx = iZmX->vx;
     // Miller-Rabin rounds, bounded [5, 50]
     int mr_rounds = MIN(MAX(input_range->mr_rounds, 5), 50);
 
@@ -79,7 +95,6 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
         return 0;
     }
 
-    IZM *iZm = NULL;
     mpz_t current_y;
     mpz_init(current_y);
     mpz_set(current_y, info.Ys);
@@ -132,10 +147,9 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
         goto stream_cleanup;
     }
 
-    // Initialize iZm structure for vx segments
-    iZm = iZm_init(vx);
-    if (!iZm)
+    if (!iZmX)
     {
+        log_error("SiZ_stream: global iZmX is not initialized.");
         total = 0;
         goto stream_cleanup;
     }
@@ -153,7 +167,7 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
             goto stream_cleanup;
         }
 
-        VX_SEG *vx_obj = vx_init(iZm, seg_start_x, seg_end_x, y_str, mr_rounds);
+        VX_SEG *vx_obj = vx_init(iZmX, seg_start_x, seg_end_x, y_str, mr_rounds);
         free(y_str);
         if (!vx_obj)
         {
@@ -171,7 +185,6 @@ uint64_t SiZ_stream(INPUT_SIEVE_RANGE *input_range)
     }
 
 stream_cleanup:
-    iZm_free(&iZm);
     range_info_free(&info);
     mpz_clear(current_y);
     if (has_output_file)
@@ -212,7 +225,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
            "Invalid INPUT_SIEVE_RANGE passed to SiZ_count.");
 
     uint64_t total = 0;
-    int vx = VX6; // Use VX6 segment size for optimal results
+    int vx = iZmX->vx;
     // Miller-Rabin rounds, bounded [5, 50]
     int mr_rounds = MIN(MAX(input_range->mr_rounds, 5), 50);
     cores_num = MAX(1, MIN(cores_num, get_cpu_cores_count()));
@@ -223,7 +236,6 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
         cores_num = 1;
     }
 #endif
-    IZM *iZm = NULL;
 #if IZ_PLATFORM_HAS_FORK
     int (*pipe_fds)[2] = NULL;
     pid_t *pids = NULL;
@@ -276,9 +288,9 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
         goto count_cleanup;
     }
 
-    iZm = iZm_init(vx);
-    if (!iZm)
+    if (!iZmX)
     {
+        log_error("SiZ_count: global iZmX is not initialized.");
         total = 0;
         goto count_cleanup;
     }
@@ -335,7 +347,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
                 goto count_cleanup;
             }
 
-            VX_SEG *vx_obj = vx_init(iZm, seg_start_x, seg_end_x, y_str, mr_rounds);
+            VX_SEG *vx_obj = vx_init(iZmX, seg_start_x, seg_end_x, y_str, mr_rounds);
             free(y_str);
             if (!vx_obj)
             {
@@ -440,7 +452,7 @@ uint64_t SiZ_count(INPUT_SIEVE_RANGE *input_range, int cores_num)
                 mpz_add_ui(local_Ys, local_Ys, offset);
 
                 // Each child has its own IZM to avoid data races
-                IZM *iZm_local = iZm_clone(iZm);
+                IZM *iZm_local = iZm_clone(iZmX);
                 if (!iZm_local)
                 {
                     mpz_clear(local_Ys);
@@ -558,7 +570,6 @@ count_cleanup:
     free(pipe_fds);
 #endif
     range_info_free(&info);
-    iZm_free(&iZm);
     mpz_clear(current_y);
 
     return total;
@@ -875,12 +886,48 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
 {
     // 1. Initialization
     int found = 0; // flag to indicate if a prime was found
-
     // tmp variable to hold the value until a prime is found
     mpz_t z;
     mpz_init_set(z, base); // set tmp = base
 
-    // a. Edge cases:
+    int vx = VX6;
+
+    // Edge cases 1:
+    // Handle small cases where base < vx
+    if (mpz_cmp_ui(base, vx) < 0)
+    {
+        // find the next/previous prime after/before base in the iZmX->root_primes array
+        uint64_t base_ui = mpz_get_ui(base); // get base ui value
+        for (int i = 0; i < iZmX->root_primes->count; i++)
+        {
+            uint64_t prime = iZmX->root_primes->array[i];
+            if (forward)
+            {
+                if (prime > base_ui)
+                {
+                    mpz_set_ui(p, prime);
+                    found = 1;
+                    break;
+                }
+            }
+            else
+            {
+                if (prime < base_ui)
+                {
+                    mpz_set_ui(p, prime);
+                    found = 1;
+                }
+                else
+                {
+                    break; // since root_primes are sorted, we can stop once we pass the candidate
+                }
+            }
+        }
+
+        return found;
+    }
+
+    // Edge cases 2:
     // if forward and base is iZ-, check next iZ+
     if (mpz_fdiv_ui(z, 6) == 5 && forward)
     {
@@ -892,8 +939,10 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
             return 1;
         }
     }
+
+    // Edge cases 3:
     // if backward and base is iZ+, check previous iZ-
-    else if (mpz_fdiv_ui(z, 6) == 1 && !forward)
+    if (mpz_fdiv_ui(z, 6) == 1 && !forward)
     {
         mpz_sub_ui(z, z, 2); // decrement tmp by 2
         if (mpz_probab_prime_p(z, MR_ROUNDS))
@@ -904,16 +953,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
         }
     }
 
-    int vx = (mpz_sizeinbase(base, 2) > 2048) ? VX6 : VX5;
-    IZM *iZm = iZm_init(vx);
-    if (!iZm)
-    {
-        log_error("iZm initialization failed in iZ_next_prime.");
-        mpz_clear(z);
-        return 0;
-    }
-
-    // c. Initialize and set y and yvx
+    // Initialize and set y and yvx
     mpz_t y, yvx, x_p;
     mpz_init(y);
     mpz_init(yvx);
@@ -921,7 +961,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
 
     mpz_div_ui(y, base, 6 * vx); // compute y = base / 6 * vx
     mpz_mul_ui(yvx, y, vx);      // compute yvx = y * vx
-    mpz_div_ui(x_p, z, 6);       // compute x_p = tmp / 6
+    mpz_div_ui(x_p, z, 6);       // compute x_p = z / 6
 
     // 2. Iterate over the x5 and x7 bitmaps to find a prime
     // set start_x = x_p % vx +/- 1
@@ -941,7 +981,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
             for (int x = start_x; x <= end_x; x++)
             {
                 // check if x5[x] is set
-                if (bitmap_get_bit(iZm->base_x5, x))
+                if (bitmap_get_bit(iZmX->base_x5, x))
                 {
                     mpz_add_ui(x_p, yvx, x); // set x_p = yvx + x
                     iZ_mpz(z, x_p, -1);      // compute p = iZ(x_p, -1)
@@ -953,7 +993,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
                 }
 
                 // check if x7[x] is set
-                if (bitmap_get_bit(iZm->base_x7, x))
+                if (bitmap_get_bit(iZmX->base_x7, x))
                 {
                     mpz_add_ui(x_p, yvx, x); // set x_p = yvx + x
                     iZ_mpz(z, x_p, 1);       // compute tmp = iZ(x_p, 1)
@@ -976,7 +1016,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
             for (int x = start_x; x >= end_x; x--)
             {
                 // check if x7[x] is set
-                if (bitmap_get_bit(iZm->base_x7, x))
+                if (bitmap_get_bit(iZmX->base_x7, x))
                 {
                     mpz_add_ui(x_p, yvx, x); // set x_p = yvx + x
                     iZ_mpz(z, x_p, 1);       // compute tmp = iZ(x_p, 1)
@@ -988,7 +1028,7 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
                 }
 
                 // check iZ-
-                if (bitmap_get_bit(iZm->base_x5, x))
+                if (bitmap_get_bit(iZmX->base_x5, x))
                 {
                     mpz_add_ui(x_p, yvx, x); // set x_p = yvx + x
                     iZ_mpz(z, x_p, -1);      // compute p = iZ(x_p, -1)
@@ -1013,7 +1053,6 @@ int iZ_next_prime(mpz_t p, mpz_t base, int forward)
         log_debug("No prime found :/");
 
     // cleanup
-    iZm_free(&iZm);
     mpz_clears(y, yvx, x_p, z, NULL);
 
     return found;

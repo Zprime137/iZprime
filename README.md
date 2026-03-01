@@ -153,11 +153,11 @@ Modern implementations of:
 
 ### SiZ family (`src/prime_sieve.c`)
 
-- `SiZ` — baseline solid Sieve-iZ (iZ basic wheel $\pm1 \mod 6$)
-- `SiZm` — segmented Sieve-iZm (iZm/vx 2d wheel)
-- `SiZm_vy` — segmented Sieve-iZm-VY (iZm/vx/vy 3d wheel, yields unordered primes)
+- `SiZ` — Baseline solid Sieve-iZ (iZ basic wheel $\pm1 \mod 6$)
+- `SiZm` — Segmented Sieve-iZm (iZm/vx 2d wheel, horizontal segmentation)
+- `SiZm_vy` — Segmented Sieve-iZm-vy (iZm/vy 2d wheel, vertical segmentation, yields unordered primes)
 
-For formal pseudocode and design rationale, read `docs/pseudocode.pdf`.
+For formal pseudocode, design rationale, and complexity analysis, please read `docs/pseudocode.pdf`, which I put a lot of effort into.
 
 ## Toolkit and Core Data Structures
 
@@ -190,7 +190,7 @@ Main public header: `include/iZ_api.h`
 
 API groups:
 
-- classic sieve models (`SoE`, `SSoE`, `SoEu`, `SoS`, `SoA`)
+- classic sieve models (`SoE`, `SSoE`, `SoS`, `SSoS` "new", `SoEu`, `SoA`)
 - SiZ family models (`SiZ`, `SiZm`, `SiZm_vy`)
 - range APIs (`SiZ_stream`, `SiZ_count`)
 - prime search (`vx_random_prime`, `vy_random_prime`, `iZ_next_prime`)

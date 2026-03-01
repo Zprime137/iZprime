@@ -1,5 +1,15 @@
 # ChangeLog
 
+## v1.1.0 (2026-03-01)
+
+### Minor release: modular polish and algorithm catalog expansion
+
+- Added the new **SSoS** algorithm (segmented Sundaram with wheel pre-sieving) to the sieve catalog.
+- Refined modular boundaries across toolkit/apps/tests and aligned headers with implementation updates.
+- Improved CLI and test-driver separation by removing CLI smoke checks from the integration suite.
+- Hardened tail-bound handling in sieve outputs to prevent range overshoot on boundary cases.
+- Refreshed documentation artifacts, including the generated user manual.
+
 ## v1.0.1 (2026-02-21)
 
 ### Stability and portability patch

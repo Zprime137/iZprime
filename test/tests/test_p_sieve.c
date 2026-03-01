@@ -1,29 +1,34 @@
 #include <test_api.h>
-#include <inttypes.h>
 
 // Sieve function type, takes uint64_t limit and returns a UI64_ARRAY pointer
 
 // * List of available algorithms
 const SIEVE_MODEL _SoE = {SoE, "SoE"};             // * Sieve of Eratosthenes
 const SIEVE_MODEL _SSoE = {SSoE, "SSoE"};          // * Segmented Sieve of Eratosthenes
-const SIEVE_MODEL _SoEu = {SoEu, "SoEu"};          // * Sieve of Euler
 const SIEVE_MODEL _SoS = {SoS, "SoS"};             // * Sieve of Sundaram
+const SIEVE_MODEL _SSoS = {SSoS, "SSoS"};          // * Segmented Sieve of Sundaram
+const SIEVE_MODEL _SoEu = {SoEu, "SoEu"};          // * Sieve of Euler (linear sieve)
 const SIEVE_MODEL _SoA = {SoA, "SoA"};             // * Sieve of Atkin
 const SIEVE_MODEL _SiZ = {SiZ, "SiZ"};             // * Sieve-iZ
 const SIEVE_MODEL _SiZm = {SiZm, "SiZm"};          // * Sieve-iZm
 const SIEVE_MODEL _SiZm_vy = {SiZm_vy, "SiZm_vy"}; // * Sieve-iZm_vy (unordered)
+
+// * Define new sieve models here to include them in tests and benchmarks
+// const SIEVE_MODEL _MySieve = {MySieve, "MySieve"}; // Example: add your custom sieve implementation here
 
 // Array of sieve models to be tested and benchmarked,
 // uncomment the ones you want to include in the tests and benchmarks
 SIEVE_MODEL SIEVE_MODELS[] = {
     _SoE,
     _SSoE,
-    _SoEu,
     _SoS,
+    _SSoS,
+    _SoEu,
     _SoA,
     _SiZ,
     _SiZm,
     _SiZm_vy,
+    // _MySieve, // Example: add your custom sieve implementation here
 };
 
 int models_count = sizeof(SIEVE_MODELS) / sizeof(SIEVE_MODELS[0]);

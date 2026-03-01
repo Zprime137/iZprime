@@ -55,6 +55,8 @@ void BENCHMARK_SiZ_count(int save_results);
 
 /** @name Prime generation tests/benchmarks */
 ///@{
+/** @brief Run CLI command-dispatch smoke tests. */
+int TEST_CLI(int verbose);
 /** @brief Validate `iZ_next_prime` for forward/backward traversal cases. */
 int TEST_iZ_next_prime(int verbose);
 /** @brief Validate `vy_random_prime` for primality and bit-length constraints. */

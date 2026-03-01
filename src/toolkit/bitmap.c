@@ -212,6 +212,8 @@ void bitmap_clear_steps(BITMAP *bitmap, uint64_t step, uint64_t start_idx, uint6
 {
     assert(step > 0 && "Step must be positive in bitmap_clear_steps.");
     limit = MIN(limit, bitmap->size - 1);
+    if (start_idx > limit) // safe guard against invalid range
+        return;
 
     for (uint64_t idx = start_idx; idx <= limit; idx += step)
     {
@@ -235,6 +237,8 @@ void bitmap_clear_steps_simd(BITMAP *bitmap, uint64_t step, uint64_t start_idx, 
 {
     assert(step > 0 && "Step must be positive in bitmap_clear_steps_simd.");
     limit = MIN(limit, bitmap->size - 1);
+    if (start_idx > limit)
+        return;
 
 #ifdef __aarch64__
     // NEON implementation for ARM64

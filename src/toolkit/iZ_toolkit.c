@@ -417,20 +417,18 @@ uint64_t iZm_solve_for_x0(int m_id, uint64_t p, uint64_t vx, uint64_t y)
     uint64_t xp = (p + 1) / 6;
     int ip = (p % 6 == 1) ? 1 : -1;
 
-    // Immediate solution check for y = 0
+    // Optimized start for first segment (y = 0)
     if (y == 0)
     {
-        // compute p * xp + m_id * ip * xp
         return p * xp + m_id * ip * xp;
     }
 
     // Normalize x_p to x_p if p_id = m_id, else to p - x_p
     xp = (m_id == ip) ? xp : p - xp;
-    uint64_t yvx = vx * y;
-
     // Compute the first composite hit of p in the yth vx segment in iZm index space
-    uint64_t x = p < vx ? p - (yvx - xp) % p : (yvx - xp) % p;
-    return x;
+    uint64_t x0 = p - (vx * y - xp) % p;
+    // return x0 if it's within the segment, else return 0 for p > vx that doesn't have a hit in the segment
+    return x0 > vx ? 0 : x0;
 }
 
 /**

@@ -36,7 +36,7 @@
  * @brief Optimized Sieve of Eratosthenes.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SoE(uint64_t n);
 
@@ -44,31 +44,39 @@ UI64_ARRAY *SoE(uint64_t n);
  * @brief Segmented Sieve of Eratosthenes.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SSoE(uint64_t n);
-
-/**
- * @brief Euler (linear) sieve.
- * @param n Upper bound (inclusive).
- * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
- */
-UI64_ARRAY *SoEu(uint64_t n);
 
 /**
  * @brief Sieve of Sundaram.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SoS(uint64_t n);
+
+/**
+ * @brief Segmented Sieve of Sundaram.
+ * @param n Upper bound (inclusive).
+ * @return Heap-allocated prime list, or NULL on allocation failure.
+ * @pre n <= 10^12.
+ */
+UI64_ARRAY *SSoS(uint64_t n);
+
+/**
+ * @brief Euler (linear) sieve.
+ * @param n Upper bound (inclusive).
+ * @return Heap-allocated prime list, or NULL on allocation failure.
+ * @pre n <= 10^12.
+ */
+UI64_ARRAY *SoEu(uint64_t n);
 
 /**
  * @brief Sieve of Atkin.
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SoA(uint64_t n);
 
@@ -83,7 +91,7 @@ UI64_ARRAY *SoA(uint64_t n);
  * @brief Solid Sieve-iZ (wheel 6, iZ index space).
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SiZ(uint64_t n);
 
@@ -91,7 +99,7 @@ UI64_ARRAY *SiZ(uint64_t n);
  * @brief Segmented Sieve-iZm (VX segmented, horizontal processing).
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SiZm(uint64_t n);
 
@@ -103,7 +111,7 @@ UI64_ARRAY *SiZm(uint64_t n);
  *
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.
- * @pre n is in (10, 10^12].
+ * @pre n <= 10^12.
  */
 UI64_ARRAY *SiZm_vy(uint64_t n);
 
@@ -123,10 +131,10 @@ UI64_ARRAY *SiZm_vy(uint64_t n);
  */
 typedef struct INPUT_SIEVE_RANGE
 {
-    char *start;    ///< Start of range as a base-10 numeric string.
-    uint64_t range; ///< Interval size (number of integers to cover).
-    int mr_rounds;  ///< Miller–Rabin rounds for large primality checks.
-    char *filepath; ///< Output path for streaming primes (NULL to disable output).
+    char *start;     ///< Start of range as a base-10 numeric string.
+    uint64_t range;  ///< Interval size (number of integers to cover).
+    int mr_rounds;   ///< Miller–Rabin rounds for large primality checks.
+    char *filepath;  ///< Output path for streaming primes (NULL to disable output).
     int stream_gaps; ///< Non-zero streams prime gaps instead of absolute primes.
 } INPUT_SIEVE_RANGE;
 
