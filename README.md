@@ -147,6 +147,7 @@ Modern implementations of:
 - `SoE` — Sieve of Eratosthenes
 - `SSoE` — Segmented Sieve of Eratosthenes
 - `SoS` — Sieve of Sundaram
+- `SSoS` — Segmented Sieve of Sundaram with wheel optimization "new"
 - `SoEu` — Euler (Linear) Sieve
 - `SoA` — Sieve of Atkin
 - with more to come..
