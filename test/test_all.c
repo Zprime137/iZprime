@@ -13,6 +13,7 @@ static void print_usage(const char *prog)
     printf("  --all                 Run unit + integration tests\n");
     printf("  --unit                Run unit tests\n");
     printf("  --integration         Run integration tests\n");
+    printf("  --cli                 Run CLI smoke tests\n");
     printf("Benchmarking options:\n");
     printf("  --benchmark           Run sieve benchmarks (alias for --benchmark-p-sieve)\n");
     printf("  --benchmark-p-sieve   Run prime sieve model benchmarks\n");
@@ -33,6 +34,7 @@ typedef struct
     int save_results;
     int run_units;
     int run_integrations;
+    int run_cli_tests;
     int run_benchmarks_sieve;
     int run_benchmark_siz_count;
     int run_benchmarks_p_gen;
@@ -60,6 +62,11 @@ static void opt_run_units(RUNNER_OPTIONS *opts)
 static void opt_run_integrations(RUNNER_OPTIONS *opts)
 {
     opts->run_integrations = 1;
+}
+
+static void opt_run_cli_tests(RUNNER_OPTIONS *opts)
+{
+    opts->run_cli_tests = 1;
 }
 
 static void opt_run_benchmark_sieve(RUNNER_OPTIONS *opts)
@@ -91,6 +98,7 @@ static const RUNNER_FLAG_SPEC k_flag_specs[] = {
     {"--all", opt_run_all},
     {"--unit", opt_run_units},
     {"--integration", opt_run_integrations},
+    {"--cli", opt_run_cli_tests},
     {"--benchmark", opt_run_benchmark_sieve},
     {"--benchmark-p-sieve", opt_run_benchmark_sieve},
     {"--benchmark-siz-count", opt_run_benchmark_siz_count},
@@ -141,7 +149,7 @@ static int parse_command(int argc, char **argv, RUNNER_OPTIONS *opts)
         }
     }
 
-    if (!opts->run_units && !opts->run_integrations && !opts->run_benchmarks_sieve &&
+    if (!opts->run_units && !opts->run_integrations && !opts->run_cli_tests && !opts->run_benchmarks_sieve &&
         !opts->run_benchmark_siz_count && !opts->run_benchmarks_p_gen)
     {
         opt_run_all(opts);
@@ -351,6 +359,18 @@ void RUN_BENCHMARK_SIEVE_MODELS(int save_results)
     print_centered_text(" End of Sieve Models Benchmarking ", 60, '=');
 }
 
+int RUN_TEST_CLI(int verbose)
+{
+    print_centered_text(" Running CLI Smoke Tests ", 60, '=');
+    printf("\n");
+
+    int result = TEST_CLI(verbose);
+
+    printf("\n");
+    print_centered_text(" End of CLI Smoke Tests ", 60, '=');
+    return result;
+}
+
 void RUN_BENCHMARK_P_GEN_ALGORITHMS(int save_results)
 {
     int bit_sizes[] = {1024, 2048, 4096};
@@ -393,6 +413,8 @@ int main(int argc, char **argv)
         ok = ok && RUN_TEST_UNITS(opts.verbose);
     if (opts.run_integrations)
         ok = ok && RUN_TEST_INTEGRATIONS(opts.verbose);
+    if (opts.run_cli_tests)
+        ok = ok && RUN_TEST_CLI(opts.verbose);
     if (opts.run_benchmarks_sieve)
         RUN_BENCHMARK_SIEVE_MODELS(opts.save_results);
     if (opts.run_benchmark_siz_count)
