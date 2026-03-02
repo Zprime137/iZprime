@@ -762,7 +762,10 @@ UI64_ARRAY *SiZm(uint64_t n)
  * @ingroup iz_api
  * @brief Segmented Sieve-iZm with vertical (vy) traversal order.
  *
- * This variant prioritizes throughput and returns primes in non-sorted order.
+ * Reuses the iZm 2D wheel segmentation, but iterates by vertical lanes
+ * (`y`-major) instead of horizontal slices. This improves throughput on large
+ * ranges at the cost of natural output ordering; returned primes are valid but
+ * not guaranteed to be sorted.
  *
  * @param n Inclusive upper bound for prime generation.
  * @return Heap-allocated list of primes <= @p n, or NULL on failure.

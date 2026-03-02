@@ -104,10 +104,11 @@ UI64_ARRAY *SiZ(uint64_t n);
 UI64_ARRAY *SiZm(uint64_t n);
 
 /**
- * @brief Segmented Sieve-iZm (vertical processing; faster, unordered output).
+ * @brief Segmented Sieve-iZm with vertical (y-major) traversal.
  *
- * This variant emphasizes throughput and may not preserve ascending order of
- * returned primes.
+ * Uses the same iZm 2D wheel model as `SiZm`, but scans vertical lanes for
+ * better cache behavior at large bounds. The generated primes are valid, but
+ * output order is not guaranteed to be ascending.
  *
  * @param n Upper bound (inclusive).
  * @return Heap-allocated prime list, or NULL on allocation failure.

@@ -1,0 +1,19 @@
+{
+  "title": "iZprime: Prime Enumeration for Arbitrary Bounds",
+  "upload_type": "software",
+  "description": "iZprime is a C library for prime generation and range enumeration. It includes classic sieve models, the SiZ family, toolkit modules, CLI utilities, tests, and benchmarking artifacts.",
+  "license": "MIT",
+  "keywords": [
+    "prime sieve",
+    "number theory",
+    "segmented sieve",
+    "algorithms",
+    "C library"
+  ],
+  "creators": [
+    {
+      "name": "Mounir, Hazem"
+    }
+  ],
+  "access_right": "open"
+}

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "iZprime"
+message: "If you use iZprime, please cite this software and the tagged release you used."
+type: software
+authors:
+  - family-names: "Mounir"
+    given-names: "Hazem"
+license: MIT
+url: "https://github.com/Zprime137/iZprime"
+repository-code: "https://github.com/Zprime137/iZprime"
+version: "1.1.0"
+date-released: "2026-03-01"

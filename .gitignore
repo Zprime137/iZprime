@@ -19,6 +19,14 @@ logs/
 # Generated docs
 docs/api/
 docs/logs/
+docs/latex_src/*.aux
+docs/latex_src/*.fdb_latexmk
+docs/latex_src/*.fls
+docs/latex_src/*.log
+docs/latex_src/*.out
+docs/latex_src/*.pdf
+docs/latex_src/*.synctex.gz
+docs/latex_src/*.toc
 
 # Python
 .venv/

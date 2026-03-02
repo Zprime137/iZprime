@@ -156,9 +156,11 @@ Modern implementations of:
 
 - `SiZ` — Baseline solid Sieve-iZ (iZ basic wheel $\pm1 \mod 6$)
 - `SiZm` — Segmented Sieve-iZm (iZm/vx 2d wheel, horizontal segmentation)
-- `SiZm_vy` — Segmented Sieve-iZm-vy (iZm/vy 2d wheel, vertical segmentation, yields unordered primes)
+- `SiZm_vy` — Segmented Sieve-iZm-vy (same iZm 2D wheel with vertical/y-major traversal; higher throughput, unordered output)
 
-For formal pseudocode, design rationale, and complexity analysis, please read `docs/pseudocode.pdf`, which I put a lot of effort into.
+For formal pseudocode, design rationale, and complexity analysis, read [`docs/pseudocode.pdf`](docs/pseudocode.pdf).
+For review/distribution, reference the tagged release artifact on GitHub:
+[`releases/latest`](https://github.com/Zprime137/iZprime/releases/latest).
 
 ## Toolkit and Core Data Structures
 
@@ -295,6 +297,12 @@ Generate user manual PDF:
 
 ```bash
 make userManual
+```
+
+Generate pseudocode PDF from LaTeX source:
+
+```bash
+make pseudocode
 ```
 
 ## Project Layout

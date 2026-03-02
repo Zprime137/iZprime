@@ -18,6 +18,8 @@ This document describes the modular `make` workflow for this repository.
   - `make benchmark-p_sieve`
 - Run prime-generation benchmarks:
   - `make benchmark-p_gen`
+- Build pseudocode PDF:
+  - `make pseudocode`
 
 ## Dependencies
 
@@ -41,6 +43,8 @@ The Makefile prefers `pkg-config` for portability; on macOS it also supports Hom
 - `release`: Builds an optimized binary and disables logging
 - `clean`: Removes build artifacts and generated output/log directories
 - `help`: Prints a concise help summary of targets and options
+- `userManual`: Generates `docs/userManual.pdf` via Doxygen + LaTeX
+- `pseudocode`: Generates `docs/pseudocode.pdf` from `docs/latex_src/pseudocode.tex`
 - `install`: Installs headers, static/shared libraries, CLI, and `pkg-config` file
 - `install-lib`: Installs headers, static/shared libraries, and `pkg-config` file
 - `uninstall`: Removes files installed by the targets above
