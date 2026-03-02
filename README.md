@@ -3,6 +3,7 @@
 [![CI](https://github.com/Zprime137/iZprime/actions/workflows/ci.yml/badge.svg)](https://github.com/Zprime137/iZprime/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Zprime137/iZprime)](https://github.com/Zprime137/iZprime/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/777528709.svg)](https://doi.org/10.5281/zenodo.18839925)
 
 `iZprime` is a modular C library + CLI for prime enumeration and prime-search workflows.
 
