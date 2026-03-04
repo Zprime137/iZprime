@@ -216,41 +216,51 @@ static void print_benchmark_help(const char *prog)
     }
 }
 
-static int run_stream_primes_cmd(int argc, char **argv)
+typedef struct
 {
-    int has_range = 0;
-    CLI_RANGE range = {0};
-    int mr_rounds = 25;
-    int print_to_console = 0;
-    int print_gaps = 0;
-    const char *stream_path = NULL;
+    int has_range;
+    CLI_RANGE range;
+    int mr_rounds;
+    int print_to_console;
+    int print_gaps;
+    const char *stream_path;
+} STREAM_CMD_OPTIONS;
 
+typedef enum
+{
+    STREAM_PARSE_OK = 0,
+    STREAM_PARSE_HELP = 1,
+    STREAM_PARSE_ERROR = 2,
+} STREAM_PARSE_RESULT;
+
+static STREAM_PARSE_RESULT parse_stream_primes_args(int argc, char **argv, STREAM_CMD_OPTIONS *options)
+{
     for (int i = 2; i < argc; ++i)
     {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
         {
             print_stream_help(argv[0]);
-            return EXIT_SUCCESS;
+            return STREAM_PARSE_HELP;
         }
         if (strcmp(argv[i], "--range") == 0)
         {
-            if (i + 1 >= argc || !parse_cli_range(argv[++i], &range))
+            if (i + 1 >= argc || !parse_cli_range(argv[++i], &options->range))
             {
                 fprintf(stderr, "Invalid --range value. Expected [LOWER, UPPER] with LOWER<=UPPER.\n");
-                return EXIT_FAILURE;
+                return STREAM_PARSE_ERROR;
             }
-            has_range = 1;
+            options->has_range = 1;
             continue;
         }
         if (strcmp(argv[i], "--print") == 0)
         {
-            print_to_console = 1;
+            options->print_to_console = 1;
             continue;
         }
         if (strcmp(argv[i], "--print-gaps") == 0)
         {
-            print_gaps = 1;
-            print_to_console = 1;
+            options->print_gaps = 1;
+            options->print_to_console = 1;
             continue;
         }
         if (strcmp(argv[i], "--stream_to") == 0 || strcmp(argv[i], "--stream-to") == 0)
@@ -258,60 +268,95 @@ static int run_stream_primes_cmd(int argc, char **argv)
             if (i + 1 >= argc)
             {
                 fprintf(stderr, "Missing filepath after %s.\n", argv[i]);
-                return EXIT_FAILURE;
+                return STREAM_PARSE_ERROR;
             }
-            stream_path = argv[++i];
+            options->stream_path = argv[++i];
             continue;
         }
         if (strcmp(argv[i], "--mr-rounds") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_int(argv[++i], &mr_rounds))
+            if (i + 1 >= argc || !parse_expr_int(argv[++i], &options->mr_rounds))
             {
                 fprintf(stderr, "Invalid --mr-rounds value.\n");
-                return EXIT_FAILURE;
+                return STREAM_PARSE_ERROR;
             }
             continue;
         }
 
         fprintf(stderr, "Unknown option: %s\n", argv[i]);
-        return EXIT_FAILURE;
+        return STREAM_PARSE_ERROR;
     }
 
-    if (!has_range)
+    return STREAM_PARSE_OK;
+}
+
+static int validate_stream_primes_options(const STREAM_CMD_OPTIONS *options)
+{
+    if (!options->has_range)
     {
         fprintf(stderr, "Missing required option: --range \"[LOWER, UPPER]\"\n");
         return EXIT_FAILURE;
     }
-    if (print_to_console && stream_path != NULL)
-    {
-        fprintf(stderr, "Use either --print or --stream-to, not both.\n");
-        return EXIT_FAILURE;
-    }
-    if (print_gaps && stream_path != NULL)
+    if (options->print_gaps && options->stream_path != NULL)
     {
         fprintf(stderr, "--print-gaps cannot be combined with --stream-to.\n");
         return EXIT_FAILURE;
     }
+    if (options->print_to_console && options->stream_path != NULL)
+    {
+        fprintf(stderr, "Use either --print or --stream-to, not both.\n");
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
+static const char *resolve_stream_path(const STREAM_CMD_OPTIONS *options, char *default_path, size_t default_path_size)
+{
+    if (options->print_to_console)
+        return NULL;
+    if (options->stream_path != NULL)
+        return options->stream_path;
+
+    time_t now = time(NULL);
+    struct tm *tm_now = localtime(&now);
+    char stamp[64];
+    strftime(stamp, sizeof(stamp), "%Y%m%d_%H%M%S", tm_now);
+    snprintf(default_path, default_path_size, "%s/stream_%s.txt", DIR_output, stamp);
+    return default_path;
+}
+
+static int run_stream_primes_cmd(int argc, char **argv)
+{
+    STREAM_CMD_OPTIONS options = {
+        .has_range = 0,
+        .range = {0},
+        .mr_rounds = 25,
+        .print_to_console = 0,
+        .print_gaps = 0,
+        .stream_path = NULL,
+    };
+
+    STREAM_PARSE_RESULT parse_result = parse_stream_primes_args(argc, argv, &options);
+    if (parse_result == STREAM_PARSE_HELP)
+        return EXIT_SUCCESS;
+    if (parse_result == STREAM_PARSE_ERROR)
+        return EXIT_FAILURE;
+
+    if (validate_stream_primes_options(&options) != EXIT_SUCCESS)
+        return EXIT_FAILURE;
 
     create_dir(DIR_output);
     char default_path[256];
-    if (!print_to_console && stream_path == NULL)
-    {
-        time_t now = time(NULL);
-        struct tm *tm_now = localtime(&now);
-        char stamp[64];
-        strftime(stamp, sizeof(stamp), "%Y%m%d_%H%M%S", tm_now);
-        snprintf(default_path, sizeof(default_path), "%s/stream_%s.txt", DIR_output, stamp);
-        stream_path = default_path;
-    }
+    const char *stream_path = resolve_stream_path(&options, default_path, sizeof(default_path));
 
     INPUT_SIEVE_RANGE input = {
-        .start = range.lower,
-        .range = range.range_size,
-        .mr_rounds = mr_rounds,
-        .stream_gaps = print_gaps,
+        .start = options.range.lower,
+        .range = options.range.range_size,
+        .mr_rounds = options.mr_rounds,
+        .stream_gaps = options.print_gaps,
         // NULL filepath tells SiZ_stream() to emit directly to stdout.
-        .filepath = (char *)(print_to_console ? NULL : stream_path)};
+        .filepath = (char *)stream_path};
 
     STOPWATCH timer;
     sw_start(&timer);
@@ -319,10 +364,10 @@ static int run_stream_primes_cmd(int argc, char **argv)
     sw_stop(&timer);
     printf("\n");
 
-    if (!print_to_console)
+    if (!options.print_to_console)
         printf("Streamed primes to: %s\n", stream_path);
 
-    printf("Prime count in [%s, %s] = %" PRIu64 "\n", range.lower, range.upper, count);
+    printf("Prime count in [%s, %s] = %" PRIu64 "\n", options.range.lower, options.range.upper, count);
     printf("Elapsed (s): %.6f\n", timer.elapsed_sec);
     return EXIT_SUCCESS;
 }
