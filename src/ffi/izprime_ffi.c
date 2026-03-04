@@ -29,7 +29,14 @@ static int izp_ffi_validate_expr_nonnegative(const char *expr, mpz_t out)
 
 static char *izp_ffi_strdup_heap(const char *src)
 {
-    size_t len = strlen(src) + 1;
+    if (src == NULL)
+        return NULL;
+
+    size_t len = strnlen(src, 8193);
+    if (len > 8192)
+        return NULL;
+
+    len += 1;
     char *dst = malloc(len);
     if (dst == NULL)
         return NULL;

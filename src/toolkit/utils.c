@@ -8,6 +8,21 @@
 #include <ctype.h>
 
 /// @cond IZ_INTERNAL
+#define IZ_MAX_TEXT_INPUT_BYTES (1U << 20)
+
+static int bounded_cstr_len(const char *s, size_t cap, size_t *out_len)
+{
+    if (s == NULL || out_len == NULL)
+        return 0;
+
+    size_t len = strnlen(s, cap + 1);
+    if (len > cap)
+        return 0;
+
+    *out_len = len;
+    return 1;
+}
+
 static const char *skip_spaces(const char *s)
 {
     while (*s && isspace((unsigned char)*s))
@@ -21,7 +36,11 @@ static char *dup_trimmed(const char *src)
         return NULL;
 
     const char *start = skip_spaces(src);
-    const char *end = start + strlen(start);
+    size_t start_len = 0;
+    if (!bounded_cstr_len(start, IZ_MAX_TEXT_INPUT_BYTES, &start_len))
+        return NULL;
+
+    const char *end = start + start_len;
     while (end > start && isspace((unsigned char)end[-1]))
         --end;
 
@@ -50,7 +69,14 @@ static char *normalize_decimal_token(const char *token)
         return NULL;
     }
 
-    size_t cap = strlen(s) + 1;
+    size_t s_len = 0;
+    if (!bounded_cstr_len(s, IZ_MAX_TEXT_INPUT_BYTES, &s_len))
+    {
+        free(trimmed);
+        return NULL;
+    }
+
+    size_t cap = s_len + 1;
     char *normalized = malloc(cap);
     if (!normalized)
     {
@@ -79,11 +105,12 @@ static char *normalize_decimal_token(const char *token)
     else
     {
         const char *seg = s;
+        const char *s_end = s + s_len;
         int group_idx = 0;
         while (1)
         {
             const char *comma = strchr(seg, ',');
-            size_t seg_len = comma ? (size_t)(comma - seg) : strlen(seg);
+            size_t seg_len = comma ? (size_t)(comma - seg) : (size_t)(s_end - seg);
             if (seg_len == 0)
             {
                 free(normalized);
@@ -417,18 +444,25 @@ int parse_inclusive_range_mpz(const char *range_expr, mpz_t lower, mpz_t upper)
         return 0;
     }
 
-    size_t len = strlen(range);
+    size_t len = 0;
+    if (!bounded_cstr_len(range, IZ_MAX_TEXT_INPUT_BYTES, &len))
+    {
+        free(range);
+        return 0;
+    }
+
     if (len > 7 && strncmp(range, "range[", 6) == 0 && range[len - 1] == ']')
     {
         memmove(range, range + 6, len - 7);
         range[len - 7] = '\0';
+        len -= 7;
     }
 
-    len = strlen(range);
     if (len > 2 && range[0] == '[' && range[len - 1] == ']')
     {
         memmove(range, range + 1, len - 2);
         range[len - 2] = '\0';
+        len -= 2;
     }
 
     char *sep = strstr(range, "..");

@@ -46,7 +46,8 @@ void print_centered_text(const char *text, int line_length, char fill_char)
     if (text == NULL)
         text = "";
 
-    int text_length = (int)strlen(text);
+    size_t scan_cap = (line_length > 0) ? (size_t)line_length + 1 : 1;
+    int text_length = (int)strnlen(text, scan_cap);
     if (text_length >= line_length)
     {
         printf("%s\n", text);

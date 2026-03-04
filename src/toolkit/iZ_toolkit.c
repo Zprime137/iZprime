@@ -12,6 +12,22 @@ static const int s_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
 /** Number of entries available in `s_primes`. */
 static int s_primes_count = sizeof(s_primes) / sizeof(int);
 
+static int gmp_random_below(gmp_randstate_t state, int upper_bound)
+{
+    if (upper_bound <= 1)
+        return 0;
+
+    mpz_t range;
+    mpz_t sample;
+    mpz_init_set_ui(range, (unsigned long)upper_bound);
+    mpz_init(sample);
+    mpz_urandomm(sample, state, range);
+    int value = (int)mpz_get_ui(sample);
+    mpz_clear(range);
+    mpz_clear(sample);
+    return value;
+}
+
 /**
  * @brief Computes 6x + i for a given x and i.
  *
@@ -1048,13 +1064,13 @@ int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size)
 
     bit_size = MAX(bit_size, 10);
 
-    // set m_id randomly if not provided
-    if (m_id != -1 && m_id != 1)
-        m_id = (rand() % 2) ? 1 : -1;
-
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_seed_randstate(state);
+
+    // set m_id randomly if not provided
+    if (m_id != -1 && m_id != 1)
+        m_id = gmp_random_below(state, 2) ? 1 : -1;
 
     UI64_ARRAY *root_primes = SiZm(vx);
     if (!root_primes)
@@ -1087,7 +1103,7 @@ int vx_search_prime(mpz_t p, int m_id, int vx, int bit_size)
             bitmap_clear_steps(bitmap, q, iZm_solve_for_x0_mpz(m_id, q, vx, y), vx);
         }
 
-        int random_x = rand() % (vx / 2); // random x < vx/2
+        int random_x = gmp_random_below(state, MAX(vx / 2, 1)); // random x < vx/2
         for (int x = random_x; x < vx; x++)
         {
             // check if z is prime candidate in bitmap
@@ -1144,13 +1160,13 @@ int vy_search_prime(mpz_t p, int m_id, mpz_t vx)
 
     int found = 0; // flag to indicate if a prime was found
 
-    // set m_id randomly if not provided
-    if (m_id != -1 && m_id != 1)
-        m_id = (rand() % 2) ? 1 : -1;
-
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_seed_randstate(state); // seed random state
+
+    // set m_id randomly if not provided
+    if (m_id != -1 && m_id != 1)
+        m_id = gmp_random_below(state, 2) ? 1 : -1;
 
     mpz_t z, g;
     mpz_init(z);
@@ -1179,7 +1195,7 @@ int vy_search_prime(mpz_t p, int m_id, mpz_t vx)
     // set g = 6 * vx to use as a step
     mpz_mul_ui(g, vx, 6);
     // add z by rand * g
-    int rand_steps = rand() % 100;
+    int rand_steps = gmp_random_below(state, 100);
     mpz_addmul_ui(z, g, rand_steps);
 
     while (!found)

@@ -14,6 +14,8 @@
 #define IZ_VERSION "dev"
 #endif
 
+#define CLI_STRING_CAP 8192U
+
 typedef UI64_ARRAY *(*SIEVE_FN)(uint64_t);
 typedef int (*CLI_HANDLER)(int argc, char **argv);
 
@@ -97,7 +99,11 @@ static char *dup_cli_string(const char *src)
     if (src == NULL)
         return NULL;
 
-    size_t len = strlen(src) + 1;
+    size_t len = strnlen(src, CLI_STRING_CAP + 1);
+    if (len > CLI_STRING_CAP)
+        return NULL;
+
+    len += 1;
     char *dst = malloc(len);
     if (dst == NULL)
         return NULL;
@@ -157,16 +163,15 @@ static int parse_cli_range(const char *value, CLI_RANGE *range)
         return 0;
     }
 
-    if (strlen(lower_str) >= sizeof(range->lower) || strlen(upper_str) >= sizeof(range->upper))
+    int lower_len = snprintf(range->lower, sizeof(range->lower), "%s", lower_str);
+    int upper_len = snprintf(range->upper, sizeof(range->upper), "%s", upper_str);
+    if (lower_len < 0 || upper_len < 0 || (size_t)lower_len >= sizeof(range->lower) || (size_t)upper_len >= sizeof(range->upper))
     {
         free(lower_str);
         free(upper_str);
         mpz_clears(lower, upper, width, NULL);
         return 0;
     }
-
-    snprintf(range->lower, sizeof(range->lower), "%s", lower_str);
-    snprintf(range->upper, sizeof(range->upper), "%s", upper_str);
     range->range_size = span;
 
     free(lower_str);

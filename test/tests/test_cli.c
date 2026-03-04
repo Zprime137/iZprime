@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #define CLI_MAX_ARGS 16
+#define CLI_ARG_CAP 8192U
 
 typedef struct
 {
@@ -58,7 +59,11 @@ static char *dup_arg(const char *src)
     if (src == NULL)
         return NULL;
 
-    size_t len = strlen(src) + 1;
+    size_t len = strnlen(src, CLI_ARG_CAP + 1);
+    if (len > CLI_ARG_CAP)
+        return NULL;
+
+    len += 1;
     char *dst = malloc(len);
     if (dst == NULL)
         return NULL;

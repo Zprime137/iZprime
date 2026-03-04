@@ -5,17 +5,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-static void ensure_dir(const char *path)
-{
-    if (!path || !path[0])
-        return;
-
-    if (mkdir(path, 0755) != 0 && errno != EEXIST)
-    {
-        fprintf(stderr, "Failed to create directory '%s': %s\n", path, strerror(errno));
-        exit(EXIT_FAILURE);
-    }
-}
+#define EXAMPLE_INPUT_CAP 8192U
 
 static void print_usage(const char *prog)
 {
@@ -35,7 +25,11 @@ static char *dup_string(const char *value)
     if (value == NULL)
         return NULL;
 
-    size_t size = strlen(value) + 1;
+    size_t len = strnlen(value, EXAMPLE_INPUT_CAP + 1);
+    if (len > EXAMPLE_INPUT_CAP)
+        return NULL;
+
+    size_t size = len + 1;
     char *copy = (char *)malloc(size);
     if (copy == NULL)
         return NULL;
@@ -60,8 +54,13 @@ static void run_SiZ_stream(const char *start_str, uint64_t range, const char *fi
         exit(EXIT_FAILURE);
     }
 
-    if (filepath)
-        ensure_dir("output");
+    if (filepath && create_dir("output") != 0 && errno != EEXIST)
+    {
+        fprintf(stderr, "Failed to create output directory: %s\n", strerror(errno));
+        free(start_buf);
+        free(path_buf);
+        exit(EXIT_FAILURE);
+    }
 
     INPUT_SIEVE_RANGE input_range = {
         .start = start_buf,

@@ -9,6 +9,8 @@
 
 #include <iZ_api.h>
 
+#define PRIME_STR_CAP_PADDING 64U
+
 #if IZ_PLATFORM_HAS_FORK
 static int write_all_bytes(int fd, const char *buf, size_t len)
 {
@@ -657,7 +659,9 @@ int vy_random_prime(mpz_t p, int bit_size, int cores_num)
                 char *p_str = mpz_get_str(NULL, 10, local_p);
                 if (p_str)
                 {
-                    if (!write_all_bytes(fd[1], p_str, strlen(p_str) + 1))
+                    size_t p_cap = (size_t)bit_size + PRIME_STR_CAP_PADDING;
+                    size_t p_len = strnlen(p_str, p_cap + 1);
+                    if (p_len > p_cap || !write_all_bytes(fd[1], p_str, p_len + 1))
                         log_warn("Failed to write prime candidate from child process in vy_random_prime");
                     free(p_str);
                 }
@@ -801,7 +805,9 @@ int vx_random_prime(mpz_t p, int bit_size, int cores_num)
                 char *p_str = mpz_get_str(NULL, 10, local_p);
                 if (p_str != NULL)
                 {
-                    if (!write_all_bytes(fd[1], p_str, strlen(p_str) + 1))
+                    size_t p_cap = (size_t)bit_size + PRIME_STR_CAP_PADDING;
+                    size_t p_len = strnlen(p_str, p_cap + 1);
+                    if (p_len > p_cap || !write_all_bytes(fd[1], p_str, p_len + 1))
                         log_warn("Failed to write prime candidate from child process in vx_random_prime");
                     free(p_str);
                 }
