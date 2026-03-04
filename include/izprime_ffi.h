@@ -14,12 +14,17 @@
 #include <stdint.h>
 
 #if defined(_WIN32) || defined(__CYGWIN__)
-#if defined(IZP_FFI_STATIC)
-#define IZP_FFI_API
-#elif defined(IZP_FFI_BUILD)
+/*
+ * Default to static-link semantics on Windows. This avoids requiring
+ * __declspec(dllimport) for in-repo static builds/tests.
+ * Define IZP_FFI_USE_DLL in consumers that link against a DLL import lib.
+ */
+#if defined(IZP_FFI_BUILD)
 #define IZP_FFI_API __declspec(dllexport)
-#else
+#elif defined(IZP_FFI_USE_DLL)
 #define IZP_FFI_API __declspec(dllimport)
+#else
+#define IZP_FFI_API
 #endif
 #else
 #define IZP_FFI_API
