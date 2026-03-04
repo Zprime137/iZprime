@@ -23,11 +23,17 @@ jobs:
 
       - name: Resolve release metadata
         id: meta
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG_RAW: ${{ github.event.release.tag_name }}
+          INPUT_TAG_RAW: ${{ inputs.tag }}
         run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            TAG="${{ github.event.release.tag_name }}"
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "release" ]; then
+            TAG="$RELEASE_TAG_RAW"
           else
-            TAG="${{ inputs.tag }}"
+            TAG="$INPUT_TAG_RAW"
           fi
 
           if [ -z "$TAG" ]; then
@@ -35,38 +41,50 @@ jobs:
             exit 1
           fi
 
-          case "$TAG" in
-            v*) ;;
-            *)
-              echo "::error::Tag must start with 'v' (got '$TAG')."
-              exit 1
-              ;;
-          esac
+          # Allow SemVer-like tags only (vMAJOR.MINOR.PATCH with optional suffix).
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+(\.[0-9]+){2}([._+-][0-9A-Za-z-]+)*$'; then
+            echo "::error::Invalid tag format '$TAG'. Expected vMAJOR.MINOR.PATCH (optional suffix allowed)."
+            exit 1
+          fi
 
           VERSION="${TAG#v}"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          printf 'tag=%s\n' "$TAG" >> "$GITHUB_OUTPUT"
+          printf 'version=%s\n' "$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Compute source tarball checksum
         id: sha
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          REPOSITORY: ${{ github.repository }}
         run: |
-          TAG="${{ steps.meta.outputs.tag }}"
-          URL="https://github.com/${{ github.repository }}/archive/refs/tags/${TAG}.tar.gz"
+          set -euo pipefail
+          URL="https://github.com/${REPOSITORY}/archive/refs/tags/${TAG}.tar.gz"
           curl -fsSL "$URL" -o source.tar.gz
           SHA="$(sha256sum source.tar.gz | awk '{print $1}')"
-          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          printf 'sha256=%s\n' "$SHA" >> "$GITHUB_OUTPUT"
 
       - name: Update Homebrew tap formula
         env:
           TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          SHA: ${{ steps.sha.outputs.sha256 }}
         run: |
+          set -euo pipefail
+
           if [ -z "$TAP_TOKEN" ]; then
             echo "::error::Missing HOMEBREW_TAP_TOKEN secret."
             exit 1
           fi
 
-          VERSION="${{ steps.meta.outputs.version }}"
-          SHA="${{ steps.sha.outputs.sha256 }}"
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+(\.[0-9]+){2}([._+-][0-9A-Za-z-]+)*$'; then
+            echo "::error::Invalid version '$VERSION'."
+            exit 1
+          fi
+          if ! printf '%s' "$SHA" | grep -Eq '^[0-9a-f]{64}$'; then
+            echo "::error::Invalid SHA256 '$SHA'."
+            exit 1
+          fi
+
           TAP_REPO="https://x-access-token:${TAP_TOKEN}@github.com/Zprime137/homebrew-izprime.git"
 
           git clone "$TAP_REPO" tap
