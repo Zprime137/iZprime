@@ -1,5 +1,12 @@
 # ChangeLog
 
+## v1.2.1 (2026-03-04)
+
+### Patch release: cross-platform build fix
+
+- Fixed GCC/MinGW `-Wmissing-braces` failure in `run_stream_primes_cmd` initializer (`src/cli/cli_app.c`).
+- Restored green CI on Linux and Windows while preserving CLI behavior.
+
 ## v1.2.0 (2026-03-04)
 
 ### Minor release: FFI, wrappers, and CLI quality hardening
