@@ -328,14 +328,8 @@ static const char *resolve_stream_path(const STREAM_CMD_OPTIONS *options, char *
 
 static int run_stream_primes_cmd(int argc, char **argv)
 {
-    STREAM_CMD_OPTIONS options = {
-        .has_range = 0,
-        .range = {0},
-        .mr_rounds = 25,
-        .print_to_console = 0,
-        .print_gaps = 0,
-        .stream_path = NULL,
-    };
+    STREAM_CMD_OPTIONS options = {0};
+    options.mr_rounds = 25;
 
     STREAM_PARSE_RESULT parse_result = parse_stream_primes_args(argc, argv, &options);
     if (parse_result == STREAM_PARSE_HELP)
