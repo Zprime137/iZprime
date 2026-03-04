@@ -329,15 +329,25 @@ int izp_ffi_stream_range(const char *start, uint64_t range, int mr_rounds, const
         return IZP_FFI_ERR_ALLOC;
     }
 
+    char *filepath_copy = izp_ffi_strdup_heap(filepath);
+    if (filepath_copy == NULL)
+    {
+        free(start_base10);
+        mpz_clear(start_value);
+        izp_ffi_set_error("Failed to allocate output path buffer.");
+        return IZP_FFI_ERR_ALLOC;
+    }
+
     INPUT_SIEVE_RANGE input_range = {
         .start = start_base10,
         .range = range,
         .mr_rounds = mr_rounds,
-        .filepath = (char *)filepath,
+        .filepath = filepath_copy,
         .stream_gaps = stream_gaps ? 1 : 0,
     };
 
     *out_count = SiZ_stream(&input_range);
+    free(filepath_copy);
     free(start_base10);
     mpz_clear(start_value);
 

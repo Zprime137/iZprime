@@ -92,6 +92,20 @@ static int read_cli_option_value(
     return 1;
 }
 
+static char *dup_cli_string(const char *src)
+{
+    if (src == NULL)
+        return NULL;
+
+    size_t len = strlen(src) + 1;
+    char *dst = malloc(len);
+    if (dst == NULL)
+        return NULL;
+
+    memcpy(dst, src, len);
+    return dst;
+}
+
 typedef struct
 {
     char lower[1024];
@@ -399,11 +413,7 @@ static const char *resolve_stream_path(const STREAM_CMD_OPTIONS *options, char *
     struct tm tm_now;
     char stamp[64];
 
-#if defined(_WIN32) || defined(_WIN64)
-    int tm_ok = localtime_s(&tm_now, &now) == 0;
-#else
-    int tm_ok = localtime_r(&now, &tm_now) != NULL;
-#endif
+    int tm_ok = iz_platform_localtime(&now, &tm_now);
     if (!tm_ok || strftime(stamp, sizeof(stamp), "%Y%m%d_%H%M%S", &tm_now) == 0)
         snprintf(stamp, sizeof(stamp), "unknown");
 
@@ -428,6 +438,12 @@ static int run_stream_primes_cmd(int argc, char **argv)
     create_dir(DIR_output);
     char default_path[256];
     const char *stream_path = resolve_stream_path(&options, default_path, sizeof(default_path));
+    char *stream_path_mut = dup_cli_string(stream_path);
+    if (stream_path != NULL && stream_path_mut == NULL)
+    {
+        fprintf(stderr, "Failed to allocate stream path buffer.\n");
+        return EXIT_FAILURE;
+    }
 
     INPUT_SIEVE_RANGE input = {
         .start = options.range.lower,
@@ -435,12 +451,13 @@ static int run_stream_primes_cmd(int argc, char **argv)
         .mr_rounds = options.mr_rounds,
         .stream_gaps = options.print_gaps,
         // NULL filepath tells SiZ_stream() to emit directly to stdout.
-        .filepath = (char *)stream_path};
+        .filepath = stream_path_mut};
 
     STOPWATCH timer;
     sw_start(&timer);
     uint64_t count = SiZ_stream(&input);
     sw_stop(&timer);
+    free(stream_path_mut);
     printf("\n");
 
     if (!options.print_to_console)
@@ -1003,7 +1020,10 @@ int cli_run(int argc, char **argv)
             return EXIT_FAILURE;
         }
 
-        char *help_argv[] = {argv[0], (char *)help_cmd->name, "--help"};
+        char help_name[64];
+        snprintf(help_name, sizeof(help_name), "%s", help_cmd->name);
+        char help_flag[] = "--help";
+        char *help_argv[] = {argv[0], help_name, help_flag};
         return help_cmd->handler(3, help_argv);
     }
 

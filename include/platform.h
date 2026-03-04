@@ -74,6 +74,14 @@ int iz_platform_l2_cache_size_bits(void);
  */
 double iz_platform_monotonic_seconds(void);
 
+/**
+ * @brief Convert calendar time to local broken-down time (thread-safe).
+ * @param timestamp Source calendar time.
+ * @param out Destination broken-down local time.
+ * @return 1 on success, 0 on failure.
+ */
+int iz_platform_localtime(const time_t *timestamp, struct tm *out);
+
 /** @} */
 
 #endif // IZ_PLATFORM_H

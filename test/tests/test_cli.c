@@ -53,6 +53,19 @@ static char *read_stream_all(FILE *stream)
     return buf;
 }
 
+static char *dup_arg(const char *src)
+{
+    if (src == NULL)
+        return NULL;
+
+    size_t len = strlen(src) + 1;
+    char *dst = malloc(len);
+    if (dst == NULL)
+        return NULL;
+    memcpy(dst, src, len);
+    return dst;
+}
+
 static int capture_cli_run(int argc, const char *const *argv_const, CLI_CAPTURE *capture)
 {
     if (capture == NULL)
@@ -98,10 +111,42 @@ static int capture_cli_run(int argc, const char *const *argv_const, CLI_CAPTURE 
     }
 
     char *argv[CLI_MAX_ARGS] = {0};
+    int argv_ok = 1;
     for (int i = 0; i < argc; ++i)
-        argv[i] = (char *)argv_const[i];
+    {
+        argv[i] = dup_arg(argv_const[i]);
+        if (argv[i] == NULL)
+        {
+            argv_ok = 0;
+            break;
+        }
+    }
+
+    if (!argv_ok)
+    {
+        for (int i = 0; i < argc; ++i)
+        {
+            free(argv[i]);
+            argv[i] = NULL;
+        }
+
+        fflush(NULL);
+        dup2(saved_stdout, STDOUT_FILENO);
+        dup2(saved_stderr, STDERR_FILENO);
+        close(saved_stdout);
+        close(saved_stderr);
+        fclose(tmp_out);
+        fclose(tmp_err);
+        return 0;
+    }
 
     capture->exit_code = cli_run(argc, argv);
+
+    for (int i = 0; i < argc; ++i)
+    {
+        free(argv[i]);
+        argv[i] = NULL;
+    }
 
     fflush(stdout);
     fflush(stderr);

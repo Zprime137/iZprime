@@ -70,8 +70,9 @@ const char *log_level_to_string(LogLevel level)
 void get_current_timestamp(char *buffer, size_t size)
 {
     time_t now = time(NULL);
-    struct tm *t = localtime(&now);
-    strftime(buffer, size, "%Y-%m-%d %H:%M:%S", t);
+    struct tm tm_now;
+    if (!iz_platform_localtime(&now, &tm_now) || strftime(buffer, size, "%Y-%m-%d %H:%M:%S", &tm_now) == 0)
+        snprintf(buffer, size, "1970-01-01 00:00:00");
 }
 
 /**

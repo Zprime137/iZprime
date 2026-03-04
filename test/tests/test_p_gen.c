@@ -531,9 +531,10 @@ int BENCHMARK_P_GEN_ALGORITHMS(int bit_size, int test_rounds, int save_results)
 
         // Get the current timestamp for file naming.
         time_t now = time(NULL);
-        struct tm *t = localtime(&now);
+        struct tm tm_now;
         char timestamp[64];
-        strftime(timestamp, sizeof(timestamp) - 1, "%d%H%M%S", t);
+        if (!iz_platform_localtime(&now, &tm_now) || strftime(timestamp, sizeof(timestamp) - 1, "%d%H%M%S", &tm_now) == 0)
+            snprintf(timestamp, sizeof(timestamp), "00000000");
 
         // Build the output file path.
         char file_path[256];

@@ -274,9 +274,10 @@ void BENCHMARK_SiZ_count(int save_results)
     if (save_results)
     {
         time_t now = time(NULL);
-        struct tm *t = localtime(&now);
+        struct tm tm_now;
         char timestamp[64];
-        strftime(timestamp, sizeof(timestamp) - 1, "%d%H%M%S", t);
+        if (!iz_platform_localtime(&now, &tm_now) || strftime(timestamp, sizeof(timestamp) - 1, "%d%H%M%S", &tm_now) == 0)
+            snprintf(timestamp, sizeof(timestamp), "00000000");
 
         char file_path[256];
         snprintf(file_path, sizeof(file_path), "%s/SiZ_count_%s.txt", DIR_output, timestamp);

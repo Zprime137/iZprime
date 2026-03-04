@@ -131,3 +131,15 @@ double iz_platform_monotonic_seconds(void)
     return (double)ts.tv_sec + (double)ts.tv_nsec / 1000000000.0;
 #endif
 }
+
+int iz_platform_localtime(const time_t *timestamp, struct tm *out)
+{
+    if (timestamp == NULL || out == NULL)
+        return 0;
+
+#if IZ_PLATFORM_WINDOWS
+    return localtime_s(out, timestamp) == 0;
+#else
+    return localtime_r(timestamp, out) != NULL;
+#endif
+}
