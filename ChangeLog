@@ -1,5 +1,12 @@
 # ChangeLog
 
+## v1.2.3 (2026-03-04)
+
+### Patch release: Sonar badge alignment
+
+- Updated the README SonarCloud quality-gate badge and link to explicitly track the `main` branch.
+- No code or API changes.
+
 ## v1.2.2 (2026-03-04)
 
 ### Patch release: Sonar security hardening and CI hygiene
