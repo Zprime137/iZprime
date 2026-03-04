@@ -1,0 +1,12 @@
+[package]
+name = "izprime"
+version = "0.1.0"
+edition = "2021"
+description = "Rust wrapper over iZprime FFI"
+license = "MIT"
+
+[lib]
+name = "izprime"
+path = "src/lib.rs"
+
+[dependencies]

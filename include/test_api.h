@@ -37,6 +37,8 @@ typedef struct
 ///@{
 /** @brief Validate utility helpers (numeric/range parsers and shared utilities). */
 int TEST_UTILS(int verbose);
+/** @brief Validate the bindings-oriented C FFI surface (`izprime_ffi.h`). */
+int TEST_FFI(int verbose);
 /** @brief Run correctness checks across all registered sieve models. */
 int TEST_SIEVE_MODELS_INTEGRITY(int verbose);
 /** @brief Benchmark registered sieve models and optionally persist results. */

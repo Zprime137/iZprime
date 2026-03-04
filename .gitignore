@@ -31,6 +31,15 @@ docs/latex_src/*.toc
 # Python
 .venv/
 py_tools/__pycache__/
+bindings/python/**/__pycache__/
+bindings/python/.pytest_cache/
+bindings/python/.mypy_cache/
+bindings/python/.ruff_cache/
+bindings/python/.tox/
+bindings/python/.coverage
+bindings/python/build/
+bindings/python/dist/
+bindings/python/*.egg-info/
 *.pyc
 
 # C/C++ objects and binaries
@@ -48,5 +57,16 @@ py_tools/__pycache__/
 # Temporary files
 *.tmp
 *.swp
+
+# Language wrapper local deps
+bindings/node/node_modules/
+bindings/node/.npm/
+bindings/node/npm-debug.log*
+bindings/node/.cache/
+bindings/rust/target/
+bindings/rust/Cargo.lock
+bindings/go/bin/
+bindings/go/pkg/
+bindings/go/coverage.out
 
 TODOS

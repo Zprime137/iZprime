@@ -186,6 +186,15 @@ int RUN_TEST_UNITS(int verbose)
     else
         failed_tests++;
 
+    // * Run FFI tests
+    printf("\n\n");
+    result = TEST_FFI(verbose);
+    total_tests++;
+    if (result)
+        passed_tests++;
+    else
+        failed_tests++;
+
     // * Run UI16_ARRAY tests
     printf("\n\n");
     result = TEST_UI16_ARRAY(verbose);

@@ -1,6 +1,8 @@
 # Examples
 
 This folder contains small standalone programs showing how to use the public API in `include/iZ_api.h`.
+It also includes `ffi_demo.c`, which targets the bindings-oriented API in
+`include/izprime_ffi.h`.
 
 ## Build
 
@@ -17,6 +19,7 @@ make examples
 ./build/examples/SiZ_range 0 1000000
 ./build/examples/SiZ_range 1000000000000 1000000 output/iZ_stream.txt
 ./build/examples/p_genrators 1024 vx
+./build/examples/ffi_demo
 ```
 
 Tip: you can also use the Makefile helper:
