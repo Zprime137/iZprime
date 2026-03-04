@@ -1,6 +1,7 @@
 #include <iZ_api.h>
 
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
@@ -29,21 +30,45 @@ static void print_usage(const char *prog)
     printf("- If output_file is omitted, this example only counts primes in the range.\n");
 }
 
+static char *dup_string(const char *value)
+{
+    if (value == NULL)
+        return NULL;
+
+    size_t size = strlen(value) + 1;
+    char *copy = (char *)malloc(size);
+    if (copy == NULL)
+        return NULL;
+
+    memcpy(copy, value, size);
+    return copy;
+}
+
 static void run_SiZ_stream(const char *start_str, uint64_t range, const char *filepath)
 {
     STOPWATCH timer;
     double elapsed_seconds;
     uint64_t prime_count;
+    char *start_buf = dup_string(start_str);
+    char *path_buf = dup_string(filepath);
+
+    if (start_buf == NULL || (filepath != NULL && path_buf == NULL))
+    {
+        free(start_buf);
+        free(path_buf);
+        fprintf(stderr, "Failed to allocate input buffers.\n");
+        exit(EXIT_FAILURE);
+    }
 
     if (filepath)
         ensure_dir("output");
 
     INPUT_SIEVE_RANGE input_range = {
-        .start = (char *)start_str,
+        .start = start_buf,
         .range = range,
         .mr_rounds = MR_ROUNDS,
         .stream_gaps = 0,
-        .filepath = (char *)filepath,
+        .filepath = path_buf,
     };
 
     sw_start(&timer);
@@ -59,6 +84,9 @@ static void run_SiZ_stream(const char *start_str, uint64_t range, const char *fi
         printf("Output file:          %s\n", filepath);
     printf("Execution time (s):   %-16f\n", elapsed_seconds);
     fflush(stdout);
+
+    free(start_buf);
+    free(path_buf);
 }
 
 static void run_SiZ_count(const char *start_str, uint64_t range)
@@ -66,9 +94,15 @@ static void run_SiZ_count(const char *start_str, uint64_t range)
     STOPWATCH timer;
     double elapsed_seconds;
     uint64_t prime_count;
+    char *start_buf = dup_string(start_str);
+    if (start_buf == NULL)
+    {
+        fprintf(stderr, "Failed to allocate input buffer.\n");
+        exit(EXIT_FAILURE);
+    }
 
     INPUT_SIEVE_RANGE input_range = {
-        .start = (char *)start_str,
+        .start = start_buf,
         .range = range,
         .mr_rounds = MR_ROUNDS,
         .stream_gaps = 0,
@@ -88,6 +122,8 @@ static void run_SiZ_count(const char *start_str, uint64_t range)
     printf("Cores:               %-16d\n", cores_num);
     printf("Execution time (s):   %-16f\n", elapsed_seconds);
     fflush(stdout);
+
+    free(start_buf);
 }
 
 int main(int argc, char **argv)

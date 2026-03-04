@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <openssl/crypto.h>
+#include <time.h>
 
 #ifndef IZ_VERSION
 #define IZ_VERSION "dev"
@@ -73,6 +74,24 @@ static int parse_cores_value(const char *value, int *out)
     return 1;
 }
 
+static int read_cli_option_value(
+    int argc,
+    char **argv,
+    int *index,
+    const char **value,
+    const char *option_name)
+{
+    if (*index + 1 >= argc)
+    {
+        fprintf(stderr, "Missing value after %s.\n", option_name);
+        return 0;
+    }
+
+    *index += 1;
+    *value = argv[*index];
+    return 1;
+}
+
 typedef struct
 {
     char lower[1024];
@@ -85,7 +104,9 @@ static int parse_cli_range(const char *value, CLI_RANGE *range)
     if (range == NULL)
         return 0;
 
-    mpz_t lower, upper, width;
+    mpz_t lower;
+    mpz_t upper;
+    mpz_t width;
     mpz_inits(lower, upper, width, NULL);
 
     int ok = parse_inclusive_range_mpz(value, lower, upper);
@@ -233,61 +254,117 @@ typedef enum
     STREAM_PARSE_ERROR = 2,
 } STREAM_PARSE_RESULT;
 
+static int stream_read_option_value(
+    int argc,
+    char **argv,
+    int *index,
+    const char **value,
+    const char *option)
+{
+    return read_cli_option_value(argc, argv, index, value, option);
+}
+
+static STREAM_PARSE_RESULT parse_stream_range_option(
+    int argc,
+    char **argv,
+    int *index,
+    STREAM_CMD_OPTIONS *options)
+{
+    const char *value = NULL;
+    if (!stream_read_option_value(argc, argv, index, &value, "--range"))
+        return STREAM_PARSE_ERROR;
+
+    if (!parse_cli_range(value, &options->range))
+    {
+        fprintf(stderr, "Invalid --range value. Expected [LOWER, UPPER] with LOWER<=UPPER.\n");
+        return STREAM_PARSE_ERROR;
+    }
+
+    options->has_range = 1;
+    return STREAM_PARSE_OK;
+}
+
+static STREAM_PARSE_RESULT parse_stream_output_option(
+    int argc,
+    char **argv,
+    int *index,
+    STREAM_CMD_OPTIONS *options,
+    const char *option)
+{
+    const char *value = NULL;
+    if (!stream_read_option_value(argc, argv, index, &value, option))
+        return STREAM_PARSE_ERROR;
+    options->stream_path = value;
+    return STREAM_PARSE_OK;
+}
+
+static STREAM_PARSE_RESULT parse_stream_rounds_option(
+    int argc,
+    char **argv,
+    int *index,
+    STREAM_CMD_OPTIONS *options)
+{
+    const char *value = NULL;
+    if (!stream_read_option_value(argc, argv, index, &value, "--mr-rounds"))
+        return STREAM_PARSE_ERROR;
+
+    if (!parse_expr_int(value, &options->mr_rounds))
+    {
+        fprintf(stderr, "Invalid --mr-rounds value.\n");
+        return STREAM_PARSE_ERROR;
+    }
+
+    return STREAM_PARSE_OK;
+}
+
+static STREAM_PARSE_RESULT parse_stream_primes_option(
+    int argc,
+    char **argv,
+    int *index,
+    STREAM_CMD_OPTIONS *options)
+{
+    const char *arg = argv[*index];
+
+    if (strcmp(arg, "--range") == 0)
+        return parse_stream_range_option(argc, argv, index, options);
+    if (strcmp(arg, "--print") == 0)
+    {
+        options->print_to_console = 1;
+        return STREAM_PARSE_OK;
+    }
+    if (strcmp(arg, "--print-gaps") == 0)
+    {
+        options->print_gaps = 1;
+        options->print_to_console = 1;
+        return STREAM_PARSE_OK;
+    }
+    if (strcmp(arg, "--stream_to") == 0 || strcmp(arg, "--stream-to") == 0)
+        return parse_stream_output_option(argc, argv, index, options, arg);
+    if (strcmp(arg, "--mr-rounds") == 0)
+        return parse_stream_rounds_option(argc, argv, index, options);
+
+    fprintf(stderr, "Unknown option: %s\n", arg);
+    return STREAM_PARSE_ERROR;
+}
+
 static STREAM_PARSE_RESULT parse_stream_primes_args(int argc, char **argv, STREAM_CMD_OPTIONS *options)
 {
+    STREAM_PARSE_RESULT result = STREAM_PARSE_OK;
+
     for (int i = 2; i < argc; ++i)
     {
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
         {
             print_stream_help(argv[0]);
-            return STREAM_PARSE_HELP;
+            result = STREAM_PARSE_HELP;
+            break;
         }
-        if (strcmp(argv[i], "--range") == 0)
-        {
-            if (i + 1 >= argc || !parse_cli_range(argv[++i], &options->range))
-            {
-                fprintf(stderr, "Invalid --range value. Expected [LOWER, UPPER] with LOWER<=UPPER.\n");
-                return STREAM_PARSE_ERROR;
-            }
-            options->has_range = 1;
-            continue;
-        }
-        if (strcmp(argv[i], "--print") == 0)
-        {
-            options->print_to_console = 1;
-            continue;
-        }
-        if (strcmp(argv[i], "--print-gaps") == 0)
-        {
-            options->print_gaps = 1;
-            options->print_to_console = 1;
-            continue;
-        }
-        if (strcmp(argv[i], "--stream_to") == 0 || strcmp(argv[i], "--stream-to") == 0)
-        {
-            if (i + 1 >= argc)
-            {
-                fprintf(stderr, "Missing filepath after %s.\n", argv[i]);
-                return STREAM_PARSE_ERROR;
-            }
-            options->stream_path = argv[++i];
-            continue;
-        }
-        if (strcmp(argv[i], "--mr-rounds") == 0)
-        {
-            if (i + 1 >= argc || !parse_expr_int(argv[++i], &options->mr_rounds))
-            {
-                fprintf(stderr, "Invalid --mr-rounds value.\n");
-                return STREAM_PARSE_ERROR;
-            }
-            continue;
-        }
-
-        fprintf(stderr, "Unknown option: %s\n", argv[i]);
-        return STREAM_PARSE_ERROR;
+        result = parse_stream_primes_option(argc, argv, &i, options);
+        if (result != STREAM_PARSE_OK)
+            break;
     }
 
-    return STREAM_PARSE_OK;
+    return result;
 }
 
 static int validate_stream_primes_options(const STREAM_CMD_OPTIONS *options)
@@ -319,9 +396,17 @@ static const char *resolve_stream_path(const STREAM_CMD_OPTIONS *options, char *
         return options->stream_path;
 
     time_t now = time(NULL);
-    struct tm *tm_now = localtime(&now);
+    struct tm tm_now;
     char stamp[64];
-    strftime(stamp, sizeof(stamp), "%Y%m%d_%H%M%S", tm_now);
+
+#if defined(_WIN32) || defined(_WIN64)
+    int tm_ok = localtime_s(&tm_now, &now) == 0;
+#else
+    int tm_ok = localtime_r(&now, &tm_now) != NULL;
+#endif
+    if (!tm_ok || strftime(stamp, sizeof(stamp), "%Y%m%d_%H%M%S", &tm_now) == 0)
+        snprintf(stamp, sizeof(stamp), "unknown");
+
     snprintf(default_path, default_path_size, "%s/stream_%s.txt", DIR_output, stamp);
     return default_path;
 }
@@ -382,7 +467,10 @@ static int run_count_primes_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--range") == 0)
         {
-            if (i + 1 >= argc || !parse_cli_range(argv[++i], &range))
+            const char *range_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &range_value, "--range"))
+                return EXIT_FAILURE;
+            if (!parse_cli_range(range_value, &range))
             {
                 fprintf(stderr, "Invalid --range value. Expected [LOWER, UPPER] with LOWER<=UPPER.\n");
                 return EXIT_FAILURE;
@@ -392,7 +480,10 @@ static int run_count_primes_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--cores") == 0 || strcmp(argv[i], "--cores-number") == 0)
         {
-            if (i + 1 >= argc || !parse_cores_value(argv[++i], &cores))
+            const char *cores_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &cores_value, argv[i]))
+                return EXIT_FAILURE;
+            if (!parse_cores_value(cores_value, &cores))
             {
                 fprintf(stderr, "Invalid --cores value. Use an integer >= 1 or 'max'.\n");
                 return EXIT_FAILURE;
@@ -401,7 +492,10 @@ static int run_count_primes_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--mr-rounds") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_int(argv[++i], &mr_rounds))
+            const char *rounds_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &rounds_value, "--mr-rounds"))
+                return EXIT_FAILURE;
+            if (!parse_expr_int(rounds_value, &mr_rounds))
             {
                 fprintf(stderr, "Invalid --mr-rounds value.\n");
                 return EXIT_FAILURE;
@@ -457,7 +551,10 @@ static int run_test_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--limit") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_u64(argv[++i], &limit))
+            const char *limit_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &limit_value, "--limit"))
+                return EXIT_FAILURE;
+            if (!parse_expr_u64(limit_value, &limit))
             {
                 fprintf(stderr, "Invalid --limit value.\n");
                 return EXIT_FAILURE;
@@ -546,7 +643,10 @@ static int run_benchmark_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--limit") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_u64(argv[++i], &limit))
+            const char *limit_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &limit_value, "--limit"))
+                return EXIT_FAILURE;
+            if (!parse_expr_u64(limit_value, &limit))
             {
                 fprintf(stderr, "Invalid --limit value.\n");
                 return EXIT_FAILURE;
@@ -555,7 +655,10 @@ static int run_benchmark_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--repeat") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_int(argv[++i], &repeat) || repeat < 1)
+            const char *repeat_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &repeat_value, "--repeat"))
+                return EXIT_FAILURE;
+            if (!parse_expr_int(repeat_value, &repeat) || repeat < 1)
             {
                 fprintf(stderr, "Invalid --repeat value.\n");
                 return EXIT_FAILURE;
@@ -564,22 +667,18 @@ static int run_benchmark_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--algo") == 0)
         {
-            if (i + 1 >= argc)
-            {
-                fprintf(stderr, "Missing value after --algo.\n");
+            const char *algo_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &algo_value, "--algo"))
                 return EXIT_FAILURE;
-            }
-            algo = argv[++i];
+            algo = algo_value;
             continue;
         }
         if (strcmp(argv[i], "--save-results") == 0)
         {
-            if (i + 1 >= argc)
-            {
-                fprintf(stderr, "Missing filepath after --save-results.\n");
+            const char *save_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &save_value, "--save-results"))
                 return EXIT_FAILURE;
-            }
-            save_path = argv[++i];
+            save_path = save_value;
             continue;
         }
 
@@ -682,12 +781,10 @@ static int run_directional_prime_cmd(int argc, char **argv, int forward)
         }
         if (strcmp(argv[i], "--n") == 0)
         {
-            if (i + 1 >= argc)
-            {
-                fprintf(stderr, "Missing value after --n.\n");
+            const char *n_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &n_value, "--n"))
                 return EXIT_FAILURE;
-            }
-            value_expr = argv[++i];
+            value_expr = n_value;
             continue;
         }
         if (argv[i][0] != '-' && value_expr == NULL)
@@ -706,7 +803,8 @@ static int run_directional_prime_cmd(int argc, char **argv, int forward)
         return EXIT_FAILURE;
     }
 
-    mpz_t base, prime;
+    mpz_t base;
+    mpz_t prime;
     mpz_inits(base, prime, NULL);
     if (!parse_numeric_expr_mpz(base, value_expr))
     {
@@ -756,17 +854,18 @@ static int run_is_prime_cmd(int argc, char **argv)
         }
         if (strcmp(argv[i], "--n") == 0)
         {
-            if (i + 1 >= argc)
-            {
-                fprintf(stderr, "Missing value after --n.\n");
+            const char *n_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &n_value, "--n"))
                 return EXIT_FAILURE;
-            }
-            value_expr = argv[++i];
+            value_expr = n_value;
             continue;
         }
         if (strcmp(argv[i], "--rounds") == 0)
         {
-            if (i + 1 >= argc || !parse_expr_int(argv[++i], &rounds) || rounds < 1)
+            const char *rounds_value = NULL;
+            if (!read_cli_option_value(argc, argv, &i, &rounds_value, "--rounds"))
+                return EXIT_FAILURE;
+            if (!parse_expr_int(rounds_value, &rounds) || rounds < 1)
             {
                 fprintf(stderr, "Invalid --rounds value.\n");
                 return EXIT_FAILURE;

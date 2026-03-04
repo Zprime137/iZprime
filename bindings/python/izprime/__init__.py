@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 import ctypes
 
-from ._ffi import IZP_U64_BUFFER, load_library
+from ._ffi import IzpU64Buffer, load_library
 
 
 class Status(IntEnum):
@@ -55,7 +55,7 @@ class Izprime:
         return raw.decode("utf-8") if raw else ""
 
     def sieve(self, kind: SieveKind, limit: int) -> list[int]:
-        out = IZP_U64_BUFFER()
+        out = IzpU64Buffer()
         status = self._lib.izp_ffi_sieve_u64(int(kind), int(limit), ctypes.byref(out))
         self._raise_if_error(status)
         try:

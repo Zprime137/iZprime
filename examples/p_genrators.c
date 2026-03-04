@@ -43,7 +43,8 @@ static void example_p_gen(int bit_size, int use_vy)
 
 void example_next_prime(void)
 {
-    mpz_t base, next_prime;
+    mpz_t base;
+    mpz_t next_prime;
     mpz_init_set_str(base, "1000000000000", 10); // starting point
     mpz_init(next_prime);
 

@@ -6,6 +6,8 @@ from pathlib import Path
 
 DEFAULT_OUTPUT_DIR = Path("./output")
 PLOT_EXT = "svg"
+LIMITS_PREFIX = "Test Limits:"
+RESULTS_PREFIX = "Test Results:"
 
 
 def prompt_results_path() -> str:
@@ -60,34 +62,50 @@ def parse_results(results_input: str | Path):
     if not lines:
         return results_path, limit_pairs, data
 
-    limits_line = next((ln for ln in lines if ln.startswith("Test Limits:")), None)
+    limits_line = next((ln for ln in lines if ln.startswith(LIMITS_PREFIX)), None)
     if limits_line:
-        rhs = limits_line.split(":", 1)[1].strip()
-        parts = [p.strip() for p in rhs.strip("[]").split(",") if p.strip()]
-        for part in parts:
-            if "^" not in part:
-                continue
-            b_str, e_str = [s.strip() for s in part.split("^", 1)]
-            try:
-                limit_pairs.append((int(b_str), int(e_str)))
-            except ValueError:
-                continue
+        limit_pairs = parse_limit_pairs(limits_line)
 
     for line in lines:
-        if line.startswith(("Test Limits:", "Test Results:")):
+        if line.startswith((LIMITS_PREFIX, RESULTS_PREFIX)):
             continue
-        if ": " not in line:
+        parsed_row = parse_algorithm_times(line)
+        if parsed_row is None:
             continue
-        algorithm, times = line.split(": ", 1)
-        if not (times.startswith("[") and times.endswith("]")):
-            continue
-        tokens = [token.strip() for token in times.strip("[]").split(",") if token.strip()]
-        try:
-            data[algorithm] = [int(token) for token in tokens]
-        except ValueError:
-            continue
+        algorithm, values = parsed_row
+        data[algorithm] = values
 
     return results_path, limit_pairs, data
+
+
+def parse_limit_pairs(line: str) -> list[tuple[int, int]]:
+    pairs: list[tuple[int, int]] = []
+    rhs = line.split(":", 1)[1].strip()
+    parts = [p.strip() for p in rhs.strip("[]").split(",") if p.strip()]
+    for part in parts:
+        if "^" not in part:
+            continue
+        b_str, e_str = [s.strip() for s in part.split("^", 1)]
+        try:
+            pairs.append((int(b_str), int(e_str)))
+        except ValueError:
+            continue
+    return pairs
+
+
+def parse_algorithm_times(line: str) -> tuple[str, list[int]] | None:
+    if ": " not in line:
+        return None
+
+    algorithm, times = line.split(": ", 1)
+    if not (times.startswith("[") and times.endswith("]")):
+        return None
+
+    tokens = [token.strip() for token in times.strip("[]").split(",") if token.strip()]
+    try:
+        return algorithm, [int(token) for token in tokens]
+    except ValueError:
+        return None
 
 
 def plot_sieve_results(results_input: str | Path, save: bool = False, show: bool = True):

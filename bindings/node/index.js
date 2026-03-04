@@ -1,4 +1,4 @@
-const path = require("path");
+const path = require("node:path");
 const ffi = require("ffi-napi");
 const ref = require("ref-napi");
 const Struct = require("ref-struct-di")(ref);
@@ -31,7 +31,10 @@ for (const cand of candidates) {
       izp_ffi_last_error: ["string", []],
       izp_ffi_sieve_u64: ["int", ["int", "uint64", ref.refType(U64Buffer)]],
       izp_ffi_free_u64_buffer: ["void", [ref.refType(U64Buffer)]],
-      izp_ffi_count_range: ["int", ["string", "uint64", "int", "int", ref.refType("uint64")]],
+      izp_ffi_count_range: [
+        "int",
+        ["string", "uint64", "int", "int", ref.refType("uint64")],
+      ],
     });
     break;
   } catch (err) {

@@ -9,11 +9,15 @@ import platform
 from pathlib import Path
 
 
-class IZP_U64_BUFFER(ctypes.Structure):
+class IzpU64Buffer(ctypes.Structure):
     _fields_ = [
         ("data", ctypes.POINTER(ctypes.c_uint64)),
         ("len", ctypes.c_size_t),
     ]
+
+
+# Backward-compatibility alias for older wrapper imports.
+IZP_U64_BUFFER = IzpU64Buffer
 
 
 def _library_candidates() -> list[str]:
@@ -77,7 +81,7 @@ def _configure_signatures(lib: ctypes.CDLL) -> None:
     lib.izp_ffi_clear_error.argtypes = []
 
     lib.izp_ffi_sieve_u64.restype = ctypes.c_int
-    lib.izp_ffi_sieve_u64.argtypes = [ctypes.c_int, ctypes.c_uint64, ctypes.POINTER(IZP_U64_BUFFER)]
+    lib.izp_ffi_sieve_u64.argtypes = [ctypes.c_int, ctypes.c_uint64, ctypes.POINTER(IzpU64Buffer)]
 
     lib.izp_ffi_count_range.restype = ctypes.c_int
     lib.izp_ffi_count_range.argtypes = [
@@ -108,7 +112,7 @@ def _configure_signatures(lib: ctypes.CDLL) -> None:
     lib.izp_ffi_random_prime_vy.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_char_p)]
 
     lib.izp_ffi_free_u64_buffer.restype = None
-    lib.izp_ffi_free_u64_buffer.argtypes = [ctypes.POINTER(IZP_U64_BUFFER)]
+    lib.izp_ffi_free_u64_buffer.argtypes = [ctypes.POINTER(IzpU64Buffer)]
 
     lib.izp_ffi_free_string.restype = None
     lib.izp_ffi_free_string.argtypes = [ctypes.POINTER(ctypes.c_char_p)]

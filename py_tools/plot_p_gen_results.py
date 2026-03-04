@@ -6,6 +6,13 @@ from pathlib import Path
 
 DEFAULT_OUTPUT_DIR = Path("./output")
 PLOT_EXT = "svg"
+ALGORITHM_PREFIX = "Algorithm:"
+BIT_SIZE_PREFIX = "Bit Size:"
+CORES_PREFIX = "Cores:"
+CORES_NUMBER_PREFIX = "Cores Number:"
+EXEC_TIMES_PREFIX = "Execution Times (s):"
+LEGACY_EXEC_TIMES_PREFIX = "Time Results (seconds):"
+AVERAGE_TIME_PREFIX = "Average Time:"
 
 
 def prompt_results_path() -> str:
@@ -62,7 +69,7 @@ def read_results(results_input: str | Path):
     sections = []
     current_section = []
     for line in lines:
-        if line.startswith("Algorithm:") and current_section:
+        if line.startswith(ALGORITHM_PREFIX) and current_section:
             sections.append(current_section)
             current_section = [line]
             continue
@@ -85,40 +92,41 @@ def read_results(results_input: str | Path):
     return results_path, bit_size_hint, parsed
 
 
-def parse_section(lines: list[str]):
-    algorithm = None
-    cores = None
-    times = []
-    avg_time = None
-    bit_size = None
+def parse_int_suffix(line: str, prefix: str) -> int | None:
+    if not line.startswith(prefix):
+        return None
+    try:
+        return int(line[len(prefix) :].strip())
+    except ValueError:
+        return None
 
-    for line in lines:
-        if line.startswith("Algorithm:"):
-            algorithm = line[len("Algorithm:") :].strip()
-        elif line.startswith("Bit Size:"):
-            try:
-                bit_size = int(line[len("Bit Size:") :].strip())
-            except ValueError:
-                bit_size = None
-        elif line.startswith("Cores:"):
-            try:
-                cores = int(line[len("Cores:") :].strip())
-            except ValueError:
-                cores = None
-        elif line.startswith("Cores Number:"):
-            try:
-                cores = int(line[len("Cores Number:") :].strip())
-            except ValueError:
-                cores = None
-        elif line.startswith("Execution Times (s):") or line.startswith("Time Results (seconds):"):
-            match = re.search(r"\[(.*?)\]", line)
-            if match:
-                times = [float(token.strip()) for token in match.group(1).split(",") if token.strip()]
-        elif line.startswith("Average Time:"):
-            match = re.search(r"([\d.]+)", line)
-            if match:
-                avg_time = float(match.group(1))
 
+def parse_times_suffix(line: str) -> list[float] | None:
+    if not (line.startswith(EXEC_TIMES_PREFIX) or line.startswith(LEGACY_EXEC_TIMES_PREFIX)):
+        return None
+
+    match = re.search(r"\[(.*?)\]", line)
+    if not match:
+        return None
+    return [float(token.strip()) for token in match.group(1).split(",") if token.strip()]
+
+
+def parse_average_suffix(line: str) -> float | None:
+    if not line.startswith(AVERAGE_TIME_PREFIX):
+        return None
+    match = re.search(r"([\d.]+)", line)
+    if not match:
+        return None
+    return float(match.group(1))
+
+
+def build_parsed_section(
+    algorithm: str | None,
+    cores: int | None,
+    times: list[float],
+    avg_time: float | None,
+    bit_size: int | None,
+):
     if algorithm and cores is not None and times and avg_time is not None:
         return {
             "algorithm": algorithm,
@@ -128,6 +136,64 @@ def parse_section(lines: list[str]):
             "bit_size": bit_size,
         }
     return None
+
+
+def parse_section(lines: list[str]):
+    algorithm = None
+    cores = None
+    times = []
+    avg_time = None
+    bit_size = None
+
+    for line in lines:
+        if line.startswith(ALGORITHM_PREFIX):
+            algorithm = line[len(ALGORITHM_PREFIX) :].strip()
+            continue
+
+        bit_size_candidate = parse_int_suffix(line, BIT_SIZE_PREFIX)
+        if bit_size_candidate is not None:
+            bit_size = bit_size_candidate
+            continue
+
+        cores_candidate = parse_int_suffix(line, CORES_PREFIX)
+        if cores_candidate is None:
+            cores_candidate = parse_int_suffix(line, CORES_NUMBER_PREFIX)
+        if cores_candidate is not None:
+            cores = cores_candidate
+            continue
+
+        times_candidate = parse_times_suffix(line)
+        if times_candidate is not None:
+            times = times_candidate
+            continue
+
+        avg_candidate = parse_average_suffix(line)
+        if avg_candidate is not None:
+            avg_time = avg_candidate
+
+    return build_parsed_section(algorithm, cores, times, avg_time, bit_size)
+
+
+def build_plot_title(bit_size: int | None, plot_avg: bool) -> str:
+    target_bits = bit_size if bit_size is not None else "Unknown"
+    if plot_avg:
+        return f"Average Time Analysis for Prime Generation Methods (Target Bit Size: {target_bits})"
+    return f"Execution Time Analysis for Prime Generation Methods (Target Bit Size: {target_bits})"
+
+
+def plot_series(ax, result: dict[str, object], idx: int, colors: list[str], markers: list[str], plot_avg: bool):
+    algorithm = str(result["algorithm"])
+    cores = int(result["cores"])
+    times = list(result["times"])
+    avg_time = float(result["avg_time"])
+    x_values = list(range(1, len(times) + 1))
+    color = colors[idx % len(colors)]
+    marker = markers[idx % len(markers)]
+    label = f"{algorithm} (cores: {cores})" if cores > 1 else algorithm
+
+    y_values = [avg_time] * len(x_values) if plot_avg else times
+    linestyle = "dashed" if plot_avg else "solid"
+    ax.plot(x_values, y_values, marker=marker, linestyle=linestyle, color=color, label=label)
 
 
 def plot_prime_gen_results(
@@ -149,15 +215,7 @@ def plot_prime_gen_results(
         raise ValueError(f"No prime-generation benchmark rows parsed from '{results_path}'.")
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    target_bits = bit_size if bit_size is not None else "Unknown"
-    if plot_avg:
-        ax.set_title(
-            f"Average Time Analysis for Prime Generation Methods (Target Bit Size: {target_bits})"
-        )
-    else:
-        ax.set_title(
-            f"Execution Time Analysis for Prime Generation Methods (Target Bit Size: {target_bits})"
-        )
+    ax.set_title(build_plot_title(bit_size, plot_avg))
 
     ax.set_xlabel("Test Round")
     ax.set_ylabel("Time (seconds)")
@@ -168,33 +226,7 @@ def plot_prime_gen_results(
     colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
     for idx, result in enumerate(results):
-        algorithm = result["algorithm"]
-        cores = result["cores"]
-        times = result["times"]
-        avg_time = result["avg_time"]
-        x_values = list(range(1, len(times) + 1))
-        color = colors[idx % len(colors)]
-        marker = markers[idx % len(markers)]
-        label = f"{algorithm} (cores: {cores})" if cores > 1 else algorithm
-
-        if plot_avg:
-            ax.plot(
-                x_values,
-                [avg_time] * len(x_values),
-                marker=marker,
-                linestyle="dashed",
-                color=color,
-                label=label,
-            )
-        else:
-            ax.plot(
-                x_values,
-                times,
-                marker=marker,
-                linestyle="solid",
-                color=color,
-                label=label,
-            )
+        plot_series(ax, result, idx, colors, markers, plot_avg)
 
     ax.legend()
     plt.tight_layout()
