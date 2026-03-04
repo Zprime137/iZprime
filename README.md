@@ -1,10 +1,11 @@
 # iZprime
 
 [![CI](https://github.com/Zprime137/iZprime/actions/workflows/ci.yml/badge.svg)](https://github.com/Zprime137/iZprime/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Zprime137_iZprime&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Zprime137_iZprime)
 [![Release](https://img.shields.io/github/v/release/Zprime137/iZprime)](https://github.com/Zprime137/iZprime/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 [![DOI](https://zenodo.org/badge/777528709.svg)](https://doi.org/10.5281/zenodo.18839925)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Zprime137_iZprime&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Zprime137_iZprime)
 
 `iZprime` is a C library and CLI for prime enumeration as a mathematical software tool.
 
