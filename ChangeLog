@@ -1,5 +1,15 @@
 # ChangeLog
 
+## v1.2.2 (2026-03-04)
+
+### Patch release: Sonar security hardening and CI hygiene
+
+- Resolved SonarCloud security hotspots across CLI, toolkit, FFI, and tests (bounded string handling and safer local-time wrappers).
+- Replaced non-cryptographic `rand()` usage in toolkit prime-search paths with GMP-state random sampling.
+- Removed remaining const-drop casts in CLI/FFI paths by using owned mutable buffers.
+- Pinned GitHub Actions in CI to immutable commit SHAs for supply-chain hardening.
+- Kept API and CLI behavior stable while preserving green cross-platform builds and test suites.
+
 ## v1.2.1 (2026-03-04)
 
 ### Patch release: cross-platform build fix
