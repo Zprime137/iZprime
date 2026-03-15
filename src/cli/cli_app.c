@@ -18,6 +18,7 @@
 
 typedef UI64_ARRAY *(*SIEVE_FN)(uint64_t);
 typedef int (*CLI_HANDLER)(int argc, char **argv);
+typedef void (*MPZ_BINARY_OP)(mpz_t out, const mpz_t a, const mpz_t b);
 
 typedef struct
 {
@@ -44,6 +45,7 @@ typedef struct
 } CLI_COMMAND;
 
 static int run_directional_prime_cmd(int argc, char **argv, int forward);
+static int run_binary_mpz_cmd(int argc, char **argv, const char *command_name, MPZ_BINARY_OP op_fn);
 
 static int parse_expr_u64(const char *value, uint64_t *out)
 {
@@ -190,11 +192,13 @@ static void print_general_help(const char *prog)
     printf("  next_prime     Find the next prime after n (uses iZ_next_prime)\n");
     printf("  prev_prime     Find the previous prime before n (uses iZ_next_prime)\n");
     printf("  is_prime       Check primality for n (uses test_primality)\n");
+    printf("  gcd            Compute gcd(a, b) for arbitrary-size integers\n");
+    printf("  lcm            Compute lcm(a, b) for arbitrary-size integers\n");
     printf("  test           Run API-level consistency tests\n");
     printf("  benchmark      Benchmark sieve models\n");
     printf("  doctor         Check runtime environment and dependencies\n");
     printf("  help           Show this message\n\n");
-    printf("Aliases: sieve -> stream_primes, count -> count_primes, prev -> prev_prime\n");
+    printf("Aliases: sieve -> stream_primes, count -> count_primes, next -> next_prime, prev -> prev_prime\n");
     printf("Use '%s <command> --help' for command-specific options.\n", prog);
 }
 
@@ -239,6 +243,24 @@ static void print_is_prime_help(const char *prog)
     printf("  - --rounds defaults to %d.\n", MR_ROUNDS);
 }
 
+static void print_gcd_help(const char *prog)
+{
+    printf("Usage: %s gcd --a VALUE --b VALUE\n", prog);
+    printf("   or: %s gcd VALUE_A VALUE_B\n", prog);
+    printf("Notes:\n");
+    printf("  - VALUE inputs accept the same numeric expression syntax as range bounds.\n");
+    printf("  - Prints the gcd in base-10 to stdout.\n");
+}
+
+static void print_lcm_help(const char *prog)
+{
+    printf("Usage: %s lcm --a VALUE --b VALUE\n", prog);
+    printf("   or: %s lcm VALUE_A VALUE_B\n", prog);
+    printf("Notes:\n");
+    printf("  - VALUE inputs accept the same numeric expression syntax as range bounds.\n");
+    printf("  - Prints the lcm in base-10 to stdout.\n");
+}
+
 static void print_test_help(const char *prog)
 {
     printf("Usage: %s test [--limit N]\n", prog);
@@ -272,6 +294,12 @@ typedef enum
     STREAM_PARSE_HELP = 1,
     STREAM_PARSE_ERROR = 2,
 } STREAM_PARSE_RESULT;
+
+typedef struct
+{
+    const char *a_expr;
+    const char *b_expr;
+} CLI_BINARY_EXPR_OPTIONS;
 
 static int stream_read_option_value(
     int argc,
@@ -405,6 +433,74 @@ static int validate_stream_primes_options(const STREAM_CMD_OPTIONS *options)
     }
 
     return EXIT_SUCCESS;
+}
+
+static STREAM_PARSE_RESULT parse_binary_mpz_args(
+    int argc,
+    char **argv,
+    CLI_BINARY_EXPR_OPTIONS *options,
+    void (*print_help)(const char *prog))
+{
+    const char *positional[2] = {0};
+    int positional_count = 0;
+
+    for (int i = 2; i < argc; ++i)
+    {
+        if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+        {
+            print_help(argv[0]);
+            return STREAM_PARSE_HELP;
+        }
+        if (strcmp(argv[i], "--a") == 0)
+        {
+            if (positional_count != 0)
+            {
+                fprintf(stderr, "Do not mix positional operands with --a/--b.\n");
+                return STREAM_PARSE_ERROR;
+            }
+            if (!read_cli_option_value(argc, argv, &i, &options->a_expr, "--a"))
+                return STREAM_PARSE_ERROR;
+            continue;
+        }
+        if (strcmp(argv[i], "--b") == 0)
+        {
+            if (positional_count != 0)
+            {
+                fprintf(stderr, "Do not mix positional operands with --a/--b.\n");
+                return STREAM_PARSE_ERROR;
+            }
+            if (!read_cli_option_value(argc, argv, &i, &options->b_expr, "--b"))
+                return STREAM_PARSE_ERROR;
+            continue;
+        }
+        if (argv[i][0] != '-' && positional_count < 2)
+        {
+            if (options->a_expr != NULL || options->b_expr != NULL)
+            {
+                fprintf(stderr, "Do not mix positional operands with --a/--b.\n");
+                return STREAM_PARSE_ERROR;
+            }
+            positional[positional_count++] = argv[i];
+            continue;
+        }
+
+        fprintf(stderr, "Unknown option: %s\n", argv[i]);
+        return STREAM_PARSE_ERROR;
+    }
+
+    if (options->a_expr == NULL && options->b_expr == NULL && positional_count == 2)
+    {
+        options->a_expr = positional[0];
+        options->b_expr = positional[1];
+    }
+
+    if (options->a_expr == NULL || options->b_expr == NULL)
+    {
+        fprintf(stderr, "Provide both operands using --a VALUE --b VALUE or two positional expressions.\n");
+        return STREAM_PARSE_ERROR;
+    }
+
+    return STREAM_PARSE_OK;
 }
 
 static const char *resolve_stream_path(const STREAM_CMD_OPTIONS *options, char *default_path, size_t default_path_size)
@@ -939,6 +1035,49 @@ static int run_is_prime_cmd(int argc, char **argv)
     return EXIT_SUCCESS;
 }
 
+static int run_binary_mpz_cmd(int argc, char **argv, const char *command_name, MPZ_BINARY_OP op_fn)
+{
+    CLI_BINARY_EXPR_OPTIONS options = {0};
+    STREAM_PARSE_RESULT parse_result = STREAM_PARSE_OK;
+
+    if (strcmp(command_name, "gcd") == 0)
+        parse_result = parse_binary_mpz_args(argc, argv, &options, print_gcd_help);
+    else
+        parse_result = parse_binary_mpz_args(argc, argv, &options, print_lcm_help);
+
+    if (parse_result == STREAM_PARSE_HELP)
+        return EXIT_SUCCESS;
+    if (parse_result == STREAM_PARSE_ERROR)
+        return EXIT_FAILURE;
+
+    mpz_t a;
+    mpz_t b;
+    mpz_t out;
+    mpz_inits(a, b, out, NULL);
+
+    if (!parse_numeric_expr_mpz(a, options.a_expr) || !parse_numeric_expr_mpz(b, options.b_expr))
+    {
+        fprintf(stderr, "Invalid numeric expression for %s operands.\n", command_name);
+        mpz_clears(a, b, out, NULL);
+        return EXIT_FAILURE;
+    }
+
+    op_fn(out, a, b);
+    gmp_printf("%Zd\n", out);
+    mpz_clears(a, b, out, NULL);
+    return EXIT_SUCCESS;
+}
+
+static int run_gcd_cmd(int argc, char **argv)
+{
+    return run_binary_mpz_cmd(argc, argv, "gcd", gcd_mpz);
+}
+
+static int run_lcm_cmd(int argc, char **argv)
+{
+    return run_binary_mpz_cmd(argc, argv, "lcm", lcm_mpz);
+}
+
 static int run_doctor_cmd(int argc, char **argv)
 {
     for (int i = 2; i < argc; ++i)
@@ -979,9 +1118,12 @@ static const CLI_COMMAND k_commands[] = {
     {"count_primes", run_count_primes_cmd},
     {"count", run_count_primes_cmd},
     {"next_prime", run_next_prime_cmd},
+    {"next", run_next_prime_cmd},
     {"prev_prime", run_prev_prime_cmd},
     {"prev", run_prev_prime_cmd},
     {"is_prime", run_is_prime_cmd},
+    {"gcd", run_gcd_cmd},
+    {"lcm", run_lcm_cmd},
     {"test", run_test_cmd},
     {"benchmark", run_benchmark_cmd},
     {"doctor", run_doctor_cmd},

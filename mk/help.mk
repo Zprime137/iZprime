@@ -43,7 +43,7 @@ help:
 	@echo "  ENABLE_NDEBUG=1/0   - Enable/disable -DNDEBUG in release/PGO targets"
 	@echo "  ENABLE_STRIP_DEAD=1/0 - Enable/disable dead-code stripping flags"
 	@echo "  USE_CCACHE=1/0      - Prefix compiler with ccache"
-	@echo "  VERSION=x.y.z       - Library/CLI version metadata (default: 1.2.3)"
+	@echo "  VERSION=x.y.z       - Library/CLI version metadata (default: 1.3.0)"
 	@echo "  SOVERSION=n         - Shared-library ABI major (default: VERSION major)"
 	@echo "  BUILD_SHARED=1/0    - Build shared library artifacts"
 	@echo ""

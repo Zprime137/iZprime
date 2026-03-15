@@ -107,6 +107,50 @@ Example:
 izprime is_prime --n "10^61 + 1" --rounds 40
 ```
 
+## `gcd`
+
+Computes the greatest common divisor of two arbitrary-size integers.
+
+```bash
+izprime gcd --a VALUE --b VALUE
+izprime gcd VALUE_A VALUE_B
+```
+
+Examples:
+
+```bash
+izprime gcd --a "10^100 + 12" --b "10^80 + 18"
+izprime gcd "10^6" "10^4"
+```
+
+Notes:
+
+- Use either named operands (`--a`, `--b`) or two positional expressions.
+- Mixed forms are rejected to keep parsing unambiguous.
+- The command prints the result in base-10 to stdout.
+
+## `lcm`
+
+Computes the least common multiple of two arbitrary-size integers.
+
+```bash
+izprime lcm --a VALUE --b VALUE
+izprime lcm VALUE_A VALUE_B
+```
+
+Examples:
+
+```bash
+izprime lcm --a "48" --b "18"
+izprime lcm "10^3" "6 * 10^2"
+```
+
+Notes:
+
+- Use either named operands (`--a`, `--b`) or two positional expressions.
+- Mixed forms are rejected to keep parsing unambiguous.
+- The command prints the result in base-10 to stdout.
+
 ## Existing maintenance commands
 
 ```bash

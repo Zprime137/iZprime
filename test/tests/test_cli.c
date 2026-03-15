@@ -250,6 +250,7 @@ int TEST_CLI(int verbose)
     CLI_TEST_CASE cases[] = {
         {.name = "general help", .argc = 1, .argv = {"izprime"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "iZprime CLI"},
         {.name = "help stream_primes", .argc = 3, .argv = {"izprime", "help", "stream_primes"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Usage: izprime stream_primes"},
+        {.name = "help gcd", .argc = 3, .argv = {"izprime", "help", "gcd"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Usage: izprime gcd --a VALUE --b VALUE"},
         {.name = "unknown command", .argc = 2, .argv = {"izprime", "does_not_exist"}, .expected_exit = EXIT_FAILURE, .stderr_contains = "Unknown command: does_not_exist"},
 
         {.name = "stream print", .argc = 5, .argv = {"izprime", "stream_primes", "--range", "[0, 200]", "--print"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Prime count in [0, 200] = 46"},
@@ -267,12 +268,20 @@ int TEST_CLI(int verbose)
         {.name = "count precondition", .argc = 4, .argv = {"izprime", "count_primes", "--range", "[0, 99]"}, .expected_exit = EXIT_FAILURE, .stderr_contains = "Range size must be > 100"},
 
         {.name = "next prime", .argc = 4, .argv = {"izprime", "next_prime", "--n", "10^2+1"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Next prime after 101 is 103"},
+        {.name = "next alias", .argc = 4, .argv = {"izprime", "next", "--n", "10^2+1"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Next prime after 101 is 103"},
         {.name = "prev prime", .argc = 4, .argv = {"izprime", "prev_prime", "--n", "10^2+1"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Previous prime before 101 is 97"},
         {.name = "prev alias", .argc = 4, .argv = {"izprime", "prev", "--n", "10^2+1"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "Previous prime before 101 is 97"},
 
         {.name = "is prime yes", .argc = 6, .argv = {"izprime", "is_prime", "--n", "97", "--rounds", "5"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "97 is prime"},
         {.name = "is prime no", .argc = 6, .argv = {"izprime", "is_prime", "--n", "99", "--rounds", "5"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "99 is composite"},
         {.name = "is prime invalid rounds", .argc = 6, .argv = {"izprime", "is_prime", "--n", "97", "--rounds", "0"}, .expected_exit = EXIT_FAILURE, .stderr_contains = "Invalid --rounds value"},
+
+        {.name = "gcd named args", .argc = 6, .argv = {"izprime", "gcd", "--a", "48", "--b", "18"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "6"},
+        {.name = "gcd positional args", .argc = 4, .argv = {"izprime", "gcd", "10^6", "10^4"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "10000"},
+        {.name = "gcd mixed args rejected", .argc = 5, .argv = {"izprime", "gcd", "--a", "48", "18"}, .expected_exit = EXIT_FAILURE, .stderr_contains = "Do not mix positional operands"},
+        {.name = "lcm named args", .argc = 6, .argv = {"izprime", "lcm", "--a", "48", "--b", "18"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "144"},
+        {.name = "lcm positional args", .argc = 4, .argv = {"izprime", "lcm", "10^3", "6*10^2"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "3000"},
+        {.name = "lcm missing operand", .argc = 3, .argv = {"izprime", "lcm", "10^3"}, .expected_exit = EXIT_FAILURE, .stderr_contains = "Provide both operands"},
 
         {.name = "doctor", .argc = 2, .argv = {"izprime", "doctor"}, .expected_exit = EXIT_SUCCESS, .stdout_contains = "iZprime doctor"},
 

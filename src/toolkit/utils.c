@@ -535,6 +535,45 @@ uint64_t gcd(uint64_t a, uint64_t b)
 }
 
 /**
+ * @brief Compute the least common multiple (LCM) of two integers.
+ *
+ * @param a The first integer.
+ * @param b The second integer.
+ * @return uint64_t The LCM of a and b, or 0 when either input is 0.
+ */
+uint64_t lcm(uint64_t a, uint64_t b)
+{
+    if (a == 0 || b == 0)
+        return 0;
+
+    return (a / gcd(a, b)) * b;
+}
+
+/**
+ * @brief Compute the greatest common divisor for arbitrary-precision integers.
+ *
+ * @param out Output GCD value.
+ * @param a The first integer.
+ * @param b The second integer.
+ */
+void gcd_mpz(mpz_t out, const mpz_t a, const mpz_t b)
+{
+    mpz_gcd(out, a, b);
+}
+
+/**
+ * @brief Compute the least common multiple for arbitrary-precision integers.
+ *
+ * @param out Output LCM value.
+ * @param a The first integer.
+ * @param b The second integer.
+ */
+void lcm_mpz(mpz_t out, const mpz_t a, const mpz_t b)
+{
+    mpz_lcm(out, a, b);
+}
+
+/**
  * @brief Compute the modular inverse of a modulo m.
  *
  * Description:

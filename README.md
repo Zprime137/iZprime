@@ -7,12 +7,13 @@
 
 [![DOI](https://zenodo.org/badge/777528709.svg)](https://doi.org/10.5281/zenodo.18839925)
 
-`iZprime` is a C library and CLI for prime enumeration as a mathematical software tool.
+`iZprime` is a C library and CLI for prime enumeration and number-theoretic utilities as a mathematical software tool.
 
 It targets two realities at once:
 
 - rigorous algorithm work (clean sieve models, documented pseudocode, reproducible benchmarks),
 - practical large-range workflows (counting/streaming/searching primes at arbitrary bounds, not just small native integer ranges).
+- shell-friendly utilities for quick number-theory checks without opening a notebook or IDE.
 
 ## Why iZprime
 
@@ -51,6 +52,8 @@ izprime count_primes --range "[10^100, 10^100 + 10^9]" --cores max
 izprime next_prime --n "10^100 + 123456789"
 izprime prev_prime --n "10^100 + 123456789"
 izprime is_prime --n "(10^137 + 1) * 3 + 2" --rounds 40
+izprime gcd --a "10^100 + 12" --b "10^80 + 18"
+izprime lcm "10^12" "6 * 10^11"
 ```
 
 Numeric inputs accept grouped integers and expressions with `+ - * / ^ e` and parentheses.
@@ -63,6 +66,7 @@ Numeric inputs accept grouped integers and expressions with `+ - * / ^ e` and pa
 - `count_primes` (alias: `count`) - count primes in a range.
 - `next_prime` (alias: `next`) / `prev_prime` (alias: `prev`) - bi-directional prime search.
 - `is_prime` - probabilistic primality testing.
+- `gcd`, `lcm` - arbitrary-precision number-theory utilities from the shell.
 - `test` - model consistency checks.
 - `benchmark` - sieve benchmarking.
 - `doctor` - runtime/build environment checks.

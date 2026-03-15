@@ -111,6 +111,25 @@ int parse_inclusive_range_mpz(const char *range_expr, mpz_t lower, mpz_t upper);
 /** @brief Compute the greatest common divisor of @p a and @p b. */
 uint64_t gcd(uint64_t a, uint64_t b);
 /**
+ * @brief Compute the least common multiple of @p a and @p b.
+ * @return Least common multiple, or 0 when either input is 0.
+ */
+uint64_t lcm(uint64_t a, uint64_t b);
+/**
+ * @brief Compute the greatest common divisor of two arbitrary-precision integers.
+ * @param out Output GCD value.
+ * @param a First input.
+ * @param b Second input.
+ */
+void gcd_mpz(mpz_t out, const mpz_t a, const mpz_t b);
+/**
+ * @brief Compute the least common multiple of two arbitrary-precision integers.
+ * @param out Output LCM value.
+ * @param a First input.
+ * @param b Second input.
+ */
+void lcm_mpz(mpz_t out, const mpz_t a, const mpz_t b);
+/**
  * @brief Compute the modular inverse of @p a modulo @p m.
  * @return The inverse in [0, m-1] if it exists; otherwise an implementation-defined value.
  */

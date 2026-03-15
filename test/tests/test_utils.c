@@ -205,6 +205,60 @@ int TEST_UTILS(int verbose)
     }
     mpz_clears(lower, upper, NULL);
 
+    // Test 13: uint64 gcd helper
+    current_test_idx++;
+    if (gcd(48ULL, 18ULL) == 6ULL)
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "gcd", "gcd(48, 18) -> 6");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "gcd", "Incorrect gcd(48, 18)");
+    }
+
+    // Test 14: uint64 lcm helper
+    current_test_idx++;
+    if (lcm(48ULL, 18ULL) == 144ULL)
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "lcm", "lcm(48, 18) -> 144");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "lcm", "Incorrect lcm(48, 18)");
+    }
+
+    // Test 15: mpz gcd/lcm wrappers
+    current_test_idx++;
+    mpz_t a, b, g, l, expected_g, expected_l;
+    mpz_inits(a, b, g, l, expected_g, expected_l, NULL);
+    mpz_set_str(a, "1000000000000000000000000", 10);
+    mpz_set_str(b, "1000000000000", 10);
+    mpz_set_str(expected_g, "1000000000000", 10);
+    mpz_set_str(expected_l, "1000000000000000000000000", 10);
+    gcd_mpz(g, a, b);
+    lcm_mpz(l, a, b);
+    if (mpz_cmp(g, expected_g) == 0 && mpz_cmp(l, expected_l) == 0)
+    {
+        passed_tests++;
+        if (verbose)
+            print_test_module_result(1, current_test_idx, "gcd_mpz/lcm_mpz", "mpz wrappers produce expected values");
+    }
+    else
+    {
+        failed_tests++;
+        if (verbose)
+            print_test_module_result(0, current_test_idx, "gcd_mpz/lcm_mpz", "mpz wrappers returned unexpected values");
+    }
+    mpz_clears(a, b, g, l, expected_g, expected_l, NULL);
+
     print_test_summary(module_name, passed_tests, failed_tests, verbose);
     return (failed_tests == 0) ? 1 : 0;
 }
